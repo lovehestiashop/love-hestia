@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const collections = [
   {
-    title: "Flower Bouquets",
+    title: "Flower Bouquets TEST ",
     image: flowerBouquetImage,
     productKey: 5,
   },
