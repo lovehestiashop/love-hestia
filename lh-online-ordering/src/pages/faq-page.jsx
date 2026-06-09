@@ -19,7 +19,7 @@ function FaqPage() {
                 Yes, we ship nationwide through J&T. Shipping rates vary by
                 location. To view the cost, simply select the product you want
                 and enter your delivery address, the <b>shipping fee</b> will
-                appear automatically.
+                appear automatically. Shipping fee rates outside Cebu will depend on the location.
               </p>
             </div>
 
