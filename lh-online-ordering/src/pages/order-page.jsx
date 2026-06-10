@@ -42,7 +42,6 @@ const DateButtonInput = forwardRef(({ value, onClick }, ref) => {
 DateButtonInput.displayName = "DateButtonInput";
 
 function OrderPage() {
-  throw new Error("ORDER PAGE TEST");
   return <h1 style={{fontSize:"50px"}}>TEST ORDER PAGE</h1>;
   const { state } = useLocation();
   alert(JSON.stringify(state));
