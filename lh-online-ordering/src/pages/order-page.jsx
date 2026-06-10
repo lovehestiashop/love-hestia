@@ -58,15 +58,43 @@ function OrderPage() {
     receiver_number: "",
     delivery_address: "",
     date_and_time_of_delivery: "",
-    product_ordered: product?.title?.rendered || "",
+    product_ordered:
+  state?.cart?.length > 0
+    ? state.cart.map(item => item.title?.rendered).join(", ")
+    : product?.title?.rendered || "",
     customize_product: "",
     small_card_note: "",
     proof_of_payment: null,
   });
 
-  const price = product?.acf?.price || 0;
-  const deliveryFee = deliveryArea === "special" ? SPECIAL_FEE : STANDARD_FEE;
-  const total = useMemo(() => price + deliveryFee, [price, deliveryFee]);
+  const cart = state?.cart || [];
+
+const subtotal = state?.subtotal ||
+  cart.reduce(
+    (sum, item) =>
+      sum + Number(item.acf?.price || 0),
+    0
+  );
+
+const price = product?.acf?.price || 0;
+
+const deliveryFee =
+  deliveryArea === "special"
+    ? SPECIAL_FEE
+    : STANDARD_FEE;
+
+const total = useMemo(() => {
+  if (cart.length > 0) {
+    return subtotal + deliveryFee;
+  }
+
+  return price + deliveryFee;
+}, [
+  subtotal,
+  price,
+  deliveryFee,
+  cart.length
+]);
 
   const imageUrl =
     product?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
@@ -263,21 +291,57 @@ function OrderPage() {
               Minglanilla / Liloan / Lapu-Lapu (₱250)
             </label>
 
-            <div className="border-t pt-6 space-y-2">
-              {product && (
-                <>
-                  <div className="flex justify-between">
-                    <span>Product Price</span>
-                    <span>₱{price}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Delivery Fee</span>
-                    <span>₱{deliveryFee}</span>
-                  </div>
-                  <div className="flex justify-between font-medium text-lg">
-                    <span>Total</span>
-                    <span>₱{total}</span>
-                  </div>
+           <div className="border-t pt-6 space-y-2">
+
+  {cart.length > 0 ? (
+    <>
+      <div className="flex justify-between">
+        <span>Products Total</span>
+        <span>
+          ₱{subtotal.toLocaleString("en-PH")}
+        </span>
+      </div>
+
+      <div className="flex justify-between">
+        <span>Delivery Fee</span>
+        <span>
+          ₱{deliveryFee.toLocaleString("en-PH")}
+        </span>
+      </div>
+
+      <div className="flex justify-between font-medium text-lg">
+        <span>Total</span>
+        <span>
+          ₱{total.toLocaleString("en-PH")}
+        </span>
+      </div>
+    </>
+  ) : (
+    <>
+      <div className="flex justify-between">
+        <span>Product Price</span>
+        <span>
+          ₱{price.toLocaleString("en-PH")}
+        </span>
+      </div>
+
+      <div className="flex justify-between">
+        <span>Delivery Fee</span>
+        <span>
+          ₱{deliveryFee.toLocaleString("en-PH")}
+        </span>
+      </div>
+
+      <div className="flex justify-between font-medium text-lg">
+        <span>Total</span>
+        <span>
+          ₱{total.toLocaleString("en-PH")}
+        </span>
+      </div>
+    </>
+  )}
+
+</div>
                 </>
               )}
             </div>
