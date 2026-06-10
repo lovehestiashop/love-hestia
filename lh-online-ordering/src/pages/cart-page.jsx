@@ -26,7 +26,9 @@ function CartPage() {
               border: "1px solid #ddd",
             }}
           >
-            <h3>{item.title.rendered}</h3>
+            <>
+  <pre>{JSON.stringify(item, null, 2)}</pre>
+</>
 
             <p>
               ₱
