@@ -25,6 +25,16 @@ function CartPage() {
     );
   }
 
+  const subtotal = cart.reduce(
+    (total, item) =>
+      total + Number(item.acf?.price || 0),
+    0
+  );
+
+  const deliveryFee = cart.length > 0 ? 200 : 0;
+
+  const grandTotal = subtotal + deliveryFee;
+
   return (
     <div style={{ padding: "50px" }}>
       <h1>My Cart</h1>
@@ -32,71 +42,104 @@ function CartPage() {
       {cart.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
-        cart.map((item, index) => (
-          <div
-            key={index}
-            style={{
-              marginBottom: "20px",
-              padding: "15px",
-              border: "1px solid #ddd",
-            }}
-          >
-            <img
-              src={
-                item._embedded?.["wp:featuredmedia"]?.[0]
-                  ?.media_details?.sizes?.large?.source_url ||
-                item._embedded?.["wp:featuredmedia"]?.[0]
-                  ?.source_url
-              }
-              alt={item.title?.rendered}
+        <>
+          {cart.map((item, index) => (
+            <div
+              key={index}
               style={{
-                width: "150px",
-                height: "150px",
-                objectFit: "cover",
-                marginBottom: "10px",
-              }}
-            />
-
-            <h3>{item.title?.rendered}</h3>
-
-            <p>
-              ₱
-              {Number(
-                item.acf?.price || 0
-              ).toLocaleString("en-PH")}
-            </p>
-
-            <button
-              onClick={() => removeFromCart(index)}
-              style={{
-                padding: "8px 15px",
-                marginRight: "10px",
-                border: "1px solid #000",
-                background: "#fff",
-                cursor: "pointer",
+                marginBottom: "20px",
+                padding: "15px",
+                border: "1px solid #ddd",
               }}
             >
-              Remove
-            </button>
+              <img
+                src={
+                  item._embedded?.["wp:featuredmedia"]?.[0]
+                    ?.media_details?.sizes?.large
+                    ?.source_url ||
+                  item._embedded?.["wp:featuredmedia"]?.[0]
+                    ?.source_url
+                }
+                alt={item.title?.rendered}
+                style={{
+                  width: "150px",
+                  height: "150px",
+                  objectFit: "cover",
+                  marginBottom: "10px",
+                }}
+              />
+
+              <h3>{item.title?.rendered}</h3>
+
+              <p>
+                ₱
+                {Number(
+                  item.acf?.price || 0
+                ).toLocaleString("en-PH")}
+              </p>
+
+              <button
+                onClick={() =>
+                  removeFromCart(index)
+                }
+                style={{
+                  padding: "10px 20px",
+                  border: "1px solid #000",
+                  background: "#fff",
+                  cursor: "pointer",
+                }}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+
+          <div
+            style={{
+              marginTop: "30px",
+              paddingTop: "20px",
+              borderTop: "2px solid #ddd",
+            }}
+          >
+            <p>
+              <strong>Subtotal:</strong> ₱
+              {subtotal.toLocaleString("en-PH")}
+            </p>
+
+            <p>
+              <strong>Delivery Fee:</strong> ₱
+              {deliveryFee.toLocaleString("en-PH")}
+            </p>
+
+            <h2>
+              Total: ₱
+              {grandTotal.toLocaleString("en-PH")}
+            </h2>
 
             <button
               onClick={() =>
                 navigate("/order", {
-                  state: { product: item },
+                  state: {
+                    cart,
+                    subtotal,
+                    deliveryFee,
+                    grandTotal,
+                  },
                 })
               }
               style={{
-                padding: "8px 15px",
-                border: "1px solid #000",
+                padding: "12px 25px",
                 background: "#000",
                 color: "#fff",
+                border: "none",
                 cursor: "pointer",
+                marginTop: "15px",
               }}
             >
-              Checkout
+              Checkout All
             </button>
           </div>
-        ))
+        </>
       )}
     </div>
   );
