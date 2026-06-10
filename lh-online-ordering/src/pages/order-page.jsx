@@ -43,9 +43,8 @@ DateButtonInput.displayName = "DateButtonInput";
 
 function OrderPage() {
   const { state } = useLocation();
-
-alert("ORDER PAGE LOADED");
-console.log("STATE RECEIVED:", state);
+  alert(JSON.stringify(state));
+  
   const navigate = useNavigate();
   const product = state?.product || null;
 const cart = state?.cart || [];
