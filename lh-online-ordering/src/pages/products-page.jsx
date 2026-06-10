@@ -97,15 +97,37 @@ function ProductsPage() {
                     })}
                   </p>
 
-                  <button
-                    type="button"
-                    onClick={() =>
-                      navigate("/order", { state: { product: item } })
-                    }
-                    className="rounded border border-neutral-800 px-6 py-2 text-sm tracking-widest uppercase text-neutral-800 transition hover:bg-neutral-800 hover:text-white hover:cursor-pointer"
-                  >
-                    Order
-                  </button>
+                 <>
+  <button
+    type="button"
+    onClick={() => {
+      const cart =
+        JSON.parse(localStorage.getItem("cart")) || [];
+
+      cart.push(item);
+
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+      );
+
+      alert("Added to cart!");
+    }}
+    className="mb-2 rounded border border-neutral-800 px-6 py-2 text-sm tracking-widest uppercase"
+  >
+    Add to Cart
+  </button>
+
+  <button
+    type="button"
+    onClick={() =>
+      navigate("/order", { state: { product: item } })
+    }
+    className="rounded border border-neutral-800 px-6 py-2 text-sm tracking-widest uppercase"
+  >
+    Order
+  </button>
+</>
                 </div>
               </div>
             );
