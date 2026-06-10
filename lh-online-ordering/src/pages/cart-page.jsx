@@ -27,13 +27,19 @@ function CartPage() {
             }}
           >
             <>
-  <pre>
-{JSON.stringify(
-  item._embedded?.["wp:featuredmedia"]?.[0],
-  null,
-  2
-)}
-</pre>
+<img
+  src={
+    item._embedded?.["wp:featuredmedia"]?.[0]
+      ?.media_details?.sizes?.large?.source_url
+  }
+  alt={item.title?.rendered}
+  style={{
+    width: "150px",
+    height: "150px",
+    objectFit: "cover",
+    marginBottom: "10px"
+  }}
+/>
 
             <p>
               ₱
