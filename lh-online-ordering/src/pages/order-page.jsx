@@ -46,9 +46,6 @@ function OrderPage() {
 
 alert("ORDER PAGE LOADED");
 console.log("STATE RECEIVED:", state);
-
-console.log("STATE RECEIVED:", state);
-  console.log("ORDER PAGE STATE:", state);
   const navigate = useNavigate();
   const product = state?.product || null;
 const cart = state?.cart || [];
