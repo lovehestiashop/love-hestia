@@ -45,6 +45,7 @@ function OrderPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const product = state?.product || null;
+const cart = state?.cart || [];
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -97,9 +98,16 @@ const total = useMemo(() => {
 ]);
 
   const imageUrl =
-    product?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-    "/placeholder.jpg";
+  product?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+  "/placeholder.jpg";
 
+const subtotal =
+  state?.subtotal ||
+  cart.reduce(
+    (sum, item) =>
+      sum + Number(item.acf?.price || 0),
+    0
+  );
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setForm((prev) => ({ ...prev, [name]: files ? files[0] : value }));
@@ -150,7 +158,7 @@ const total = useMemo(() => {
             }`}
             onSubmit={handleSubmit}
           >
-            {!product && (
+            {!product && cart.length === 0 && (
               <div>
                 <h3 className="mb-4 font-medium uppercase tracking-wide">
                   Customize Your Arrangement
@@ -391,7 +399,7 @@ const total = useMemo(() => {
           </form>
 
           {/* PRODUCT PREVIEW */}
-          {product && (
+          {product ? (
             <div className="order-1 md:order-2">
               <div className="aspect-[3/5] overflow-hidden bg-neutral-200">
                 <img
