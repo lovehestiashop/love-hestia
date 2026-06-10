@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function CartPage() {
   const [cart, setCart] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedCart =
@@ -68,12 +70,30 @@ function CartPage() {
               onClick={() => removeFromCart(index)}
               style={{
                 padding: "8px 15px",
+                marginRight: "10px",
                 border: "1px solid #000",
-                background: "white",
+                background: "#fff",
                 cursor: "pointer",
               }}
             >
               Remove
+            </button>
+
+            <button
+              onClick={() =>
+                navigate("/order", {
+                  state: { product: item },
+                })
+              }
+              style={{
+                padding: "8px 15px",
+                border: "1px solid #000",
+                background: "#000",
+                color: "#fff",
+                cursor: "pointer",
+              }}
+            >
+              Checkout
             </button>
           </div>
         ))
