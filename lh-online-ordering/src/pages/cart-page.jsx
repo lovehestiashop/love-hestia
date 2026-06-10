@@ -27,8 +27,13 @@ function CartPage() {
             }}
           >
             <>
-  <pre>{JSON.stringify(item, null, 2)}</pre>
-</>
+  <pre>
+{JSON.stringify(
+  item._embedded?.["wp:featuredmedia"]?.[0],
+  null,
+  2
+)}
+</pre>
 
             <p>
               ₱
