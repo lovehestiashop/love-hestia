@@ -4,23 +4,24 @@ function CartPage() {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    function removeFromCart(indexToRemove) {
-  const updatedCart = cart.filter(
-    (_, index) => index !== indexToRemove
-  );
-
-  setCart(updatedCart);
-
-  localStorage.setItem(
-    "cart",
-    JSON.stringify(updatedCart)
-  );
-}
     const storedCart =
       JSON.parse(localStorage.getItem("cart")) || [];
 
     setCart(storedCart);
   }, []);
+
+  function removeFromCart(indexToRemove) {
+    const updatedCart = cart.filter(
+      (_, index) => index !== indexToRemove
+    );
+
+    setCart(updatedCart);
+
+    localStorage.setItem(
+      "cart",
+      JSON.stringify(updatedCart)
+    );
+  }
 
   return (
     <div style={{ padding: "50px" }}>
@@ -41,7 +42,9 @@ function CartPage() {
             <img
               src={
                 item._embedded?.["wp:featuredmedia"]?.[0]
-                  ?.media_details?.sizes?.large?.source_url
+                  ?.media_details?.sizes?.large?.source_url ||
+                item._embedded?.["wp:featuredmedia"]?.[0]
+                  ?.source_url
               }
               alt={item.title?.rendered}
               style={{
@@ -58,20 +61,20 @@ function CartPage() {
               ₱
               {Number(
                 item.acf?.price || 0
-            <button
-  onClick={() => removeFromCart(index)}
-  style={{
-    padding: "8px 15px",
-    border: "1px solid #000",
-    background: "white",
-    cursor: "pointer",
-    marginTop: "10px"
-  }}
->
-  Remove
-</button>
               ).toLocaleString("en-PH")}
             </p>
+
+            <button
+              onClick={() => removeFromCart(index)}
+              style={{
+                padding: "8px 15px",
+                border: "1px solid #000",
+                background: "white",
+                cursor: "pointer",
+              }}
+            >
+              Remove
+            </button>
           </div>
         ))
       )}
