@@ -1,5 +1,6 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import CartPage from "./pages/cart-page";
 import HomePage from "./pages/home-page";
 import ShopPage from "./pages/shop-page";
 import CustomizePage from "./pages/customize-page";
@@ -27,7 +28,9 @@ const router = createBrowserRouter([
         element: <ProductsPage />,
       },
       { path: "/order", element: <OrderPage /> },
+        { path: "/cart", element: <CartPage /> },
       {
+     
         path: "/customize",
         element: <CustomizePage />,
       },
