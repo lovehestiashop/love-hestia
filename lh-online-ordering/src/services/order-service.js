@@ -18,9 +18,7 @@ headers: {
 },
 );
 
-```
 return res.data.token;
-```
 
 } catch (err) {
 console.error(
@@ -57,13 +55,11 @@ async function sendWebhook() {
 try {
 console.log("Triggering webhook");
 
-```
 await api.post("/aiwu/v1/webhook/12_1/", {
   headers: {
     "Content-Type": "application/json",
   },
 });
-```
 
 } catch (err) {
 console.error(
@@ -78,7 +74,6 @@ export const orderService = {
 async createOrder(orderData) {
 const token = await getToken();
 
-```
 let attachmentId = null;
 
 if (orderData.proof_of_payment) {
@@ -164,25 +159,24 @@ const res = await api.post(
   },
 );
 
-// UPDATE STOCK
-// if (
-//   orderData.product_id &&
-//   orderData.current_stock !== undefined
-// ) {
-//   const newStock = Math.max(
-//     0,
-//     Number(orderData.current_stock) - 1,
-//   );
-//
-//   await productService.updateStock(
-//     orderData.product_id,
-//     newStock,
-//   );
-// }
+ UPDATE STOCK
+ if (
+  orderData.product_id &&
+  orderData.current_stock !== undefined
+ ) {
+   const newStock = Math.max(
+     0,
+     Number(orderData.current_stock) - 1,
+   );
+
+   await productService.updateStock(
+     orderData.product_id,
+     newStock,
+   );
+ }
 sendWebhook();
 
 return res.data;
-```
 
 },
 };
