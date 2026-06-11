@@ -105,7 +105,7 @@ const cartGrandTotal = state?.grandTotal || 0;
     form.date_and_time_of_delivery,
   ),
   date_time_ordered: formatDateTime(new Date().toISOString()),
-  product_image: product.featured_media,
+  product_image: product?.featured_media || "",
 });
 
      localStorage.setItem("cart", JSON.stringify([]));
