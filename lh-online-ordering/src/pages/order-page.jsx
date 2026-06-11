@@ -1,5 +1,5 @@
  import { useLocation, useNavigate } from "react-router-dom";
-import { useMemo, useState, useRef, forwardRef } from "react";
+import { useMemo, useState, forwardRef } from "react";
 import HeaderComponent from "../components/header";
 import FooterComponent from "../components/footer";
 import { orderService } from "../services/order-service";
@@ -167,6 +167,9 @@ const total = useMemo(() => {
             )}
 {cart.length > 0 && (
   <div className="mb-8">
+   <h1>
+ Cart Count: {cart.length}
+</h1>
     <h3 className="mb-4 font-medium uppercase tracking-wide">
       Products Ordered
     </h3>
