@@ -76,6 +76,8 @@ const cartGrandTotal = state?.grandTotal || 0;
 
   const price = product?.acf?.price || 0;
   const deliveryFee = deliveryArea === "special" ? SPECIAL_FEE : STANDARD_FEE;
+  const currentCartTotal =
+  cartSubtotal + deliveryFee;
   const total = useMemo(() => price + deliveryFee, [price, deliveryFee]);
 
   const imageUrl =
@@ -310,12 +312,12 @@ navigate("/shop");
 
       <div className="flex justify-between">
         <span>Delivery Fee</span>
-        <span>₱{cartDeliveryFee}</span>
+        <span>₱{deliveryFee}</span>
       </div>
 
       <div className="flex justify-between font-medium text-lg">
         <span>Total</span>
-        <span>₱{cartGrandTotal}</span>
+        <span>₱{currentCartTotal}</span>
       </div>
     </>
   )}
