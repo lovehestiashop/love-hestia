@@ -97,14 +97,16 @@ const cartGrandTotal = state?.grandTotal || 0;
     setIsSubmitting(true);
 
     try {
-      await orderService.createOrder({
-        ...form,
-        date_and_time_of_delivery: formatDateTime(
-          form.date_and_time_of_delivery,
-        ),
-        date_time_ordered: formatDateTime(new Date().toISOString()),
-        product_image: product?.featured_media || "",
-      });
+    await orderService.createOrder({
+  ...form,
+  product_id: product?.id,
+  current_stock: product?.acf?.stock,
+  date_and_time_of_delivery: formatDateTime(
+    form.date_and_time_of_delivery,
+  ),
+  date_time_ordered: formatDateTime(new Date().toISOString()),
+  product_image: product.featured_media,
+});
 
      localStorage.setItem("cart", JSON.stringify([]));
 
