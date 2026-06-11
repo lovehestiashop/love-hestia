@@ -108,7 +108,11 @@ const cartGrandTotal = state?.grandTotal || 0;
       navigate("/shop");
     } catch (err) {
       console.error(err);
-      alert("Failed to place order: " + err.message);
+      console.error("FULL ERROR:", err.response?.data);
+alert(
+  "Failed to place order: " +
+    JSON.stringify(err.response?.data)
+);
       setIsSubmitting(false);
     }
   };
