@@ -78,13 +78,14 @@ export const orderService = {
     );
     formData.append("acf[date_time_ordered]", orderData.date_time_ordered);
     formData.append("acf[product_ordered]", orderData.product_ordered);
-    formData.append("acf[small_card_note]", orderData.small_card_note);
-    formData.append("acf[customize_desc]", orderData.customize_product || "");
-    formData.append("featured_media", orderData.product_image);
+   formData.append("acf[small_card_note]", orderData.small_card_note);
+formData.append("acf[customize_desc]", orderData.customize_product || "");
 
-    if (attachmentId) {
-      formData.append("acf[proof_of_payment]", attachmentId);
-    }
+// formData.append("featured_media", orderData.product_image);
+
+if (attachmentId) {
+formData.append("acf[proof_of_payment]", attachmentId);
+}
 
     // ✅ CREATE ORDER (CRITICAL)
     const res = await api.post("/wp/v2/customer-order", formData, {
