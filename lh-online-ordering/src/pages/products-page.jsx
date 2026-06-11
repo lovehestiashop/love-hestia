@@ -66,8 +66,6 @@ function ProductsPage() {
           
       {filteredProducts.map((item) => {
 
-  console.log(item.acf);
-
   const imageUrl =
     item._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
     "/placeholder.jpg";
@@ -75,11 +73,20 @@ function ProductsPage() {
   /** Price mapping */
   const price =
     item.acf?.price || item.meta?.price || item.price || 0;
+      const isAvailable = item.acf?.availability;
 
             return (
               <div key={item.id} className="flex flex-col">
                 {/* Image */}
                 <div className="relative aspect-[3/4] overflow-hidden bg-neutral-200">
+
+  {!isAvailable && (
+    <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/60">
+      <span className="text-white text-xl font-bold tracking-widest">
+        SOLD OUT
+      </span>
+    </div>
+  )}
                   <img
                     src={imageUrl}
                     alt={item.title.rendered}
@@ -103,8 +110,9 @@ function ProductsPage() {
 
                  <>
   <button
-    type="button"
-    onClick={() => {
+  type="button"
+  disabled={!isAvailable}
+  onClick={() => {
       const cart =
         JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -119,17 +127,19 @@ function ProductsPage() {
     }}
     className="mb-2 rounded border border-neutral-800 px-6 py-2 text-sm tracking-widest uppercase"
   >
-    Add to Cart
+    {isAvailable ? "Add to Cart" : "Sold Out"}
   </button>
 
   <button
-    type="button"
-    onClick={() =>
-      navigate("/order", { state: { product: item } })
+  type="button"
+  disabled={!isAvailable}
+  onClick={() =>
+    navigate("/order", { state: { product: item } })
+  }
     }
     className="rounded border border-neutral-800 px-6 py-2 text-sm tracking-widest uppercase"
   >
-    Order
+    {isAvailable ? "Order" : "Unavailable"}
   </button>
 </>
                 </div>
