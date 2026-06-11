@@ -65,7 +65,7 @@ function ProductsPage() {
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 sm:grid-cols-2 md:grid-cols-3">
           
       {filteredProducts.map((item) => {
-       console.log(item.acf);
+       console.log(item);
 
   const imageUrl =
     item._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
