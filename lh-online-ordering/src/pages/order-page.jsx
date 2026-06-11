@@ -66,7 +66,9 @@ const cartGrandTotal = state?.grandTotal || 0;
     receiver_number: "",
     delivery_address: "",
     date_and_time_of_delivery: "",
-    product_ordered: product?.title?.rendered || "",
+    product_ordered:
+  product?.title?.rendered ||
+  cart.map((item) => item.title?.rendered).join(", "),
     customize_product: "",
     small_card_note: "",
     proof_of_payment: null,
@@ -99,7 +101,7 @@ const cartGrandTotal = state?.grandTotal || 0;
           form.date_and_time_of_delivery,
         ),
         date_time_ordered: formatDateTime(new Date().toISOString()),
-        product_image: product.featured_media,
+        product_image: product?.featured_media || "",
       });
 
       alert("Order placed successfully!");
