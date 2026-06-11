@@ -1,3 +1,4 @@
+import { productService } from "./product-service";
 import axios from "axios";
 import api from "./api";
 
@@ -31,13 +32,27 @@ async function uploadFile(file, token) {
   formData.append("file", file);
   formData.append("alt_text", file.name);
 
-  const res = await api.post("/wp/v2/media", formData, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+ const res = await api.post("/wp/v2/customer-order", formData, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
 
-  return res.data.id;
+if (orderData.product_id) {
+  const newStock = Math.max(
+    0,
+    Number(orderData.current_stock || 0) - 1
+  );
+
+  await productService.updateStock(
+    orderData.product_id,
+    newStock
+  );
+}
+
+sendWebhook();
+
+return res.data;
 }
 
 async function sendWebhook() {
