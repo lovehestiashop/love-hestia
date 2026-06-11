@@ -272,23 +272,51 @@ const cartGrandTotal = state?.grandTotal || 0;
             </label>
 
             <div className="border-t pt-6 space-y-2">
-              {product && (
-                <>
-                  <div className="flex justify-between">
-                    <span>Product Price</span>
-                    <span>₱{price}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Delivery Fee</span>
-                    <span>₱{deliveryFee}</span>
-                  </div>
-                  <div className="flex justify-between font-medium text-lg">
-                    <span>Total</span>
-                    <span>₱{total}</span>
-                  </div>
-                </>
-              )}
-            </div>
+
+  {product && (
+    <>
+      <div className="flex justify-between">
+        <span>Product Price</span>
+        <span>₱{price}</span>
+      </div>
+
+      <div className="flex justify-between">
+        <span>Delivery Fee</span>
+        <span>₱{deliveryFee}</span>
+      </div>
+
+      <div className="flex justify-between font-medium text-lg">
+        <span>Total</span>
+        <span>₱{total}</span>
+      </div>
+    </>
+  )}
+
+  {!product && cart.length > 0 && (
+    <>
+      <div className="flex justify-between">
+        <span>Cart Items</span>
+        <span>{cart.length}</span>
+      </div>
+
+      <div className="flex justify-between">
+        <span>Subtotal</span>
+        <span>₱{cartSubtotal}</span>
+      </div>
+
+      <div className="flex justify-between">
+        <span>Delivery Fee</span>
+        <span>₱{cartDeliveryFee}</span>
+      </div>
+
+      <div className="flex justify-between font-medium text-lg">
+        <span>Total</span>
+        <span>₱{cartGrandTotal}</span>
+      </div>
+    </>
+  )}
+
+</div>
 
             <h3 className="mb-4 font-medium uppercase tracking-wide">
               Payment
