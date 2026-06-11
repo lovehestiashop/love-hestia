@@ -21,6 +21,25 @@ async function getToken() {
 
 export const productService = {
   async getAll() {
+    async updateStock(productId, newStock) {
+  const token = await getToken();
+
+  const formData = new FormData();
+
+  formData.append("acf[stock]", newStock);
+
+  const res = await api.post(
+    `/wp/v2/product/${productId}`,
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return res.data;
+},
     const token = await getToken();
 
     const res = await api.get("/wp/v2/product", {
