@@ -12,6 +12,7 @@ async function getToken() {
       },
       { headers: { "Content-Type": "application/json" } },
     );
+
     return res.data.token;
   } catch (err) {
     console.error("JWT Token Error:", err.response?.data || err.message);
@@ -21,25 +22,6 @@ async function getToken() {
 
 export const productService = {
   async getAll() {
-    async updateStock(productId, newStock) {
-  const token = await getToken();
-
-  const formData = new FormData();
-
-  formData.append("acf[stock]", newStock);
-
-  const res = await api.post(
-    `/wp/v2/product/${productId}`,
-    formData,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  return res.data;
-},
     const token = await getToken();
 
     const res = await api.get("/wp/v2/product", {
@@ -48,9 +30,29 @@ export const productService = {
       },
       params: {
         _embed: true,
-        per_page: 100, // adjust if needed
+        per_page: 100,
       },
     });
+
+    return res.data;
+  },
+
+  async updateStock(productId, newStock) {
+    const token = await getToken();
+
+    const formData = new FormData();
+    formData.append("acf[stock]", newStock);
+
+    const res = await api.post(
+      `/wp/v2/product/${productId}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
     return res.data;
   },
 };
