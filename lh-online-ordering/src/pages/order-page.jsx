@@ -412,7 +412,7 @@ const total = useMemo(() => {
           </form>
 
           {/* PRODUCT PREVIEW */}
-          {product ? (
+          {product && (
             <div className="order-1 md:order-2">
               <div className="aspect-[3/5] overflow-hidden bg-neutral-200">
                 <img
