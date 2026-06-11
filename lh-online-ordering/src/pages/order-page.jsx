@@ -364,8 +364,7 @@ const total = useMemo(() => {
   )}
 
 </div>
-                </>
-              )}
+           
             </div>
 
             <h3 className="mb-4 font-medium uppercase tracking-wide">
