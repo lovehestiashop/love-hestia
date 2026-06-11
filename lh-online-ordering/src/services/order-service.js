@@ -158,22 +158,37 @@ const res = await api.post(
     },
   },
 );
-
- /* UPDATE STOCK */
- if (
+// Single product order
+if (
   orderData.product_id &&
   orderData.current_stock !== undefined
- ) {
-   const newStock = Math.max(
-     0,
-     Number(orderData.current_stock) - 1,
-   );
+) {
+  const newStock = Math.max(
+    0,
+    Number(orderData.current_stock) - 1,
+  );
 
-   await productService.updateStock(
-     orderData.product_id,
-     newStock,
-   );
- }
+  await productService.updateStock(
+    orderData.product_id,
+    newStock,
+  );
+}
+
+// Cart checkout
+if (orderData.cart?.length) {
+  for (const item of orderData.cart) {
+    const newStock = Math.max(
+      0,
+      Number(item.acf?.stock || 0) - 1,
+    );
+
+    await productService.updateStock(
+      item.id,
+      newStock,
+    );
+  }
+}
+
 sendWebhook();
 
 return res.data;
