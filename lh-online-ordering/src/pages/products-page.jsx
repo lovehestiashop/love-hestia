@@ -63,14 +63,7 @@ function ProductsPage() {
 
         {/* 2 columns on mobile */}
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 sm:grid-cols-2 md:grid-cols-3">
-          {filteredProducts.map((item) => {
-            const imageUrl =
-              item._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-              "/placeholder.jpg";
-
-            /** Price mapping */
-            const price =
-              item.acf?.price || item.meta?.price || item.price || 0;
+          
       {filteredProducts.map((item) => {
 
   console.log(item.acf);
