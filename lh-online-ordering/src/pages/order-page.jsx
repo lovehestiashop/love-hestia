@@ -1,5 +1,5 @@
- import { useLocation, useNavigate } from "react-router-dom";
-import { useMemo, useState, forwardRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useMemo, useState, useRef, forwardRef } from "react";
 import HeaderComponent from "../components/header";
 import FooterComponent from "../components/footer";
 import { orderService } from "../services/order-service";
@@ -45,7 +45,6 @@ function OrderPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const product = state?.product || null;
-const cart = state?.cart || [];
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -59,45 +58,19 @@ const cart = state?.cart || [];
     receiver_number: "",
     delivery_address: "",
     date_and_time_of_delivery: "",
-    product_ordered:
-  state?.cart?.length > 0
-    ? state.cart.map(item => item.title?.rendered).join(", ")
-    : product?.title?.rendered || "",
+    product_ordered: product?.title?.rendered || "",
     customize_product: "",
     small_card_note: "",
     proof_of_payment: null,
   });
 
-const subtotal = state?.subtotal ||
-  cart.reduce(
-    (sum, item) =>
-      sum + Number(item.acf?.price || 0),
-    0
-  );
-
-const price = product?.acf?.price || 0;
-
-const deliveryFee =
-  deliveryArea === "special"
-    ? SPECIAL_FEE
-    : STANDARD_FEE;
-
-const total = useMemo(() => {
-  if (cart.length > 0) {
-    return subtotal + deliveryFee;
-  }
-
-  return price + deliveryFee;
-}, [
-  subtotal,
-  price,
-  deliveryFee,
-  cart.length
-]);
+  const price = product?.acf?.price || 0;
+  const deliveryFee = deliveryArea === "special" ? SPECIAL_FEE : STANDARD_FEE;
+  const total = useMemo(() => price + deliveryFee, [price, deliveryFee]);
 
   const imageUrl =
-  product?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-  "/placeholder.jpg";
+    product?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+    "/placeholder.jpg";
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -118,7 +91,7 @@ const total = useMemo(() => {
           form.date_and_time_of_delivery,
         ),
         date_time_ordered: formatDateTime(new Date().toISOString()),
-       product_image: product?.featured_media || null,
+        product_image: product.featured_media,
       });
 
       alert("Order placed successfully!");
@@ -149,11 +122,11 @@ const total = useMemo(() => {
             }`}
             onSubmit={handleSubmit}
           >
-          {!product && (!cart || cart.length === 0) && (
-  <div>
-    <h3 className="mb-4 font-medium uppercase tracking-wide">
-      Customize Your Arrangement
-    </h3>
+            {!product && (
+              <div>
+                <h3 className="mb-4 font-medium uppercase tracking-wide">
+                  Customize Your Arrangement
+                </h3>
                 <textarea
                   required
                   name="customize_product"
@@ -165,30 +138,7 @@ const total = useMemo(() => {
                 />
               </div>
             )}
-{cart.length > 0 && (
-  <div className="mb-8">
-   <h1>
- Cart Count: {cart.length}
-</h1>
-    <h3 className="mb-4 font-medium uppercase tracking-wide">
-      Products Ordered
-    </h3>
 
-    <div className="border p-4 bg-white">
-      {cart.map((item, index) => (
-        <div
-          key={index}
-          className="flex justify-between border-b py-2 last:border-b-0"
-        >
-          <span>{item.title?.rendered}</span>
-          <span>
-            ₱{Number(item.acf?.price || 0).toLocaleString("en-PH")}
-          </span>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
             <h3 className="mb-4 font-medium uppercase tracking-wide">
               Your Information
             </h3>
@@ -313,58 +263,23 @@ const total = useMemo(() => {
               Minglanilla / Liloan / Lapu-Lapu (₱250)
             </label>
 
-           <div className="border-t pt-6 space-y-2">
-
-  {cart.length > 0 ? (
-    <>
-      <div className="flex justify-between">
-        <span>Products Total</span>
-        <span>
-          ₱{subtotal.toLocaleString("en-PH")}
-        </span>
-      </div>
-
-      <div className="flex justify-between">
-        <span>Delivery Fee</span>
-        <span>
-          ₱{deliveryFee.toLocaleString("en-PH")}
-        </span>
-      </div>
-
-      <div className="flex justify-between font-medium text-lg">
-        <span>Total</span>
-        <span>
-          ₱{total.toLocaleString("en-PH")}
-        </span>
-      </div>
-    </>
-  ) : (
-    <>
-      <div className="flex justify-between">
-        <span>Product Price</span>
-        <span>
-          ₱{price.toLocaleString("en-PH")}
-        </span>
-      </div>
-
-      <div className="flex justify-between">
-        <span>Delivery Fee</span>
-        <span>
-          ₱{deliveryFee.toLocaleString("en-PH")}
-        </span>
-      </div>
-
-      <div className="flex justify-between font-medium text-lg">
-        <span>Total</span>
-        <span>
-          ₱{total.toLocaleString("en-PH")}
-        </span>
-      </div>
-    </>
-  )}
-
-</div>
-           
+            <div className="border-t pt-6 space-y-2">
+              {product && (
+                <>
+                  <div className="flex justify-between">
+                    <span>Product Price</span>
+                    <span>₱{price}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Delivery Fee</span>
+                    <span>₱{deliveryFee}</span>
+                  </div>
+                  <div className="flex justify-between font-medium text-lg">
+                    <span>Total</span>
+                    <span>₱{total}</span>
+                  </div>
+                </>
+              )}
             </div>
 
             <h3 className="mb-4 font-medium uppercase tracking-wide">
