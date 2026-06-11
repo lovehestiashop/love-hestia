@@ -43,9 +43,16 @@ DateButtonInput.displayName = "DateButtonInput";
 
 function OrderPage() {
   const { state } = useLocation();
-  const navigate = useNavigate();
-  const product = state?.product || null;
+const navigate = useNavigate();
+
+const product = state?.product || null;
+
 const cart = state?.cart || [];
+const isCartCheckout = cart.length > 0;
+
+const cartSubtotal = state?.subtotal || 0;
+const cartDeliveryFee = state?.deliveryFee || 0;
+const cartGrandTotal = state?.grandTotal || 0;
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -123,11 +130,11 @@ const cart = state?.cart || [];
             }`}
             onSubmit={handleSubmit}
           >
-            {!product && (
-              <div>
-                <h3 className="mb-4 font-medium uppercase tracking-wide">
-                  Customize Your Arrangement
-                </h3>
+            {!product && !isCartCheckout && (
+  <div>
+    <h3 className="mb-4 font-medium uppercase tracking-wide">
+      Customize Your Arrangement
+    </h3>
                 <textarea
                   required
                   name="customize_product"
