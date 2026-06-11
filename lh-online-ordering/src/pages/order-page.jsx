@@ -47,10 +47,6 @@ function OrderPage() {
   const product = state?.product || null;
 const cart = state?.cart || [];
 
-alert(
-  `Product: ${product ? "YES" : "NO"} | Cart Items: ${cart.length}`
-);
-
   const [selectedDate, setSelectedDate] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deliveryArea, setDeliveryArea] = useState("standard");
