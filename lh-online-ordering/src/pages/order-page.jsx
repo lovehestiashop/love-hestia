@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+ import { useLocation, useNavigate } from "react-router-dom";
 import { useMemo, useState, useRef, forwardRef } from "react";
 import HeaderComponent from "../components/header";
 import FooterComponent from "../components/footer";
@@ -42,7 +42,6 @@ const DateButtonInput = forwardRef(({ value, onClick }, ref) => {
 DateButtonInput.displayName = "DateButtonInput";
 
 function OrderPage() {
-  return <h1 style={{fontSize:"50px"}}>TEST ORDER PAGE</h1>;
   const { state } = useLocation();
   alert(JSON.stringify(state));
   
@@ -70,8 +69,6 @@ const cart = state?.cart || [];
     small_card_note: "",
     proof_of_payment: null,
   });
-
-  const cart = state?.cart || [];
 
 const subtotal = state?.subtotal ||
   cart.reduce(
@@ -104,13 +101,6 @@ const total = useMemo(() => {
   product?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
   "/placeholder.jpg";
 
-const subtotal =
-  state?.subtotal ||
-  cart.reduce(
-    (sum, item) =>
-      sum + Number(item.acf?.price || 0),
-    0
-  );
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setForm((prev) => ({ ...prev, [name]: files ? files[0] : value }));
@@ -130,7 +120,7 @@ const subtotal =
           form.date_and_time_of_delivery,
         ),
         date_time_ordered: formatDateTime(new Date().toISOString()),
-        product_image: product.featured_media,
+       product_image: product?.featured_media || null,
       });
 
       alert("Order placed successfully!");
@@ -161,11 +151,11 @@ const subtotal =
             }`}
             onSubmit={handleSubmit}
           >
-            {!product && cart.length === 0 && (
-              <div>
-                <h3 className="mb-4 font-medium uppercase tracking-wide">
-                  Customize Your Arrangement
-                </h3>
+          {!product && (!cart || cart.length === 0) && (
+  <div>
+    <h3 className="mb-4 font-medium uppercase tracking-wide">
+      Customize Your Arrangement
+    </h3>
                 <textarea
                   required
                   name="customize_product"
@@ -177,7 +167,27 @@ const subtotal =
                 />
               </div>
             )}
+{cart.length > 0 && (
+  <div className="mb-8">
+    <h3 className="mb-4 font-medium uppercase tracking-wide">
+      Products Ordered
+    </h3>
 
+    <div className="border p-4 bg-white">
+      {cart.map((item, index) => (
+        <div
+          key={index}
+          className="flex justify-between border-b py-2 last:border-b-0"
+        >
+          <span>{item.title?.rendered}</span>
+          <span>
+            ₱{Number(item.acf?.price || 0).toLocaleString("en-PH")}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
             <h3 className="mb-4 font-medium uppercase tracking-wide">
               Your Information
             </h3>
