@@ -71,6 +71,17 @@ function ProductsPage() {
             /** Price mapping */
             const price =
               item.acf?.price || item.meta?.price || item.price || 0;
+      {filteredProducts.map((item) => {
+
+  console.log(item.acf);
+
+  const imageUrl =
+    item._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+    "/placeholder.jpg";
+
+  /** Price mapping */
+  const price =
+    item.acf?.price || item.meta?.price || item.price || 0;
 
             return (
               <div key={item.id} className="flex flex-col">
