@@ -159,7 +159,7 @@ const res = await api.post(
   },
 );
 
- UPDATE STOCK
+ /* UPDATE STOCK */
  if (
   orderData.product_id &&
   orderData.current_stock !== undefined
