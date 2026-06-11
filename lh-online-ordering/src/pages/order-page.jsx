@@ -104,8 +104,10 @@ const cartGrandTotal = state?.grandTotal || 0;
         product_image: product?.featured_media || "",
       });
 
-      alert("Order placed successfully!");
-      navigate("/shop");
+     localStorage.setItem("cart", JSON.stringify([]));
+
+alert("Order placed successfully!");
+navigate("/shop");
     } catch (err) {
       console.error(err);
       alert("Failed to place order: " + err.message);
