@@ -165,21 +165,20 @@ const res = await api.post(
 );
 
 // UPDATE STOCK
-if (
-  orderData.product_id &&
-  orderData.current_stock !== undefined
-) {
-  const newStock = Math.max(
-    0,
-    Number(orderData.current_stock) - 1,
-  );
-
-  await productService.updateStock(
-    orderData.product_id,
-    newStock,
-  );
-}
-
+// if (
+//   orderData.product_id &&
+//   orderData.current_stock !== undefined
+// ) {
+//   const newStock = Math.max(
+//     0,
+//     Number(orderData.current_stock) - 1,
+//   );
+//
+//   await productService.updateStock(
+//     orderData.product_id,
+//     newStock,
+//   );
+// }
 sendWebhook();
 
 return res.data;
