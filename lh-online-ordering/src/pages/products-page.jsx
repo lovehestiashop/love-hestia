@@ -114,19 +114,33 @@ const isAvailable = stock > 0;
   <button
   type="button"
   disabled={!isAvailable}
-  onClick={() => {
-      const cart =
-        JSON.parse(localStorage.getItem("cart")) || [];
+onClick={() => {
+  const cart =
+    JSON.parse(localStorage.getItem("cart")) || [];
 
-      cart.push(item);
+  const currentCount = cart.filter(
+    (cartItem) => cartItem.id === item.id
+  ).length;
 
-      localStorage.setItem(
-        "cart",
-        JSON.stringify(cart)
-      );
+  const stock =
+    Number(item.acf?.stock || 0);
 
-      alert("Added to cart!");
-    }}
+  if (currentCount >= stock) {
+    alert(
+      `Only ${stock} available in stock`
+    );
+    return;
+  }
+
+  cart.push(item);
+
+  localStorage.setItem(
+    "cart",
+    JSON.stringify(cart)
+  );
+
+  alert("Added to cart!");
+}}
     className="mb-2 rounded border border-neutral-800 px-6 py-2 text-sm tracking-widest uppercase"
   >
     {isAvailable ? "Add to Cart" : "Sold Out"}
