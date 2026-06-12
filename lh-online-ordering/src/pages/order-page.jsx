@@ -3,6 +3,7 @@ import { useMemo, useState, useRef, forwardRef } from "react";
 import HeaderComponent from "../components/header";
 import FooterComponent from "../components/footer";
 import { orderService } from "../services/order-service";
+import { productService } from "../services/product-service";
 import QrComponent from "../components/qr";
 
 import DatePicker from "react-datepicker";
@@ -97,6 +98,34 @@ const cartGrandTotal = state?.grandTotal || 0;
     setIsSubmitting(true);
 
     try {
+      // REAL-TIME STOCK CHECK
+if (cart.length > 0) {
+  const latestProducts =
+    await productService.getAll();
+
+  for (const cartItem of cart) {
+    const latestProduct =
+      latestProducts.find(
+        (p) => p.id === cartItem.id
+      );
+
+    const latestStock =
+      Number(latestProduct?.acf?.stock || 0);
+
+    const qtyInCart = cart.filter(
+      (item) => item.id === cartItem.id
+    ).length;
+
+    if (latestStock < qtyInCart) {
+      alert(
+        `${cartItem.title.rendered} only has ${latestStock} stock remaining.`
+      );
+
+      setIsSubmitting(false);
+      return;
+    }
+  }
+}
     await orderService.createOrder({
   ...form,
   product_id: product?.id,
