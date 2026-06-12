@@ -101,10 +101,7 @@ const isAvailable = stock > 0;
                   <h3 className="mb-1 text-sm font-medium text-neutral-800">
                     {item.title.rendered}
                   </h3>
-                  <p className="text-xs text-neutral-500 mb-2">
-  Stock: {stock}
-</p>
-
+                 
                   {/* Price added */}
                   <p className="mb-3 text-sm text-neutral-600 font-bold">
                     ₱
