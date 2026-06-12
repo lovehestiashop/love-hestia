@@ -71,12 +71,25 @@ function CartPage() {
 
               <h3>{item.title?.rendered}</h3>
 
-              <p>
-                ₱
-                {Number(
-                  item.acf?.price || 0
-                ).toLocaleString("en-PH")}
-              </p>
+{item.acf?.stock <= 3 && (
+  <p
+    style={{
+      fontSize: "14px",
+      color: "#b45309",
+      marginBottom: "8px",
+      fontWeight: "600",
+    }}
+  >
+    Only {item.acf?.stock} left
+  </p>
+)}
+
+<p>
+  ₱
+  {Number(
+    item.acf?.price || 0
+  ).toLocaleString("en-PH")}
+</p>
 
               <button
                 onClick={() =>
