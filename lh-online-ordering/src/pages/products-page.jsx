@@ -118,21 +118,28 @@ onClick={() => {
   const cart =
     JSON.parse(localStorage.getItem("cart")) || [];
 
-  const currentCount = cart.filter(
-    (cartItem) => cartItem.id === item.id
-  ).length;
+  const existingItem = cart.find(
+    (cartItem) => cartItem.product.id === item.id
+  );
 
   const stock =
     Number(item.acf?.stock || 0);
 
-  if (currentCount >= stock) {
-    alert(
-      `Only ${stock} available in stock`
-    );
-    return;
-  }
+  if (existingItem) {
+    if (existingItem.quantity >= stock) {
+      alert(
+        `Only ${stock} available in stock`
+      );
+      return;
+    }
 
-  cart.push(item);
+    existingItem.quantity += 1;
+  } else {
+    cart.push({
+      product: item,
+      quantity: 1,
+    });
+  }
 
   localStorage.setItem(
     "cart",
