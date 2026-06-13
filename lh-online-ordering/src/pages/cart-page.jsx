@@ -72,14 +72,7 @@ function CartPage() {
               />
 
               <h3>{item.product?.title?.rendered}</h3>
-              <p
-  style={{
-    marginBottom: "8px",
-    fontWeight: "600",
-  }}
->
-  Quantity: {item.quantity}
-                </p>
+
 {item.product?.acf?.stock <= 3 && (
   <p
     style={{
