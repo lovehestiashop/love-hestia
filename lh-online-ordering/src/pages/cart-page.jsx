@@ -92,19 +92,6 @@ function CartPage() {
   </p>
 )}
 
-{item.product?.acf?.stock <= 3 && (
-  <p
-    style={{
-      fontSize: "14px",
-      color: "#b45309",
-      marginBottom: "8px",
-      fontWeight: "600",
-    }}
-  >
-    Only {item.product?.acf?.stock} left
-  </p>
-)}
-
 <p>
  ₱
 {(
