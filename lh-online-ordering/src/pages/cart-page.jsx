@@ -72,6 +72,64 @@ function CartPage() {
               />
 
               <h3>{item.product?.title?.rendered}</h3>
+              <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    marginBottom: "10px",
+  }}
+>
+  <button
+    onClick={() => {
+      const updatedCart = [...cart];
+
+      if (updatedCart[index].quantity > 1) {
+        updatedCart[index].quantity -= 1;
+      } else {
+        updatedCart.splice(index, 1);
+      }
+
+      setCart(updatedCart);
+
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(updatedCart)
+      );
+    }}
+  >
+    -
+  </button>
+
+  <span>{item.quantity}</span>
+
+  <button
+    onClick={() => {
+      const stock =
+        Number(item.product?.acf?.stock || 0);
+
+      if (item.quantity >= stock) {
+        alert(
+          `Only ${stock} available in stock`
+        );
+        return;
+      }
+
+      const updatedCart = [...cart];
+
+      updatedCart[index].quantity += 1;
+
+      setCart(updatedCart);
+
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(updatedCart)
+      );
+    }}
+  >
+    +
+  </button>
+</div>
 
 {item.product?.acf?.stock <= 3 && (
   <p
