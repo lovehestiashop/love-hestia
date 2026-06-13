@@ -79,15 +79,17 @@ function CartPage() {
   }}
 >
   Quantity: {item.quantity}
-</p>
-              <p
-  style={{
-    color: "#666",
-    marginBottom: "8px",
-  }}
->
-  Available Stock: {item.product?.acf?.stock}
-</p>
+{item.product?.acf?.stock <= 3 && (
+  <p
+    style={{
+      color: "#b45309",
+      fontWeight: "600",
+      marginBottom: "8px",
+    }}
+  >
+    Only {item.product?.acf?.stock} left
+  </p>
+)}
 
 {item.product?.acf?.stock <= 3 && (
   <p
