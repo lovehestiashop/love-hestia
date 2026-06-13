@@ -26,10 +26,12 @@ function CartPage() {
   }
 
   const subtotal = cart.reduce(
-    (total, item) =>
-      total + Number(item.acf?.price || 0),
-    0
-  );
+  (total, item) =>
+    total +
+    Number(item.product?.acf?.price || 0) *
+      item.quantity,
+  0
+);
 
   const deliveryFee = cart.length > 0 ? 200 : 0;
 
@@ -54,10 +56,10 @@ function CartPage() {
             >
               <img
                 src={
-                  item._embedded?.["wp:featuredmedia"]?.[0]
+                  item.product?._embedded?.["wp:featuredmedia"]?.[0]
                     ?.media_details?.sizes?.large
                     ?.source_url ||
-                  item._embedded?.["wp:featuredmedia"]?.[0]
+                  item.product?._embedded?.["wp:featuredmedia"]?.[0]
                     ?.source_url
                 }
                 alt={item.title?.rendered}
@@ -69,9 +71,25 @@ function CartPage() {
                 }}
               />
 
-              <h3>{item.title?.rendered}</h3>
+              <h3>{item.product?.title?.rendered}</h3>
+              <p
+  style={{
+    marginBottom: "8px",
+    fontWeight: "600",
+  }}
+>
+  Quantity: {item.quantity}
+</p>
+              <p
+  style={{
+    color: "#666",
+    marginBottom: "8px",
+  }}
+>
+  Available Stock: {item.product?.acf?.stock}
+</p>
 
-{item.acf?.stock <= 3 && (
+{item.product?.acf?.stock <= 3 && (
   <p
     style={{
       fontSize: "14px",
@@ -80,15 +98,16 @@ function CartPage() {
       fontWeight: "600",
     }}
   >
-    Only {item.acf?.stock} left
+    Only {item.product?.acf?.stock} left
   </p>
 )}
 
 <p>
-  ₱
-  {Number(
-    item.acf?.price || 0
-  ).toLocaleString("en-PH")}
+ ₱
+{(
+  Number(item.product?.acf?.price || 0) *
+  item.quantity
+).toLocaleString("en-PH")}
 </p>
 
               <button
