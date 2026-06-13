@@ -79,6 +79,7 @@ function CartPage() {
   }}
 >
   Quantity: {item.quantity}
+                </p>
 {item.product?.acf?.stock <= 3 && (
   <p
     style={{
