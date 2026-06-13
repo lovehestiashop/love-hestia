@@ -72,12 +72,15 @@ function CartPage() {
               />
 
               <h3>{item.product?.title?.rendered}</h3>
-              <div
+            <div
   style={{
     display: "flex",
     alignItems: "center",
-    gap: "10px",
-    marginBottom: "10px",
+    justifyContent: "space-between",
+    width: "110px",
+    border: "1px solid #ddd",
+    padding: "12px 16px",
+    marginBottom: "12px",
   }}
 >
   <button
@@ -97,8 +100,15 @@ function CartPage() {
         JSON.stringify(updatedCart)
       );
     }}
+    style={{
+      border: "none",
+      background: "none",
+      cursor: "pointer",
+      fontSize: "20px",
+      color: "#999",
+    }}
   >
-    -
+    −
   </button>
 
   <span>{item.quantity}</span>
@@ -126,95 +136,17 @@ function CartPage() {
         JSON.stringify(updatedCart)
       );
     }}
+    style={{
+      border: "none",
+      background: "none",
+      cursor: "pointer",
+      fontSize: "20px",
+      color: "#999",
+    }}
   >
     +
   </button>
-</div>
-
-{item.product?.acf?.stock <= 3 && (
-  <p
-    style={{
-      color: "#b45309",
-      fontWeight: "600",
-      marginBottom: "8px",
-    }}
-  >
-    Only {item.product?.acf?.stock} left
-  </p>
-)}
-
-<p>
- ₱
-{(
-  Number(item.product?.acf?.price || 0) *
-  item.quantity
-).toLocaleString("en-PH")}
-</p>
-
-              <button
-                onClick={() =>
-                  removeFromCart(index)
-                }
-                style={{
-                  padding: "10px 20px",
-                  border: "1px solid #000",
-                  background: "#fff",
-                  cursor: "pointer",
-                }}
-              >
-                Remove
-              </button>
-            </div>
-          ))}
-
-          <div
-            style={{
-              marginTop: "30px",
-              paddingTop: "20px",
-              borderTop: "2px solid #ddd",
-            }}
-          >
-            <p>
-              <strong>Subtotal:</strong> ₱
-              {subtotal.toLocaleString("en-PH")}
-            </p>
-
-            <p>
-              <strong>Delivery Fee:</strong> ₱
-              {deliveryFee.toLocaleString("en-PH")}
-            </p>
-
-            <h2>
-              Total: ₱
-              {grandTotal.toLocaleString("en-PH")}
-            </h2>
-
-            <button
-              onClick={() =>
-                navigate("/order", {
-                  state: {
-                    cart,
-                    subtotal,
-                    deliveryFee,
-                    grandTotal,
-                  },
-                })
-              }
-              style={{
-                padding: "12px 25px",
-                background: "#000",
-                color: "#fff",
-                border: "none",
-                cursor: "pointer",
-                marginTop: "15px",
-              }}
-            >
-              Checkout All
-            </button>
-          </div>
-        </>
-      )}
-    </div>
+</div> 
   );
 }
 
