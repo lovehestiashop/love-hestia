@@ -82,9 +82,13 @@ const isAvailable = stock > 0;
                 {/* Image */}
                <div
   className="relative aspect-[3/4] overflow-hidden bg-neutral-200 cursor-pointer"
-  onClick={() =>
-    navigate(`/product/${item.id}`)
-  }
+ onClick={() =>
+  navigate(`/product/${item.id}`, {
+    state: {
+      product: item,
+    },
+  })
+}
 >
 
   {!isAvailable && (
