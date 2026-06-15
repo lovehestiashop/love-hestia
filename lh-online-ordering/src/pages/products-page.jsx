@@ -170,7 +170,7 @@ onClick={() => {
   }
   className="rounded border border-neutral-800 px-6 py-2 text-sm tracking-widest uppercase"
 >
-  {isAvailable ? "Order" : "Unavailable"}
+  {isAvailable ? "BUY NOW" : "Unavailable"}
 </button>
 </>
                 </div>
