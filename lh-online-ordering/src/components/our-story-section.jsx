@@ -2,19 +2,19 @@ import ourStoryImage from "../assets/hero-image.jpg";
 
 function OurStorySectionComponent() {
   return (
-    <section className="py-30 bg-neutral-50">
-      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 px-6 items-center">
-        
+    <section className="py-12 bg-neutral-50">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6 px-6 items-center">
+
         {/* Image First on Mobile */}
-        <div className="order-1 md:order-2 h-96 flex items-center justify-center rounded">
+        <div className="order-1 md:order-2">
           <img
             src={ourStoryImage}
             alt="Our story image"
-            className="w-full h-full object-cover rounded"
+            className="w-full h-[350px] md:h-[450px] object-cover rounded-lg"
           />
         </div>
 
-        {/* Text Second on Mobile */}
+        {/* Text */}
         <div className="order-2 md:order-1">
           <h2 className="text-[36px] mb-5">
             Our Story
@@ -33,7 +33,7 @@ function OurStorySectionComponent() {
             What started as a small, comforting hobby slowly grew into a passion
             and eventually a business. From offering locally sourced dried
             flowers, Love Hestia has expanded into creating premium preserved
-            blooms that can last 1-2 years with proper care. Every arrangement
+            blooms that can last 1–2 years with proper care. Every arrangement
             is crafted with intention, care, and heart, perfect for gifting or
             adding warmth to any space.
             <br />
