@@ -43,10 +43,17 @@ function ProductsPage() {
 
   /** Filter by product-type */
   const filteredProducts = useMemo(() => {
-    return products.filter((item) =>
-      item["product-type"]?.includes(productTypeId),
-    );
-  }, [products, productTypeId]);
+  return products
+    .filter((item) =>
+      item["product-type"]?.includes(productTypeId)
+    )
+    .sort((a, b) => {
+      const priceA = Number(a.acf?.price || 0);
+      const priceB = Number(b.acf?.price || 0);
+
+      return priceB - priceA;
+    });
+}, [products, productTypeId]);
 
   if (loading) {
     return <p className="py-24 text-center">Loading...</p>;
