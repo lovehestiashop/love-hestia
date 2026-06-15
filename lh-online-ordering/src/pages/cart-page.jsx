@@ -290,8 +290,8 @@ function CartPage() {
 >
                   <p
                     style={{
-                      fontSize: "20px",
-                      fontWeight: "700",
+                      fontSize: "22px",
+                      fontWeight: "500",
                       marginBottom:
                         "20px",
                     }}
