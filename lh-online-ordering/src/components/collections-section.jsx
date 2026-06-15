@@ -60,11 +60,11 @@ function CollectionsSectionComponent() {
         </div>
 
         {/* Flower Dome Center */}
-        <div className="flex justify-center">
-          <Link
-            to={`/shop/${collections[2].productKey}`}
-            className="w-[60%]"
-          >
+     <div className="flex justify-center">
+  <Link
+    to={`/shop/${collections[2].productKey}`}
+    className="w-[45%] max-w-[170px]"
+  >
             <div className="group flex flex-col items-center">
               <div className="relative aspect-[3/4] overflow-hidden">
                 <img
