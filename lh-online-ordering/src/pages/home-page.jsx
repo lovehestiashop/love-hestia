@@ -52,31 +52,41 @@ function HomePage() {
       </section>
 
       {/* FLORIST FOR A DAY */}
-      <section className="py-10 bg-neutral-50 text-center">
-        <h1 className="text-[64px] md:text-[80px] mb-4">
-          Florist <br className="sm:hidden" /> for a Day
-        </h1>
+<section className="py-16 bg-neutral-50 text-center">
+  <h1 className="text-[42px] md:text-[80px] mb-4 whitespace-nowrap">
+    Florist for a Day
+  </h1>
 
-        <p className="italic text-base md:text-lg mb-10 max-w-2xl mx-auto px-10">
-          "There's no wrong way to make a bouquet. If it makes you smile, that's
-          all the magic you need."
-        </p>
+  <p className="italic text-base md:text-lg mb-10 max-w-2xl mx-auto px-6">
+    "There's no wrong way to make a bouquet. If it makes you smile, that's
+    all the magic you need."
+  </p>
 
-        <div className="grid md:grid-cols-2 gap-10 max-w-6xl mx-auto px-6">
-          {floristForADayImages.map((i) => (
-            <div
-              key={i}
-              className="h-80 bg-neutral-300 flex items-center justify-center"
-            >
-              <img
-                src={i.imgUrl}
-                alt="Workshop Image"
-                className="w-full h-full object-cover rounded"
-              />
-            </div>
-          ))}
+  <div className="max-w-6xl mx-auto">
+    <div className="flex gap-6 overflow-x-auto px-6 pb-4 snap-x snap-mandatory scrollbar-hide">
+      {floristForADayImages.map((i) => (
+        <div
+          key={i.imgUrl}
+          className="
+            min-w-[85%]
+            sm:min-w-[70%]
+            md:min-w-[48%]
+            lg:min-w-[40%]
+            h-[500px]
+            snap-center
+            flex-shrink-0
+          "
+        >
+          <img
+            src={i.imgUrl}
+            alt="Florist for a Day Workshop"
+            className="w-full h-full object-cover rounded-xl"
+          />
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
 
       <FooterComponent />
     </div>
