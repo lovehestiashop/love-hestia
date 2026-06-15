@@ -168,7 +168,7 @@ onClick={() => {
   onClick={() =>
     navigate("/order", { state: { product: item } })
   }
-  className="rounded border border-neutral-800 px-6 py-2 text-sm tracking-widest uppercase"
+  className="rounded bg-black text-white px-6 py-2 text-sm tracking-widest uppercase"
 >
   {isAvailable ? "BUY NOW" : "Unavailable"}
 </button>
