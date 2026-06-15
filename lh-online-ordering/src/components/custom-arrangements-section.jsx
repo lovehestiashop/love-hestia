@@ -16,9 +16,9 @@ function CustomArrangementSectionComponent() {
 
         {/* Content */}
         <div>
-          <h2 className="text-3xl md:text-[36px] font-medium mb-5 text-neutral-800">
-            Custom Arrangements
-          </h2>
+          <h2 className="text-[36px] mb-5 text-neutral-800">
+  Custom Arrangements
+</h2>
 
           <p className="text-sm md:text-base leading-relaxed mb-4">
             We'd love to create a personalized dried-flower arrangement just for
