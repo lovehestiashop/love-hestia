@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 function CustomArrangementSectionComponent() {
   return (
-    <section className="py-30 bg-[#7c8a6e] text-white">
+    <section className="py-30 bg-[#faf9f7] text-neutral-800">
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center px-6">
-        <div className="h-130 bg-neutral-300 flex items-center justify-center rounded">
+       <div className="h-130 flex items-center justify-center rounded">
           <img
             src={customArrangementImage}
             alt="flower bouquet image"
@@ -13,7 +13,7 @@ function CustomArrangementSectionComponent() {
           />
         </div>
         <div>
-          <h2 className="text-[36px] mb-5">Custom Arrangements</h2>
+          <h2 className="text-[42px] mb-5 font-light">Custom Arrangements</h2>
           <p className="text-sm leading-relaxed mb-6">
             We'd love to create a personalized dried-flower arrangement just for
             you. Each design is unique and crafted based on your chosen color
