@@ -80,10 +80,12 @@ const isAvailable = stock > 0;
             return (
               <div key={item.id} className="flex flex-col">
                 {/* Image */}
-                <div className="relative aspect-[3/4] overflow-hidden bg-neutral-200">
-                  onClick={() =>
-  navigate(`/product/${item.id}`)
-}
+               <div
+  className="relative aspect-[3/4] overflow-hidden bg-neutral-200 cursor-pointer"
+  onClick={() =>
+    navigate(`/product/${item.id}`)
+  }
+>
 
   {!isAvailable && (
     <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/60">
