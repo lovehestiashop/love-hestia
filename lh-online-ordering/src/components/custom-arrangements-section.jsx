@@ -3,29 +3,43 @@ import { Link } from "react-router-dom";
 
 function CustomArrangementSectionComponent() {
   return (
-    <section className="py-30 bg-[#faf9f7] text-neutral-800">
-      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center px-6">
-       <div className="h-130 flex items-center justify-center rounded">
+    <section className="py-16 bg-[#faf9f7] text-neutral-800">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center px-6">
+        
+        {/* Image */}
+        <div>
           <img
             src={customArrangementImage}
-            alt="flower bouquet image"
-            className="w-full h-full object-cover rounded"
+            alt="Custom Arrangement"
+            className="w-full rounded-lg object-cover"
           />
         </div>
+
+        {/* Content */}
         <div>
-          <h2 className="text-[42px] mb-5 font-light">Custom Arrangements</h2>
-          <p className="text-sm leading-relaxed mb-6">
+          <h2 className="text-[42px] font-light mb-6">
+            Custom Arrangements
+          </h2>
+
+          <p className="text-base leading-relaxed mb-6">
             We'd love to create a personalized dried-flower arrangement just for
-            you. Each design is unique and crafted based on your chosen color
-            palette or inspiration photos. Final pricing will depend on the
-            flower varieties and arrangement size, depending on stock
-            availability.
+            you. Each design is thoughtfully crafted based on your chosen color
+            palette, inspiration photos, and gifting needs.
           </p>
-          {/* <Link to="/customize">
-            <button className="border border-white px-6 py-2 rounded-full text-sm hover:bg-white hover:text-emerald-800 transition hover:cursor-pointer">
-              Custom order process
+
+          <p className="text-base leading-relaxed">
+            Final pricing depends on flower availability, arrangement size, and
+            design complexity. Every piece is handmade with care, making each
+            bouquet uniquely yours.
+          </p>
+
+          {/*
+          <Link to="/customize">
+            <button className="mt-8 border border-neutral-800 px-6 py-2 rounded-full text-sm hover:bg-neutral-800 hover:text-white transition">
+              Custom Order Process
             </button>
-          </Link> */}
+          </Link>
+          */}
         </div>
       </div>
     </section>
