@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 function CartPage() {
   const [cart, setCart] = useState([]);
   const navigate = useNavigate();
+  const isMobile = window.innerWidth <= 768;
 
   useEffect(() => {
     const storedCart =
@@ -62,14 +63,15 @@ function CartPage() {
           {cart.map((item, index) => (
             <div
               key={index}
-              style={{
-                display: "flex",
-                gap: "20px",
-                padding: "25px",
-                border: "1px solid #ddd",
-                marginBottom: "20px",
-                alignItems: "flex-start",
-              }}
+             style={{
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "20px",
+  padding: "25px",
+  border: "1px solid #ddd",
+  marginBottom: "20px",
+  alignItems: "flex-start",
+}}
             >
               <img
                 src={
@@ -93,13 +95,13 @@ function CartPage() {
               />
 
               <div
-                style={{
-                  flex: 1,
-                  display: "flex",
-                  justifyContent:
-                    "space-between",
-                  alignItems: "flex-start",
-                }}
+               style={{
+  flex: 1,
+  display: "flex",
+  flexDirection: isMobile ? "column" : "row",
+  justifyContent: "space-between",
+  alignItems: isMobile ? "stretch" : "flex-start",
+}}
               >
                 <div>
                   <h3
@@ -266,12 +268,13 @@ function CartPage() {
                   )}
                 </div>
 
-                <div
-                  style={{
-                    textAlign: "right",
-                    minWidth: "180px",
-                  }}
-                >
+          <div
+  style={{
+    textAlign: isMobile ? "left" : "right",
+    minWidth: isMobile ? "100%" : "180px",
+    marginTop: isMobile ? "20px" : "0",
+  }}
+>
                   <p
                     style={{
                       fontSize: "20px",
