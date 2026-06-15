@@ -101,7 +101,7 @@ function CartPage() {
                 }
                 style={{
                   width: "160px",
-                  height: "160px",
+                  height: "220px",
                   objectFit: "cover",
                   flexShrink: 0,
                 }}
