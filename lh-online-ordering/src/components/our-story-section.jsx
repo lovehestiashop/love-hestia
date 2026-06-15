@@ -4,8 +4,22 @@ function OurStorySectionComponent() {
   return (
     <section className="py-30 bg-neutral-50">
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 px-6 items-center">
-        <div>
-          <h2 className="text-[36px] mb-5">Our Story</h2>
+        
+        {/* Image First on Mobile */}
+        <div className="order-1 md:order-2 h-96 flex items-center justify-center rounded">
+          <img
+            src={ourStoryImage}
+            alt="Our story image"
+            className="w-full h-full object-cover rounded"
+          />
+        </div>
+
+        {/* Text Second on Mobile */}
+        <div className="order-2 md:order-1">
+          <h2 className="text-[36px] mb-5">
+            Our Story
+          </h2>
+
           <p className="text-sm leading-relaxed">
             Love Hestia began in 2022, born from healing, hope, and a renewed
             sense of purpose. Like many, the journey was shaped by the
@@ -30,13 +44,7 @@ function OurStorySectionComponent() {
             share joy, creativity, and a little warmth, one flower at a time.
           </p>
         </div>
-        <div className="h-96 bg-neutral-300 flex items-center justify-center rounded">
-          <img
-            src={ourStoryImage}
-            alt="Our story image"
-            className="w-full h-full object-cover rounded"
-          />
-        </div>
+
       </div>
     </section>
   );
