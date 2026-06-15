@@ -91,13 +91,22 @@ const isAvailable = stock > 0;
 }
 >
 
-  {!isAvailable && (
-    <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/60">
-      <span className="text-white text-xl font-bold tracking-widest">
-        SOLD OUT
-      </span>
-    </div>
-  )}
+  <div
+  className="relative aspect-[3/4] overflow-hidden bg-neutral-200 cursor-pointer"
+  onClick={() =>
+    navigate(`/product/${item.id}`, {
+      state: {
+        product: item,
+      },
+    })
+  }
+>
+  <img
+    src={imageUrl}
+    alt={item.title.rendered}
+    className="h-full w-full object-cover"
+  />
+</div>
                   <img
                     src={imageUrl}
                     alt={item.title.rendered}
