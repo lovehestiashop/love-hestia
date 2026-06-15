@@ -170,9 +170,17 @@ function WorkshopPage() {
             {data.title}
           </h1>
 
-          <div className="whitespace-pre-line leading-relaxed text-sm md:text-base">
-            {data.details}
-          </div>
+    <div
+  className="
+    prose
+    prose-neutral
+    max-w-none
+    text-neutral-700
+  "
+  dangerouslySetInnerHTML={{
+    __html: data.details,
+  }}
+/>
 
         </div>
 
