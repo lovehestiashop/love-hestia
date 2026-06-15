@@ -72,9 +72,11 @@ function CartPage() {
   objectFit: "cover",
   flexShrink: 0,
 }}
-              />
+             />
 
-              <h3>{item.product?.title?.rendered}</h3>
+<div style={{ flex: 1 }}>
+
+<h3>{item.product?.title?.rendered}</h3>
               <p
   style={{
     marginBottom: "10px",
