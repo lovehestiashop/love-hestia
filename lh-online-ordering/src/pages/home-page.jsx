@@ -1,5 +1,6 @@
 import NavItemsComponent from "../components/nav-items";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 
 import CollectionsSectionComponent from "../components/collections-section";
@@ -9,16 +10,49 @@ import HeroSectionComponent from "../components/hero-section";
 import OurStorySectionComponent from "../components/our-story-section";
 
 import workshopImage from "../assets/workshop-image.jpg";
-import floristForADay1 from "../assets/florist-for-a-day1.jpg";
-import floristForADay2 from "../assets/florist2-op.jpg";
 
 function HomePage() {
-  const floristForADayImages = [
-    { imgUrl: floristForADay1 },
-    { imgUrl: floristForADay2 },
-  ];
-
   const [currentImage, setCurrentImage] = useState(0);
+
+  const [floristForADayImages, setFloristForADayImages] =
+    useState([]);
+
+  useEffect(() => {
+    const loadFloristImages = async () => {
+      try {
+        const res = await axios.get(
+          "https://api.lovehestia.shop/wp-json/wp/v2/pages/4973?_fields=acf"
+        );
+
+        const acf = res.data.acf;
+
+        const imageIds = [
+          acf.florist_image_1,
+          acf.florist_image_2,
+          acf.florist_image_3,
+          acf.florist_image_4,
+        ].filter(Boolean);
+
+        const images = await Promise.all(
+          imageIds.map(async (id) => {
+            const mediaRes = await axios.get(
+              `https://api.lovehestia.shop/wp-json/wp/v2/media/${id}`
+            );
+
+            return {
+              imgUrl: mediaRes.data.source_url,
+            };
+          })
+        );
+
+        setFloristForADayImages(images);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadFloristImages();
+  }, []);
 
   const nextImage = () => {
     setCurrentImage(
@@ -35,18 +69,22 @@ function HomePage() {
     );
   };
 
+  if (!floristForADayImages.length) {
+    return null;
+  }
+
   return (
     <div className="text-neutral-700 bg-neutral-50">
 
-  {/* HEADER */}
-  <header className="bg-[#faf9f7] border-b border-neutral-200">
-    <div className="max-w-7xl mx-auto px-6 py-3">
-      <NavItemsComponent />
-    </div>
-  </header>
+      {/* HEADER */}
+      <header className="bg-[#faf9f7] border-b border-neutral-200">
+        <div className="max-w-7xl mx-auto px-6 py-3">
+          <NavItemsComponent />
+        </div>
+      </header>
 
-  {/* HERO SECTION */}
-  <HeroSectionComponent />
+      {/* HERO SECTION */}
+      <HeroSectionComponent />
 
       {/* COLLECTIONS */}
       <CollectionsSectionComponent />
@@ -57,40 +95,37 @@ function HomePage() {
       {/* OUR STORY */}
       <OurStorySectionComponent />
 
-     {/* WORKSHOP */}
-<section className="relative h-[400px] md:h-[600px] text-white text-center overflow-hidden">
+      {/* WORKSHOP */}
+      <section className="relative h-[400px] md:h-[600px] text-white text-center overflow-hidden">
 
-  {/* Background Image */}
-  <div className="absolute inset-0">
-    <img
-      src={workshopImage}
-      alt="Workshop Image"
-      className="w-full h-full object-cover object-center"
-    />
+        <div className="absolute inset-0">
+          <img
+            src={workshopImage}
+            alt="Workshop Image"
+            className="w-full h-full object-cover object-center"
+          />
 
-    <div className="absolute inset-0 bg-black/35"></div>
-  </div>
+          <div className="absolute inset-0 bg-black/35"></div>
+        </div>
 
-  {/* Content */}
-  <div className="relative z-10 flex h-full flex-col items-center justify-center px-6">
+        <div className="relative z-10 flex h-full flex-col items-center justify-center px-6">
 
-    <h1 className="text-3xl md:text-5xl mb-3">
-      Private Dried Flower Workshop
-    </h1>
+          <h1 className="text-3xl md:text-5xl mb-3">
+            Private Dried Flower Workshop
+          </h1>
 
-    <p className="mb-5 text-sm md:text-base">
-      Birthdays · Bridal Shower · Events
-    </p>
+          <p className="mb-5 text-sm md:text-base">
+            Birthdays · Bridal Shower · Events
+          </p>
 
-    <Link to="/workshop">
-      <button className="border border-white px-6 py-2 rounded-full text-sm hover:bg-white hover:text-neutral-800 transition">
-        Learn more
-      </button>
-    </Link>
+          <Link to="/workshop">
+            <button className="border border-white px-6 py-2 rounded-full text-sm hover:bg-white hover:text-neutral-800 transition">
+              Learn more
+            </button>
+          </Link>
 
-  </div>
-</section>
-    
+        </div>
+      </section>
 
       {/* FLORIST FOR A DAY */}
       <section className="py-16 bg-neutral-50 text-center">
@@ -129,7 +164,7 @@ function HomePage() {
 
             {/* IMAGE */}
             <img
-              src={floristForADayImages[currentImage].imgUrl}
+              src={floristForADayImages[currentImage]?.imgUrl}
               alt="Florist for a Day Workshop"
               className="
                 w-full
@@ -162,6 +197,7 @@ function HomePage() {
             >
               ›
             </button>
+
           </div>
 
           {/* DOTS */}
@@ -178,6 +214,7 @@ function HomePage() {
               />
             ))}
           </div>
+
         </div>
       </section>
 
