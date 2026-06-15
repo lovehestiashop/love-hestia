@@ -76,10 +76,9 @@ function HeroSectionComponent() {
 
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white px-6">
-        <h1 className="text-[34px] sm:text-[48px] md:text-[80px] leading-none mb-4">
-          {heroData.title}
-        </h1>
-
+        <h1 className="text-[36px] sm:text-[56px] md:text-[88px] font-light tracking-tight leading-[0.95] mb-4">
+  {heroData.title}
+</h1>
         <p className="text-base md:text-2xl tracking-wide">
           {heroData.subtitle}
         </p>
