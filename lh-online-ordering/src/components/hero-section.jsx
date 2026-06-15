@@ -67,7 +67,6 @@ function HeroSectionComponent() {
 
   return (
     <section className="relative w-full h-[75vh] md:min-h-screen overflow-hidden">
-
       {/* Hero Image */}
       <div
         className="absolute inset-0"
@@ -96,4 +95,12 @@ function HeroSectionComponent() {
           {heroTitle}
         </h1>
 
-        <p className="tracking-wide text-base md:text-2
+        <p className="tracking-wide text-base md:text-2xl">
+          {heroSubtitle}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+export default HeroSectionComponent;
