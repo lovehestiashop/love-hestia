@@ -34,7 +34,7 @@ return (
         </Link>
       </li>
 
-      <li className="md:ml-auto">
+      <li>
         <Link
           to="/cart"
           className="flex items-center gap-2"
