@@ -1,7 +1,10 @@
 import FooterComponent from "../components/footer";
 import HeaderComponent from "../components/header";
 
+import { useState } from "react";
+
 function FaqPage() {
+  const [openFaq, setOpenFaq] = useState(null);
   return (
     <div>
       <HeaderComponent />
@@ -13,15 +16,33 @@ function FaqPage() {
           </h2>
 
           <div className="space-y-6 text-sm leading-relaxed">
-            <div>
-              <h3 className="font-semibold mb-2">Do you ship nationwide?</h3>
-              <p className="mb-2">
-                Yes, we ship nationwide through J&T. Shipping rates vary by
-                location. To view the cost, simply select the product you want
-                and enter your delivery address, the <b>shipping fee</b> will
-                appear automatically. Shipping fee rates outside Cebu will depend on the location.
-              </p>
-            </div>
+            <div className="border-b border-neutral-200 pb-4">
+  <button
+    onClick={() =>
+      setOpenFaq(
+        openFaq === 1 ? null : 1
+      )
+    }
+    className="flex w-full items-center justify-between text-left"
+  >
+    <span className="font-semibold">
+      Do you ship nationwide?
+    </span>
+
+    <span>
+      {openFaq === 1 ? "▼" : "▶"}
+    </span>
+  </button>
+
+  {openFaq === 1 && (
+    <p className="mt-3">
+      Yes, we ship nationwide through J&T.
+      Shipping rates vary by location.
+      The shipping fee will appear
+      automatically during checkout.
+    </p>
+  )}
+</div>
 
             <div>
               <h3 className="font-semibold mb-2">
