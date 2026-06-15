@@ -15,47 +15,50 @@ function NavItemsComponent() {
   }, []);
 
   return (
-    <nav className="w-full px-10">
-      <ul className="flex w-full items-center text-lg font-normal tracking-wide">
+    <nav className="w-full px-4 md:px-10">
+      <ul className="flex flex-wrap items-center gap-6 md:gap-12 text-base md:text-lg font-normal tracking-wide">
         <li>
           <Link to="/" className={navItemClass}>
             Home
           </Link>
         </li>
 
-        <li className="ml-20">
+        <li>
           <Link to="/shop" className={navItemClass}>
             Shop
           </Link>
         </li>
 
-        <li className="ml-20">
+        <li>
           <Link to="/faq" className={navItemClass}>
             FAQ's
           </Link>
         </li>
 
-        <li className="ml-auto">
+        <li className="md:ml-auto">
           <Link
             to="/cart"
             className="flex items-center gap-2"
           >
-            <span style={{ fontSize: "24px" }}>
+            <span style={{ fontSize: "22px" }}>
               🛒
             </span>
+
+            <span>Cart</span>
 
             {cartCount > 0 && (
               <span
                 style={{
                   background: "#000",
                   color: "#fff",
-                  borderRadius: "50%",
-                  width: "20px",
-                  height: "20px",
+                  borderRadius: "999px",
+                  minWidth: "22px",
+                  height: "22px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   fontSize: "12px",
+                  padding: "0 6px",
                 }}
               >
                 {cartCount}
