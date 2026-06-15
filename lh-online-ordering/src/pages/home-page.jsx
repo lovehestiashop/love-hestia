@@ -40,7 +40,7 @@ function HomePage() {
 
   {/* HEADER */}
   <header className="bg-[#faf9f7] border-b border-neutral-200">
-    <div className="max-w-7xl mx-auto px-6 py-5">
+    <div className="max-w-7xl mx-auto px-6 py-3">
       <NavItemsComponent />
     </div>
   </header>
