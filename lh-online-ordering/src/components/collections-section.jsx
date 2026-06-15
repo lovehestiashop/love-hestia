@@ -1,26 +1,59 @@
-import flowerBouquetImage from "../assets/flower-bouquets.JPG";
-import vaseAndBasketImage from "../assets/vase-and-basket.JPG";
-import flowerDomeImage from "../assets/flower-dome.JPG";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 
 function CollectionsSectionComponent() {
-  const collections = [
-    {
-      title: "Flower Bouquets",
-      image: flowerBouquetImage,
-      productKey: 5,
-    },
-    {
-      title: "Vases & Baskets",
-      image: vaseAndBasketImage,
-      productKey: 6,
-    },
-    {
-      title: "Flower Domes",
-      image: flowerDomeImage,
-      productKey: 7,
-    },
-  ];
+  const [collections, setCollections] = useState([]);
+
+  useEffect(() => {
+    const loadCollections = async () => {
+      try {
+        const pageRes = await axios.get(
+          "https://api.lovehestia.shop/wp-json/wp/v2/pages/4973?_fields=acf"
+        );
+
+        const acf = pageRes.data.acf;
+
+        const image1 = await axios.get(
+          `https://api.lovehestia.shop/wp-json/wp/v2/media/${acf.collection_image_1}`
+        );
+
+        const image2 = await axios.get(
+          `https://api.lovehestia.shop/wp-json/wp/v2/media/${acf.collection_image_2}`
+        );
+
+        const image3 = await axios.get(
+          `https://api.lovehestia.shop/wp-json/wp/v2/media/${acf.collection_image_3}`
+        );
+
+        setCollections([
+          {
+            title: acf.collection_title_1,
+            image: image1.data.source_url,
+            productKey: 5,
+          },
+          {
+            title: acf.collection_title_2,
+            image: image2.data.source_url,
+            productKey: 6,
+          },
+          {
+            title: acf.collection_title_3,
+            image: image3.data.source_url,
+            productKey: 7,
+          },
+        ]);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadCollections();
+  }, []);
+
+  if (collections.length === 0) {
+    return null;
+  }
 
   return (
     <section className="bg-neutral-50 py-20 text-center">
@@ -28,12 +61,9 @@ function CollectionsSectionComponent() {
         Our Collections
       </h2>
 
-      {/* MOBILE LAYOUT */}
+      {/* MOBILE */}
       <div className="md:hidden max-w-5xl mx-auto px-6">
-
-        {/* Top Row */}
         <div className="grid grid-cols-2 gap-6 mb-10">
-
           {collections.slice(0, 2).map((item) => (
             <Link
               key={item.title}
@@ -56,15 +86,13 @@ function CollectionsSectionComponent() {
               </div>
             </Link>
           ))}
-
         </div>
 
-        {/* Flower Dome Center */}
-     <div className="flex justify-center">
-  <Link
-    to={`/shop/${collections[2].productKey}`}
-    className="w-[45%] max-w-[170px]"
-  >
+        <div className="flex justify-center">
+          <Link
+            to={`/shop/${collections[2].productKey}`}
+            className="w-[45%] max-w-[170px]"
+          >
             <div className="group flex flex-col items-center">
               <div className="relative aspect-[3/4] overflow-hidden">
                 <img
@@ -82,10 +110,9 @@ function CollectionsSectionComponent() {
             </div>
           </Link>
         </div>
-
       </div>
 
-      {/* DESKTOP LAYOUT */}
+      {/* DESKTOP */}
       <div className="hidden md:grid mx-auto max-w-5xl grid-cols-3 gap-15 px-6">
         {collections.map((item) => (
           <Link
@@ -93,9 +120,7 @@ function CollectionsSectionComponent() {
             to={`/shop/${item.productKey}`}
           >
             <div className="group flex cursor-pointer flex-col items-center">
-
               <div className="relative mb-6 h-86 w-70 overflow-hidden">
-
                 <img
                   src={item.image}
                   alt={item.title}
