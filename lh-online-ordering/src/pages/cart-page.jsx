@@ -72,6 +72,17 @@ function CartPage() {
               />
 
               <h3>{item.product?.title?.rendered}</h3>
+              <p
+  style={{
+    marginBottom: "10px",
+    color: "#666",
+  }}
+>
+  Price: ₱
+  {Number(
+    item.product?.acf?.price || 0
+  ).toLocaleString("en-PH")}
+</p>
     <div
   style={{
     display: "flex",
@@ -171,12 +182,18 @@ function CartPage() {
   </p>
 )}
 
-<p>
- ₱
-{(
-  Number(item.product?.acf?.price || 0) *
-  item.quantity
-).toLocaleString("en-PH")}
+<p
+  style={{
+    fontWeight: "600",
+    marginTop: "10px",
+  }}
+>
+  Total: ₱
+  {(
+    Number(
+      item.product?.acf?.price || 0
+    ) * item.quantity
+  ).toLocaleString("en-PH")}
 </p>
 
               <button
