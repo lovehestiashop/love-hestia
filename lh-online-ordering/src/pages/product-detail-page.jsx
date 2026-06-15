@@ -106,7 +106,71 @@ useEffect(() => {
           product.acf?.price || 0
         ).toLocaleString("en-PH")}
       </h2>
+<div
+  style={{
+    display: "flex",
+    gap: "10px",
+    marginTop: "20px",
+    marginBottom: "20px",
+  }}
+>
+  <button
+    onClick={() => {
+      const cart =
+        JSON.parse(
+          localStorage.getItem("cart")
+        ) || [];
 
+      const existingItem = cart.find(
+        (item) =>
+          item.product?.id === product.id
+      );
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          product,
+          quantity: 1,
+        });
+      }
+
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+      );
+
+      alert("Added to cart!");
+    }}
+    style={{
+      padding: "12px 25px",
+      border: "1px solid #000",
+      background: "#fff",
+      cursor: "pointer",
+    }}
+  >
+    ADD TO CART
+  </button>
+
+  <button
+    onClick={() =>
+      navigate("/order", {
+        state: {
+          product,
+        },
+      })
+    }
+    style={{
+      padding: "12px 25px",
+      border: "none",
+      background: "#000",
+      color: "#fff",
+      cursor: "pointer",
+    }}
+  >
+    BUY NOW
+  </button>
+</div>
       <p>
         Stock: {product.acf?.stock}
       </p>
