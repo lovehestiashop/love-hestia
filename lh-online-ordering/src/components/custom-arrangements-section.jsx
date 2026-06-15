@@ -16,8 +16,9 @@ function CustomArrangementSectionComponent() {
 
         {/* Content */}
         <div>
-          <h2 className="text-[36px] md:text-[42px] font-light mb-6">
-            Custom Arrangements
+<h2 className="text-[36px] font-semibold mb-5">
+  Custom Arrangements
+</h2>
           </h2>
 
           <p className="text-sm md:text-base leading-relaxed mb-4">
