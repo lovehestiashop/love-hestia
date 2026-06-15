@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import logo from "../assets/love-hestia-logo.png";
 const navItemClass =
   "relative transition-colors duration-300 hover:text-gray-300";
 
@@ -13,10 +12,10 @@ function NavItemsComponent() {
 
     setCartCount(cart.length);
   }, []);
+
 return (
   <nav className="w-full px-4 md:px-10">
-    <ul className="flex items-center justify-center gap-6 md:gap-12 text-base md:text-lg font-normal tracking-wide">
-
+    <ul className="flex flex-wrap items-center gap-6 md:gap-12 text-base md:text-lg font-normal tracking-wide">
       <li>
         <Link to="/" className={navItemClass}>
           Home
@@ -29,24 +28,13 @@ return (
         </Link>
       </li>
 
-      {/* LOGO */}
-      <li>
-        <Link to="/">
-          <img
-            src={logo}
-            alt="Love Hestia"
-            className="h-14 md:h-20 w-auto"
-          />
-        </Link>
-      </li>
-
       <li>
         <Link to="/faq" className={navItemClass}>
           FAQ's
         </Link>
       </li>
 
-      <li>
+      <li className="md:ml-auto">
         <Link
           to="/cart"
           className="flex items-center gap-2"
@@ -77,11 +65,9 @@ return (
           )}
         </Link>
       </li>
-
     </ul>
   </nav>
 );
-
 }
 
 export default NavItemsComponent;
