@@ -47,13 +47,16 @@ function CartPage() {
         <>
           {cart.map((item, index) => (
             <div
-              key={index}
-              style={{
-                marginBottom: "20px",
-                padding: "15px",
-                border: "1px solid #ddd",
-              }}
-            >
+  key={index}
+  style={{
+    marginBottom: "20px",
+    padding: "20px",
+    border: "1px solid #ddd",
+    display: "flex",
+    gap: "20px",
+    alignItems: "flex-start",
+  }}
+>
               <img
                 src={
                   item.product?._embedded?.["wp:featuredmedia"]?.[0]
@@ -63,12 +66,12 @@ function CartPage() {
                     ?.source_url
                 }
                 alt={item.title?.rendered}
-                style={{
-                  width: "150px",
-                  height: "150px",
-                  objectFit: "cover",
-                  marginBottom: "10px",
-                }}
+               style={{
+  width: "160px",
+  height: "160px",
+  objectFit: "cover",
+  flexShrink: 0,
+}}
               />
 
               <h3>{item.product?.title?.rendered}</h3>
