@@ -370,7 +370,6 @@ function CartPage() {
     marginTop: "5px",
   }}
 >
-  Final delivery fee will be calculated at checkout.
 </p>
 
             <h2
@@ -383,7 +382,16 @@ function CartPage() {
                 "en-PH"
               )}
             </h2>
-
+<p
+  style={{
+    fontSize: "14px",
+    color: "#666",
+    marginTop: "8px",
+    marginBottom: "20px",
+  }}
+>
+  Final delivery fee will be calculated at checkout.
+</p>
             <button
               onClick={() =>
                 navigate("/order", {
