@@ -1,11 +1,15 @@
-import { useLocation } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { useEffect, useState } from "react";
 import { mediaService } from "../services/media-service";
 
 function ProductDetailPage() {
-  const { state } = useLocation();
+ const { state } = useLocation();
+const navigate = useNavigate();
 
-  const product = state?.product;
+const product = state?.product;
   const [gallery, setGallery] = useState([]);
 const [selectedImage, setSelectedImage] =
   useState(null);
