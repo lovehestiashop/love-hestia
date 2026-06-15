@@ -359,15 +359,19 @@ function CartPage() {
               )}
             </p>
 
-            <p>
-              <strong>
-                Delivery Fee:
-              </strong>{" "}
-              ₱
-              {deliveryFee.toLocaleString(
-                "en-PH"
-              )}
-            </p>
+         <p>
+  <strong>Starting Delivery Fee:</strong> ₱200
+</p>
+
+<p
+  style={{
+    fontSize: "14px",
+    color: "#666",
+    marginTop: "5px",
+  }}
+>
+  Final delivery fee will be calculated at checkout.
+</p>
 
             <h2
               style={{
