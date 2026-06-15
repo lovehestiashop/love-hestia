@@ -296,25 +296,26 @@ navigate("/shop");
               Delivery Area
             </h3>
 
-            <label className="flex items-center gap-3 mb-2">
-              <input
-                type="radio"
-                checked={deliveryArea === "standard"}
-                onChange={() => setDeliveryArea("standard")}
-                required
-              />
-              Standard Delivery (₱200)
-            </label>
+           <label className="flex items-center gap-3 mb-2">
+  <input
+    type="radio"
+    checked={deliveryArea === "standard"}
+    onChange={() => setDeliveryArea("standard")}
+    required
+  />
+  Standard Delivery (₱200)
+</label>
 
-            <label className="flex items-center gap-3">
-              <input
-                type="radio"
-                checked={deliveryArea === "special"}
-                onChange={() => setDeliveryArea("special")}
-              />
-              Minglanilla / Liloan / Lapu-Lapu (₱250)
-            </label>
-            <label className="flex items-center gap-3 mt-2">
+<label className="flex items-center gap-3 mb-2">
+  <input
+    type="radio"
+    checked={deliveryArea === "special"}
+    onChange={() => setDeliveryArea("special")}
+  />
+  Minglanilla / Liloan / Lapu-Lapu (₱250)
+</label>
+
+<label className="flex items-center gap-3">
   <input
     type="radio"
     checked={deliveryArea === "car"}
