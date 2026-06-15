@@ -162,20 +162,22 @@ function HomePage() {
               ‹
             </button>
 
-            {/* IMAGE */}
-            <img
-              src={floristForADayImages[currentImage]?.imgUrl}
-              alt="Florist for a Day Workshop"
-              className="
-                w-full
-                h-[320px]
-                sm:h-[450px]
-                md:h-[650px]
-                object-contain
-                bg-white
-                rounded-xl
-              "
-            />
+           {/* IMAGE */}
+<div className="overflow-hidden rounded-xl bg-white">
+  <img
+    key={currentImage}
+    src={floristForADayImages[currentImage]?.imgUrl}
+    alt="Florist for a Day Workshop"
+    className="
+      w-full
+      h-[320px]
+      sm:h-[450px]
+      md:h-[650px]
+      object-contain
+      animate-fade
+    "
+  />
+</div>
 
             {/* RIGHT ARROW */}
             <button
