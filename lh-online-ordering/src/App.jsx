@@ -1,4 +1,4 @@
-import ProductDetailPage from "./pages/product-detail-page";
+import ProductDetailPage from "./pages/product-details";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import CartPage from "./pages/cart-page";
