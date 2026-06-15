@@ -373,15 +373,15 @@ function CartPage() {
 </p>
 
             <h2
-              style={{
-                marginTop: "15px",
-              }}
-            >
-              Total: ₱
-              {grandTotal.toLocaleString(
-                "en-PH"
-              )}
-            </h2>
+  style={{
+    marginTop: "20px",
+    fontSize: "32px",
+    fontWeight: "700",
+  }}
+>
+  Total: ₱
+  {grandTotal.toLocaleString("en-PH")}
+</h2>
 <p
   style={{
     fontSize: "14px",
