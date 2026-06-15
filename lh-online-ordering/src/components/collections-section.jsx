@@ -4,7 +4,6 @@ import flowerDomeImage from "../assets/flower-dome.JPG";
 import { Link } from "react-router-dom";
 
 function CollectionsSectionComponent() {
-  // Array of objects with name and image URL
   const collections = [
     {
       title: "Flower Bouquets",
@@ -29,27 +28,83 @@ function CollectionsSectionComponent() {
         Our Collections
       </h2>
 
-      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-15 px-6 md:grid-cols-3">
-        {collections.map((item) => (
-          <Link to={`/shop/${item.productKey}`}>
-            <div
+      {/* MOBILE LAYOUT */}
+      <div className="md:hidden max-w-5xl mx-auto px-6">
+
+        {/* Top Row */}
+        <div className="grid grid-cols-2 gap-6 mb-10">
+
+          {collections.slice(0, 2).map((item) => (
+            <Link
               key={item.title}
-              className="group flex cursor-pointer flex-col items-center"
+              to={`/shop/${item.productKey}`}
             >
-              {/* Image wrapper */}
-              <div className="relative mb-6 md:h-86 md:w-70 h-66 w-50 overflow-hidden">
-                {/* Image */}
+              <div className="group flex flex-col items-center">
+                <div className="relative w-full aspect-[3/4] overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+
+                  <div className="absolute inset-0 bg-black/25 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                </div>
+
+                <p className="mt-4 text-[12px] font-medium tracking-widest uppercase text-neutral-800">
+                  {item.title}
+                </p>
+              </div>
+            </Link>
+          ))}
+
+        </div>
+
+        {/* Flower Dome Center */}
+        <div className="flex justify-center">
+          <Link
+            to={`/shop/${collections[2].productKey}`}
+            className="w-[60%]"
+          >
+            <div className="group flex flex-col items-center">
+              <div className="relative aspect-[3/4] overflow-hidden">
+                <img
+                  src={collections[2].image}
+                  alt={collections[2].title}
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+
+                <div className="absolute inset-0 bg-black/25 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              </div>
+
+              <p className="mt-4 text-[12px] font-medium tracking-widest uppercase text-neutral-800">
+                {collections[2].title}
+              </p>
+            </div>
+          </Link>
+        </div>
+
+      </div>
+
+      {/* DESKTOP LAYOUT */}
+      <div className="hidden md:grid mx-auto max-w-5xl grid-cols-3 gap-15 px-6">
+        {collections.map((item) => (
+          <Link
+            key={item.title}
+            to={`/shop/${item.productKey}`}
+          >
+            <div className="group flex cursor-pointer flex-col items-center">
+
+              <div className="relative mb-6 h-86 w-70 overflow-hidden">
+
                 <img
                   src={item.image}
                   alt={item.title}
                   className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />
 
-                {/* Overlay */}
                 <div className="absolute inset-0 bg-black/25 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               </div>
 
-              {/* Text */}
               <p className="text-[13px] font-medium tracking-widest uppercase text-neutral-800">
                 {item.title}
               </p>
