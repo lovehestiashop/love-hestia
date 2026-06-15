@@ -72,12 +72,17 @@ function CartPage() {
               />
 
               <h3>{item.product?.title?.rendered}</h3>
-              <div
+    <div
   style={{
     display: "flex",
     alignItems: "center",
-    gap: "10px",
-    marginBottom: "10px",
+    justifyContent: "space-between",
+    width: "120px",
+    border: "1px solid #ddd",
+    borderRadius: "8px",
+    padding: "10px 14px",
+    marginBottom: "12px",
+    background: "#fff",
   }}
 >
   <button
@@ -97,11 +102,26 @@ function CartPage() {
         JSON.stringify(updatedCart)
       );
     }}
+    style={{
+      border: "none",
+      background: "transparent",
+      fontSize: "20px",
+      cursor: "pointer",
+      color: "#999",
+      padding: 0,
+    }}
   >
-    -
+    −
   </button>
 
-  <span>{item.quantity}</span>
+  <span
+    style={{
+      fontSize: "16px",
+      fontWeight: "600",
+    }}
+  >
+    {item.quantity}
+  </span>
 
   <button
     onClick={() => {
@@ -125,6 +145,14 @@ function CartPage() {
         "cart",
         JSON.stringify(updatedCart)
       );
+    }}
+    style={{
+      border: "none",
+      background: "transparent",
+      fontSize: "20px",
+      cursor: "pointer",
+      color: "#999",
+      padding: 0,
     }}
   >
     +
