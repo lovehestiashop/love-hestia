@@ -374,7 +374,7 @@ function CartPage() {
 
             <h2
   style={{
-    marginTop: "20px",
+    marginTop: "5px",
     fontSize: "22px",
     fontWeight: "700",
   }}
