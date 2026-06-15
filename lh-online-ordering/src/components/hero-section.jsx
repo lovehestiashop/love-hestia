@@ -19,16 +19,21 @@ function HeroSectionComponent() {
 
     window.addEventListener("scroll", handleScroll);
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () =>
+      window.removeEventListener(
+        "scroll",
+        handleScroll
+      );
   }, []);
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden">
+    <section className="relative w-full h-[75vh] md:min-h-screen overflow-hidden">
+
       {/* PARALLAX IMAGE */}
       <div
         className="absolute inset-0"
         style={{
-          transform: `translateY(${offsetY * 0.4}px)`, // adjust speed here
+          transform: `translateY(${offsetY * 0.4}px)`,
         }}
       >
         <img
@@ -47,11 +52,18 @@ function HeroSectionComponent() {
       </nav>
 
       {/* Content */}
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center text-center text-white px-6">
-        <h1 className="text-[64px] md:text-[80px] leading-[1.1] mb-2">
-          Love written in flowers
+      <div className="relative z-10 h-[75vh] md:min-h-screen flex flex-col items-center justify-center text-center text-white px-6">
+
+        <h1 className="text-[52px] md:text-[80px] leading-[1.05] mb-3">
+          Love written
+          <br />
+          in flowers
         </h1>
-        <p className="tracking-wide text-lg md:text-2xl">Flower Studio</p>
+
+        <p className="tracking-wide text-base md:text-2xl">
+          Flower Studio
+        </p>
+
       </div>
     </section>
   );
