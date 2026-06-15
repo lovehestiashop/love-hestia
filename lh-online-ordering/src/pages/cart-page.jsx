@@ -55,6 +55,19 @@ function CartPage() {
       >
         My Cart
       </h1>
+      <button
+  onClick={() => navigate("/shop")}
+  style={{
+    background: "#000",
+    color: "#fff",
+    border: "none",
+    padding: "12px 24px",
+    cursor: "pointer",
+    marginBottom: "30px",
+  }}
+>
+  + Add More Items
+</button>
 
       {cart.length === 0 ? (
         <p>Your cart is empty.</p>
