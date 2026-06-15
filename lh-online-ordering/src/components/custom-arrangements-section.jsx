@@ -38,13 +38,11 @@ function CustomArrangementSectionComponent() {
 
         {/* Image */}
         <div>
-          <div className="w-full h-[350px] md:h-[450px] bg-white rounded-lg overflow-hidden flex items-center justify-center shadow-sm">
-            <img
-              src={data.image}
-              alt={data.title}
-              className="max-w-full max-h-full object-contain"
-            />
-          </div>
+          <img
+            src={data.image}
+            alt={data.title}
+            className="w-full h-[350px] md:h-[450px] object-cover rounded-lg"
+          />
         </div>
 
         {/* Content */}
