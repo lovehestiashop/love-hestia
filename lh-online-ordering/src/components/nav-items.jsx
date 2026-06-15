@@ -15,31 +15,52 @@ function NavItemsComponent() {
   }, []);
 
   return (
-    <nav className="flex justify-center">
-      <ul className="flex gap-20 text-lg font-normal tracking-wide">
+    <nav className="w-full px-10">
+      <ul className="flex w-full items-center text-lg font-normal tracking-wide">
         <li>
           <Link to="/" className={navItemClass}>
             Home
           </Link>
         </li>
-        <li>
-  <Link to="/cart" className={navItemClass}>
-    Cart {cartCount > 0 ? `(${cartCount})` : ""}
-  </Link>
-</li>
-        <li>
+
+        <li className="ml-20">
           <Link to="/shop" className={navItemClass}>
             Shop
           </Link>
         </li>
-        {/* <li>
-          <Link to="/customize" className={navItemClass}>
-            Customize
-          </Link>
-        </li> */}
-        <li>
+
+        <li className="ml-20">
           <Link to="/faq" className={navItemClass}>
             FAQ's
+          </Link>
+        </li>
+
+        <li className="ml-auto">
+          <Link
+            to="/cart"
+            className="flex items-center gap-2"
+          >
+            <span style={{ fontSize: "24px" }}>
+              🛒
+            </span>
+
+            {cartCount > 0 && (
+              <span
+                style={{
+                  background: "#000",
+                  color: "#fff",
+                  borderRadius: "50%",
+                  width: "20px",
+                  height: "20px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "12px",
+                }}
+              >
+                {cartCount}
+              </span>
+            )}
           </Link>
         </li>
       </ul>
