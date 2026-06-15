@@ -1,14 +1,34 @@
 import { useEffect, useRef, useState } from "react";
-import heroImageFallback from "../assets/hero-shot-opt.jpg";
-import NavItemsComponent from "./nav-items";
+import axios from "axios";
 
 function HeroSectionComponent() {
   const [offsetY, setOffsetY] = useState(0);
+  const [heroData, setHeroData] = useState(null);
+
   const ticking = useRef(false);
 
-  const [heroImage, setHeroImage] = useState(heroImageFallback);
-  const [heroTitle, setHeroTitle] = useState("Love written in flowers");
-  const [heroSubtitle, setHeroSubtitle] = useState("Flower Studio");
+  useEffect(() => {
+    axios
+      .get(
+        "https://api.lovehestia.shop/wp-json/wp/v2/pages/4973?_fields=acf"
+      )
+      .then(async (res) => {
+        const acf = res.data.acf;
+
+        const mediaRes = await axios.get(
+          `https://api.lovehestia.shop/wp-json/wp/v2/media/${acf.hero_image}`
+        );
+
+        setHeroData({
+          image: mediaRes.data.source_url,
+          title: acf.hero_title,
+          subtitle: acf.hero_subtitle,
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,79 +44,44 @@ function HeroSectionComponent() {
 
     window.addEventListener("scroll", handleScroll);
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () =>
+      window.removeEventListener(
+        "scroll",
+        handleScroll
+      );
   }, []);
 
-  useEffect(() => {
-    const fetchHeroData = async () => {
-      try {
-        const pageRes = await fetch(
-          "https://api.lovehestia.shop/wp-json/wp/v2/pages/4973?_fields=acf"
-        );
-
-        const pageData = await pageRes.json();
-
-        if (pageData.acf?.hero_title) {
-          setHeroTitle(pageData.acf.hero_title);
-        }
-
-        if (pageData.acf?.hero_subtitle) {
-          setHeroSubtitle(pageData.acf.hero_subtitle);
-        }
-
-        if (pageData.acf?.hero_image) {
-          const mediaRes = await fetch(
-            `https://api.lovehestia.shop/wp-json/wp/v2/media/${pageData.acf.hero_image}`
-          );
-
-          const mediaData = await mediaRes.json();
-
-          if (mediaData.source_url) {
-            setHeroImage(mediaData.source_url);
-          }
-        }
-      } catch (error) {
-        console.error("Failed loading hero content", error);
-      }
-    };
-
-    fetchHeroData();
-  }, []);
+  if (!heroData) {
+    return null;
+  }
 
   return (
-    <section className="relative w-full h-[75vh] md:min-h-screen overflow-hidden">
+    <section className="relative w-full h-[65vh] md:h-[80vh] overflow-hidden">
       {/* Hero Image */}
       <div
         className="absolute inset-0"
         style={{
-          transform: `translateY(${offsetY * 0.4}px)`,
+          transform: `translateY(${offsetY * 0.25}px)`,
         }}
       >
         <img
-          src={heroImage}
-          alt="Hero"
-          className="w-full h-[120%] object-cover"
+          src={heroData.image}
+          alt={heroData.title}
+          className="w-full h-[110%] object-cover"
         />
       </div>
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/40"></div>
-
-      {/* Navigation */}
-      <nav className="absolute text-white top-5 left-1/2 -translate-x-1/2 w-full flex justify-center py-6 z-20">
-        <NavItemsComponent />
-      </nav>
+      <div className="absolute inset-0 bg-black/35"></div>
 
       {/* Content */}
-      <div className="relative z-10 h-[75vh] md:min-h-screen flex flex-col items-center justify-center text-center text-white px-6">
-        <h1 className="text-[32px] sm:text-[42px] md:text-[80px] leading-[1.05] mb-3 whitespace-nowrap">
-          {heroTitle}
+      <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white px-6">
+        <h1 className="text-[34px] sm:text-[48px] md:text-[80px] leading-none mb-4">
+          {heroData.title}
         </h1>
 
-        <p className="tracking-wide text-base md:text-2xl">
-          {heroSubtitle}
+        <p className="text-base md:text-2xl tracking-wide">
+          {heroData.subtitle}
         </p>
       </div>
     </section>
