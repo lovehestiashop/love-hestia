@@ -37,10 +37,12 @@ function ShopPage() {
         {/* Grid */}
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-6 sm:grid-cols-2 md:grid-cols-3">
           {collections.map((item) => (
-            <Link to={`/shop/${item.productKey}`}>
+            <Link
+              key={item.title}
+              to={`/shop/${item.productKey}`}
+            >
               <div
-                key={item.title}
-                className="group relative aspect-square cursor-pointer overflow-hidden"
+                className="group relative aspect-[3/4] cursor-pointer overflow-hidden"
               >
                 {/* Image */}
                 <img
