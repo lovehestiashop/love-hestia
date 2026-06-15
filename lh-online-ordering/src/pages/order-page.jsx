@@ -11,6 +11,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const STANDARD_FEE = 200;
 const SPECIAL_FEE = 250;
+const CAR_FEE = 500;
 
 // Format date as "January 1, 2025 3:00 PM"
 function formatDateTime(dateString) {
@@ -76,7 +77,12 @@ const cartGrandTotal = state?.grandTotal || 0;
   });
 
   const price = product?.acf?.price || 0;
-  const deliveryFee = deliveryArea === "special" ? SPECIAL_FEE : STANDARD_FEE;
+ const deliveryFee =
+  deliveryArea === "special"
+    ? SPECIAL_FEE
+    : deliveryArea === "car"
+    ? CAR_FEE
+    : STANDARD_FEE;
   const currentCartTotal =
   cartSubtotal + deliveryFee;
   const total = useMemo(() => price + deliveryFee, [price, deliveryFee]);
@@ -308,6 +314,14 @@ navigate("/shop");
               />
               Minglanilla / Liloan / Lapu-Lapu (₱250)
             </label>
+            <label className="flex items-center gap-3 mt-2">
+  <input
+    type="radio"
+    checked={deliveryArea === "car"}
+    onChange={() => setDeliveryArea("car")}
+  />
+  Car Delivery (₱500)
+</label>
 
             <div className="border-t pt-6 space-y-2">
 
