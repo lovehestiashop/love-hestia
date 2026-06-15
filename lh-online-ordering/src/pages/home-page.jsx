@@ -1,3 +1,4 @@
+import NavItemsComponent from "../components/nav-items";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -36,8 +37,16 @@ function HomePage() {
 
   return (
     <div className="text-neutral-700 bg-neutral-50">
-      {/* HERO SECTION */}
-      <HeroSectionComponent />
+
+  {/* HEADER */}
+  <header className="bg-[#faf9f7] border-b border-neutral-200">
+    <div className="max-w-7xl mx-auto px-6 py-5">
+      <NavItemsComponent />
+    </div>
+  </header>
+
+  {/* HERO SECTION */}
+  <HeroSectionComponent />
 
       {/* COLLECTIONS */}
       <CollectionsSectionComponent />
