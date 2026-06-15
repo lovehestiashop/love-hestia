@@ -46,12 +46,14 @@ function CartPage() {
       }}
     >
       <h1
-        style={{
-          marginBottom: "30px",
-        }}
-      >
-        My Cart
-      </h1>
+  style={{
+    fontSize: "42px",
+    fontWeight: "700",
+    marginBottom: "40px",
+  }}
+>
+  My Cart
+</h1>
 
       {cart.length === 0 ? (
         <p>Your cart is empty.</p>
