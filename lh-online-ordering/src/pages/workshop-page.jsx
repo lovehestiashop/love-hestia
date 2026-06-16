@@ -178,44 +178,20 @@ function WorkshopPage() {
     {data.introduction}
   </div>
 
-  {/* Pricing */}
-  <div className="mb-12">
-    <h2 className="text-2xl font-medium mb-4">
-      Pricing
-    </h2>
+  <div className="max-w-4xl mx-auto px-6 py-20">
 
-    <div
-      dangerouslySetInnerHTML={{
-        __html: data.pricing,
-      }}
-    />
-  </div>
+  <h1 className="text-center text-4xl mb-10">
+    {data.title}
+  </h1>
 
-  {/* Workshop Details */}
-  <div className="mb-12">
-    <h2 className="text-2xl font-medium mb-4">
-      Workshop Details
-    </h2>
+  <div
+    className="prose prose-neutral max-w-none"
+    dangerouslySetInnerHTML={{
+      __html: data.details,
+    }}
+  />
 
-    <div
-      dangerouslySetInnerHTML={{
-        __html: data.details,
-      }}
-    />
-  </div>
-
-  {/* How To Book */}
-  <div>
-    <h2 className="text-2xl font-medium mb-4">
-      How to Book
-    </h2>
-
-    <div
-      dangerouslySetInnerHTML={{
-        __html: data.howToBook,
-      }}
-    />
-  </div>
+</div>
 
 </div>
 
