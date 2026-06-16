@@ -180,10 +180,6 @@ function WorkshopPage() {
 
   <div className="max-w-4xl mx-auto px-6 py-20">
 
-  <h1 className="text-center text-4xl mb-10">
-    {data.title}
-  </h1>
-
   <div
     className="prose prose-neutral max-w-none"
     dangerouslySetInnerHTML={{
