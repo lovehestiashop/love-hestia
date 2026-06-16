@@ -69,7 +69,6 @@ if (!acf) {
       imgUrl: workshopImage,
     },
   ]);
-}
       }
     };
 
