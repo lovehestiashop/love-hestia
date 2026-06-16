@@ -212,6 +212,33 @@ function WorkshopPage() {
     }}
   />
 </div>
+        {/* CTA */}
+<div className="mt-20 text-center">
+  <p className="mb-6 text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+    Let's plan your workshop together. Send us a message on Instagram and we'll help you choose the perfect arrangement, date, and workshop setup.
+  </p>
+
+  <a
+    href="https://www.instagram.com/lovehestiaflowers"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="
+      inline-block
+      px-8
+      py-3
+      border
+      border-neutral-800
+      text-neutral-800
+      tracking-wide
+      transition-all
+      duration-300
+      hover:bg-neutral-800
+      hover:text-white
+    "
+  >
+    Contact Us
+  </a>
+</div>  
 
         </div>
 
