@@ -36,12 +36,13 @@ function WorkshopPage() {
           (res) => res.data.source_url
         );
 
-        setData({
-          title: acf.workshop_title,
-          pricing: acf.workshop_pricing,
-          details: acf.workshop_details,
-          images,
-        });
+      setData({
+  title: acf.workshop_title,
+  pricing: acf.workshop_pricing,
+  details: acf.workshop_details,
+  howToBook: acf.how_to_book,
+  images,
+});
       } catch (error) {
         console.error(error);
       }
@@ -192,6 +193,25 @@ function WorkshopPage() {
               }}
             />
           </div>
+          {/* How To Book */}
+<div className="mt-14">
+  <h2 className="text-2xl font-medium mb-5">
+    How to Book
+  </h2>
+
+  <div
+    className="
+      text-base
+      leading-relaxed
+      [&_ol]:list-decimal
+      [&_ol]:pl-6
+      [&_ol]:space-y-2
+    "
+    dangerouslySetInnerHTML={{
+      __html: data.howToBook,
+    }}
+  />
+</div>
 
         </div>
 
