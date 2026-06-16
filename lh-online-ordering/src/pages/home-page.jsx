@@ -28,6 +28,13 @@ function HomePage() {
 
 if (!acf) {
   console.error(
+    "Home Page Settings ACF missing"
+  );
+  return;
+}
+
+if (!acf) {
+  console.error(
     "ACF data missing from page 4973"
   );
   return;
