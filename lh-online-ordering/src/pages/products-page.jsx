@@ -117,15 +117,26 @@ function ProductsPage() {
                     })}
                   </p>
 
-                  {isAvailable ? (
-                    <span className="text-sm font-medium text-green-700">
-                      Available
-                    </span>
-                  ) : (
-                    <span className="text-sm font-medium text-red-600">
-                      Sold Out
-                    </span>
-                  )}
+                  {!isAvailable && (
+  <div className="mt-2">
+    <span
+      className="
+        inline-block
+        border
+        border-neutral-700
+        px-4
+        py-1
+        text-[11px]
+        font-medium
+        tracking-[0.25em]
+        uppercase
+        text-neutral-700
+      "
+    >
+      Sold Out
+    </span>
+  </div>
+)}
                 </div>
               </div>
             );
