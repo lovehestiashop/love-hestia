@@ -99,26 +99,17 @@ return (
             flexWrap: "wrap",
           }}
         >
-          {gallery.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt=""
-              onClick={() =>
-                setSelectedImage(image)
-              }
-              style={{
-                width: "90px",
-                height: "90px",
-                objectFit: "cover",
-                cursor: "pointer",
-                border:
-                  selectedImage === image
-                    ? "2px solid #000"
-                    : "1px solid #ddd",
-              }}
-            />
-          ))}
+         style={{
+  width: "120px",
+  height: "140px",
+  objectFit: "cover",
+  cursor: "pointer",
+  border:
+    selectedImage === image
+      ? "2px solid #000"
+      : "1px solid #ddd",
+  transition: "0.3s ease",
+}}
         </div>
       </div>
 
