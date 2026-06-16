@@ -70,6 +70,36 @@ function ProductDetailPage() {
         padding: "50px 30px",
       }}
     >
+      
+      <div
+  style={{
+    marginBottom: "30px",
+    fontSize: "14px",
+    color: "#666",
+  }}
+>
+  <span
+    onClick={() => navigate("/")}
+    style={{ cursor: "pointer" }}
+  >
+    Home
+  </span>
+
+  {" / "}
+
+  <span
+    onClick={() => navigate("/shop")}
+    style={{ cursor: "pointer" }}
+  >
+    Shop
+  </span>
+
+  {" / "}
+
+  <span>
+    {product.title.rendered}
+  </span>
+</div>
       <div
         style={{
           display: "flex",
