@@ -149,15 +149,6 @@ if (attachmentId) {
   );
 }
 
-const res = await api.post(
-  "/wp/v2/customer-order",
-  formData,
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  },
-);
 // Single product order
 if (
   orderData.product_id &&
@@ -177,23 +168,28 @@ if (
 // Cart checkout
 if (orderData.cart?.length) {
   for (const item of orderData.cart) {
-console.log("FULL ITEM:", item);
-console.log("PRODUCT:", item.product);
-console.log("PRODUCT ID:", item.product?.id);
-console.log("PRODUCT OBJECT:", JSON.stringify(item.product, null, 2));
+    const productId = item.product?.id;
+
+    if (!productId) {
+      console.error("Missing product ID", item);
+      continue;
+    }
+
     const newStock = Math.max(
       0,
-      Number(item.acf?.stock || 0) - 1,
+      Number(item.product?.acf?.stock || 0) - 1,
     );
 
     await productService.updateStock(
-      item.id,
+      productId,
       newStock,
     );
   }
 }
 
 sendWebhook();
+
+return res.data;
 
 return res.data;
 
