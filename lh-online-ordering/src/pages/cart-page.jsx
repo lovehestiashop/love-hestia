@@ -55,39 +55,40 @@ function CartPage() {
       >
         My Cart
       </h1>
-   <div
-  style={{
-    display: "flex",
-    gap: "10px",
-    marginBottom: "30px",
-  }}
->
-  <button
-    onClick={() => navigate("/")}
-    style={{
-      background: "#fff",
-      color: "#000",
-      border: "1px solid #000",
-      padding: "12px 24px",
-      cursor: "pointer",
-    }}
-  >
-    Home
-  </button>
 
-  <button
-    onClick={() => navigate("/shop")}
-    style={{
-      background: "#000",
-      color: "#fff",
-      border: "none",
-      padding: "12px 24px",
-      cursor: "pointer",
-    }}
-  >
-    + Add More Items
-  </button>
-</div>
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+          marginBottom: "30px",
+        }}
+      >
+        <button
+          onClick={() => navigate("/")}
+          style={{
+            background: "#fff",
+            color: "#000",
+            border: "1px solid #000",
+            padding: "12px 24px",
+            cursor: "pointer",
+          }}
+        >
+          Home
+        </button>
+
+        <button
+          onClick={() => navigate("/shop")}
+          style={{
+            background: "#000",
+            color: "#fff",
+            border: "none",
+            padding: "12px 24px",
+            cursor: "pointer",
+          }}
+        >
+          + Add More Items
+        </button>
+      </div>
 
       {cart.length === 0 ? (
         <p>Your cart is empty.</p>
@@ -96,15 +97,15 @@ function CartPage() {
           {cart.map((item, index) => (
             <div
               key={index}
-             style={{
-  display: "flex",
-  flexWrap: "wrap",
-  gap: "20px",
-  padding: "25px",
-  border: "1px solid #ddd",
-  marginBottom: "20px",
-  alignItems: "flex-start",
-}}
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "20px",
+                padding: "25px",
+                border: "1px solid #ddd",
+                marginBottom: "20px",
+                alignItems: "flex-start",
+              }}
             >
               <img
                 src={
@@ -128,13 +129,18 @@ function CartPage() {
               />
 
               <div
-               style={{
-  flex: 1,
-  display: "flex",
-  flexDirection: isMobile ? "column" : "row",
-  justifyContent: "space-between",
-  alignItems: isMobile ? "stretch" : "flex-start",
-}}
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: isMobile
+                    ? "column"
+                    : "row",
+                  justifyContent:
+                    "space-between",
+                  alignItems: isMobile
+                    ? "stretch"
+                    : "flex-start",
+                }}
               >
                 <div>
                   <h3
@@ -156,11 +162,8 @@ function CartPage() {
                   >
                     Price: ₱
                     {Number(
-                      item.product?.acf
-                        ?.price || 0
-                    ).toLocaleString(
-                      "en-PH"
-                    )}
+                      item.product?.acf?.price || 0
+                    ).toLocaleString("en-PH")}
                   </p>
 
                   <div
@@ -170,8 +173,7 @@ function CartPage() {
                       justifyContent:
                         "space-between",
                       width: "120px",
-                      border:
-                        "1px solid #ddd",
+                      border: "1px solid #ddd",
                       borderRadius: "8px",
                       padding: "10px 14px",
                       marginBottom: "12px",
@@ -185,9 +187,8 @@ function CartPage() {
                         ];
 
                         if (
-                          updatedCart[
-                            index
-                          ].quantity > 1
+                          updatedCart[index]
+                            .quantity > 1
                         ) {
                           updatedCart[
                             index
@@ -224,8 +225,7 @@ function CartPage() {
 
                     <span
                       style={{
-                        fontWeight:
-                          "600",
+                        fontWeight: "600",
                       }}
                     >
                       {item.quantity}
@@ -233,25 +233,9 @@ function CartPage() {
 
                     <button
                       onClick={() => {
-                        const stock =
-                          Number(
-                            item.product
-                              ?.acf
-                              ?.stock || 0
-                          );
-
-                        if (
-                          item.quantity >=
-                          stock
-                        ) {
-                          alert(
-                            `Only ${stock} available in stock`
-                          );
-                          return;
-                        }
-
-                        const updatedCart =
-                          [...cart];
+                        const updatedCart = [
+                          ...cart,
+                        ];
 
                         updatedCart[
                           index
@@ -280,40 +264,26 @@ function CartPage() {
                       +
                     </button>
                   </div>
-
-                  {item.product?.acf
-                    ?.stock <= 3 && (
-                    <p
-                      style={{
-                        color:
-                          "#b45309",
-                        fontWeight:
-                          "600",
-                      }}
-                    >
-                      Only{" "}
-                      {
-                        item.product
-                          ?.acf?.stock
-                      }{" "}
-                      left
-                    </p>
-                  )}
                 </div>
 
-          <div
-  style={{
-    textAlign: isMobile ? "left" : "right",
-    minWidth: isMobile ? "100%" : "180px",
-    marginTop: isMobile ? "20px" : "0",
-  }}
->
+                <div
+                  style={{
+                    textAlign: isMobile
+                      ? "left"
+                      : "right",
+                    minWidth: isMobile
+                      ? "100%"
+                      : "180px",
+                    marginTop: isMobile
+                      ? "20px"
+                      : "0",
+                  }}
+                >
                   <p
                     style={{
                       fontSize: "22px",
                       fontWeight: "500",
-                      marginBottom:
-                        "20px",
+                      marginBottom: "20px",
                     }}
                   >
                     ₱
@@ -321,28 +291,19 @@ function CartPage() {
                       Number(
                         item.product?.acf
                           ?.price || 0
-                      ) *
-                      item.quantity
-                    ).toLocaleString(
-                      "en-PH"
-                    )}
+                      ) * item.quantity
+                    ).toLocaleString("en-PH")}
                   </p>
 
                   <button
                     onClick={() =>
-                      removeFromCart(
-                        index
-                      )
+                      removeFromCart(index)
                     }
                     style={{
-                      padding:
-                        "10px 20px",
-                      border:
-                        "1px solid #000",
-                      background:
-                        "#fff",
-                      cursor:
-                        "pointer",
+                      padding: "10px 20px",
+                      border: "1px solid #000",
+                      background: "#fff",
+                      cursor: "pointer",
                     }}
                   >
                     Remove
@@ -354,8 +315,7 @@ function CartPage() {
 
           <div
             style={{
-              borderTop:
-                "2px solid #ddd",
+              borderTop: "2px solid #ddd",
               marginTop: "40px",
               paddingTop: "30px",
               textAlign: "right",
@@ -370,48 +330,42 @@ function CartPage() {
             </h2>
 
             <p>
-              <strong>
-                Subtotal:
-              </strong>{" "}
-              ₱
-              {subtotal.toLocaleString(
-                "en-PH"
-              )}
+              <strong>Subtotal:</strong> ₱
+              {subtotal.toLocaleString("en-PH")}
             </p>
 
-         <p>
-  <strong>Starting Delivery Fee:</strong> ₱200
-</p>
-
-<p
-  style={{
-    fontSize: "14px",
-    color: "#666",
-    marginTop: "5px",
-  }}
->
-</p>
+            <p>
+              <strong>
+                Starting Delivery Fee:
+              </strong>{" "}
+              ₱200
+            </p>
 
             <h2
-  style={{
-    marginTop: "5px",
-    fontSize: "22px",
-    fontWeight: "700",
-  }}
->
-  Total: ₱
-  {grandTotal.toLocaleString("en-PH")}
-</h2>
-<p
-  style={{
-    fontSize: "14px",
-    color: "#666",
-    marginTop: "8px",
-    marginBottom: "20px",
-  }}
->
-  Final delivery fee will be calculated at checkout.
-</p>
+              style={{
+                marginTop: "5px",
+                fontSize: "22px",
+                fontWeight: "700",
+              }}
+            >
+              Total: ₱
+              {grandTotal.toLocaleString(
+                "en-PH"
+              )}
+            </h2>
+
+            <p
+              style={{
+                fontSize: "14px",
+                color: "#666",
+                marginTop: "8px",
+                marginBottom: "20px",
+              }}
+            >
+              Final delivery fee will be
+              calculated at checkout.
+            </p>
+
             <button
               onClick={() =>
                 navigate("/order", {
@@ -425,14 +379,12 @@ function CartPage() {
               }
               style={{
                 marginTop: "20px",
-                padding:
-                  "14px 30px",
+                padding: "14px 30px",
                 background: "#000",
                 color: "#fff",
                 border: "none",
                 cursor: "pointer",
-                letterSpacing:
-                  "1px",
+                letterSpacing: "1px",
               }}
             >
               CHECKOUT
