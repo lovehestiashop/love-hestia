@@ -101,7 +101,7 @@ function ProductsPage() {
                   <img
                     src={imageUrl}
                     alt={item.title.rendered}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover transition duration-300 hover:scale-105"
                   />
                 </div>
 
@@ -110,78 +110,22 @@ function ProductsPage() {
                     {item.title.rendered}
                   </h3>
 
-                  <p className="mb-3 text-sm font-bold text-neutral-600">
+                  <p className="mb-2 text-sm font-bold text-neutral-600">
                     ₱
-                    {Number(price).toLocaleString(
-                      "en-PH",
-                      {
-                        minimumFractionDigits: 2,
-                      }
-                    )}
+                    {Number(price).toLocaleString("en-PH", {
+                      minimumFractionDigits: 2,
+                    })}
                   </p>
 
-                  <button
-                    type="button"
-                    disabled={!isAvailable}
-                    onClick={() => {
-                      if (!isAvailable) {
-                        alert(
-                          "This item is currently unavailable."
-                        );
-                        return;
-                      }
-
-                      const cart =
-                        JSON.parse(
-                          localStorage.getItem("cart")
-                        ) || [];
-
-                      const existingItem =
-                        cart.find(
-                          (cartItem) =>
-                            cartItem.product.id ===
-                            item.id
-                        );
-
-                      if (existingItem) {
-                        existingItem.quantity += 1;
-                      } else {
-                        cart.push({
-                          product: item,
-                          quantity: 1,
-                        });
-                      }
-
-                      localStorage.setItem(
-                        "cart",
-                        JSON.stringify(cart)
-                      );
-
-                      alert("Added to cart!");
-                    }}
-                    className="mb-2 rounded border border-neutral-800 px-6 py-2 text-sm tracking-widest uppercase"
-                  >
-                    {isAvailable
-                      ? "Add to Cart"
-                      : "Sold Out"}
-                  </button>
-
-                  <button
-                    type="button"
-                    disabled={!isAvailable}
-                    onClick={() =>
-                      navigate("/order", {
-                        state: {
-                          product: item,
-                        },
-                      })
-                    }
-                    className="rounded bg-black px-6 py-2 text-sm tracking-widest uppercase text-white"
-                  >
-                    {isAvailable
-                      ? "BUY NOW"
-                      : "Unavailable"}
-                  </button>
+                  {isAvailable ? (
+                    <span className="text-sm font-medium text-green-700">
+                      Available
+                    </span>
+                  ) : (
+                    <span className="text-sm font-medium text-red-600">
+                      Sold Out
+                    </span>
+                  )}
                 </div>
               </div>
             );
