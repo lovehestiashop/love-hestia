@@ -189,7 +189,7 @@ if (orderData.cart?.length) {
   }
 }
 
-sendWebhook();
+// sendWebhook();
 
 return res.data;
 
