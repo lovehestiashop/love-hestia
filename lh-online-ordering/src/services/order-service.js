@@ -17,9 +17,11 @@ async function uploadFile(file, token) {
 async function sendWebhook() {
   try {
     console.log("Triggering webhook");
-    await api.post("/aiwu/v1/webhook/12_1/", {
-      headers: { "Content-Type": "application/json" },
-    });
+   await api.post(
+  "/aiwu/v1/webhook/12_1/",
+  {},
+  { headers: { "Content-Type": "application/json" } },
+);
   } catch (err) {
     console.error("Webhook failed:", err.response?.data || err.message);
   }
