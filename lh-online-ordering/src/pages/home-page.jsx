@@ -60,8 +60,16 @@ if (!acf) {
         );
 
         setFloristForADayImages(images);
-      } catch (error) {
-        console.error(error);
+      } 
+      catch (error) {
+  console.error(error);
+
+  setFloristForADayImages([
+    {
+      imgUrl: workshopImage,
+    },
+  ]);
+}
       }
     };
 
