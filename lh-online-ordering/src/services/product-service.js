@@ -10,19 +10,12 @@ async function getToken() {
         username: "admin",
         password: "admin",
       },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
+      { headers: { "Content-Type": "application/json" } },
     );
 
     return res.data.token;
   } catch (err) {
-    console.error(
-      "JWT Token Error:",
-      err.response?.data || err.message,
-    );
+    console.error("JWT Token Error:", err.response?.data || err.message);
     throw err;
   }
 }
@@ -45,9 +38,6 @@ export const productService = {
   },
 
   async updateStock(productId, newStock) {
-    console.log("productId:", productId);
-    console.log("newStock:", newStock);
-
     const token = await getToken();
 
     const formData = new FormData();
