@@ -89,29 +89,39 @@ return (
             display: "block",
           }}
         />
-
-        {/* THUMBNAILS */}
-        <div
-          style={{
-            display: "flex",
-            gap: "10px",
-            marginTop: "20px",
-            flexWrap: "wrap",
-          }}
-        >
-         style={{
-  width: "120px",
-  height: "140px",
-  objectFit: "cover",
-  cursor: "pointer",
-  border:
-    selectedImage === image
-      ? "2px solid #000"
-      : "1px solid #ddd",
-  transition: "0.3s ease",
-}}
-        </div>
-      </div>
+{/* THUMBNAILS */}
+<div
+  style={{
+    display: "flex",
+    gap: "18px",
+    marginTop: "25px",
+    flexWrap: "wrap",
+    alignItems: "center",
+  }}
+>
+  {gallery.map((image, index) => (
+    <img
+      key={index}
+      src={image}
+      alt=""
+      onClick={() =>
+        setSelectedImage(image)
+      }
+      style={{
+        width: "130px",
+        height: "180px",
+        objectFit: "cover",
+        cursor: "pointer",
+        border:
+          selectedImage === image
+            ? "2px solid #000"
+            : "1px solid #ddd",
+        transition: "0.3s ease",
+      }}
+    />
+  ))}
+</div>
+       
 
       {/* RIGHT SIDE - PRODUCT INFO */}
       <div
