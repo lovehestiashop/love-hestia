@@ -125,8 +125,10 @@ if (cart.length > 0) {
       Number(latestProduct?.acf?.stock || 0);
 
     const qtyInCart = cart.filter(
-      (item) => item.id === cartItem.id
-    ).length;
+  (item) =>
+    item.product?.id ===
+    cartItem.product?.id
+).length;
 
     if (latestStock < qtyInCart) {
       alert(
