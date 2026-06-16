@@ -215,7 +215,7 @@ function WorkshopPage() {
         {/* CTA */}
 <div className="mt-20 text-center">
   <p className="mb-6 text-neutral-600 max-w-2xl mx-auto leading-relaxed">
-    Let's plan your workshop together. Send us a message on Instagram and we'll help you choose the perfect arrangement, date, and workshop setup.
+    Let's plan your workshop together.
   </p>
 
   <a
