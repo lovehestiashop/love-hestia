@@ -81,9 +81,8 @@ function WorkshopPage() {
   if (!data) return null;
 
   console.log("Workshop Data:", data);
-  console.log("Workshop Intro:", data.intro);
-  console.log("Workshop Pricing:", data.pricing);
-  console.log("Workshop Details:", data.details);
+console.log("Workshop Intro Raw:", data?.intro);
+console.log("Workshop Intro Type:", typeof data?.intro);
 
   return (
     <div>
@@ -174,6 +173,9 @@ function WorkshopPage() {
           <h1 className="text-center text-4xl mb-10">
             {data.title}
           </h1>
+          <div className="bg-yellow-100 p-4 mb-6">
+  TEST: {data.intro}
+</div>
 
           {/* INTRO */}
           {data.intro && (
