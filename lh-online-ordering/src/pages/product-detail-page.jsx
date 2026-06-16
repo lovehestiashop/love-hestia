@@ -80,11 +80,15 @@ function ProductDetailPage() {
       >
         {/* LEFT COLUMN */}
         <div
-          style={{
-            flex: 1,
-            minWidth: "400px",
-          }}
-        >
+  style={{
+    flex: 1,
+    minWidth: 0,
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  }}
+>
           <img
             src={selectedImage}
             alt={product.title.rendered}
