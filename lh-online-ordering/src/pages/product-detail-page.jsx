@@ -177,13 +177,7 @@ useEffect(() => {
     BUY NOW
   </button>
 </div>
-      <p>
-        Stock: {product.acf?.stock}
-      </p>
-
-      <p>
-        {product.acf?.product_description}
-      </p>
+      
     </div>
   );
 }
