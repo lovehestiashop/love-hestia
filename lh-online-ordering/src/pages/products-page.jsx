@@ -81,8 +81,7 @@ function ProductsPage() {
   /** Price mapping */
   const price =
     item.acf?.price || item.meta?.price || item.price || 0;
-      const stock = Number(item.acf?.stock || 0);
-const isAvailable = stock > 0;
+const isAvailable = Boolean(item.acf?.availability);
 
             return (
               <div key={item.id} className="flex flex-col">
