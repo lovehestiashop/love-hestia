@@ -178,14 +178,6 @@ if (
 if (orderData.cart?.length) {
   for (const item of orderData.cart) {
 
-    console.log("Cart item:", item);
-    console.log("Item ID:", item.id);
-
-    if (!item.id) {
-      console.error("Missing product ID", item);
-      continue;
-    }
-
     const newStock = Math.max(
       0,
       Number(item.acf?.stock || 0) - 1,
