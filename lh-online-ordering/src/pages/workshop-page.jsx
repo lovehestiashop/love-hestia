@@ -78,11 +78,9 @@ function WorkshopPage() {
     );
   };
 
-  if (!data) return null;
-
-  return (
-    console.log("Workshop Data:", data);
+   console.log("Workshop Data:", data);
     <div>
+return (
       <HeaderComponent />
 
       <section className="bg-[#faf9f7] text-neutral-700">
