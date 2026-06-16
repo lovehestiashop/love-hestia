@@ -115,10 +115,11 @@ if (cart.length > 0) {
     await productService.getAll();
 
   for (const cartItem of cart) {
-    const latestProduct =
-      latestProducts.find(
-        (p) => p.id === cartItem.id
-      );
+   const latestProduct =
+  latestProducts.find(
+    (p) =>
+      p.id === cartItem.product?.id
+  );
 
     const latestStock =
       Number(latestProduct?.acf?.stock || 0);
