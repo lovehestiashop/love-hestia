@@ -190,17 +190,18 @@ function ProductDetailPage() {
           </h1>
 
           <h2
-            style={{
-              marginBottom: "30px",
-              fontWeight: "400",
-            }}
-          >
-            ₱
-            {Number(
-              product.acf?.price || 0
-            ).toLocaleString("en-PH")}
-          </h2>
-
+  style={{
+    marginBottom: "40px",
+    fontSize: "28px",
+    fontWeight: "700",
+    color: "#000",
+  }}
+>
+  ₱
+  {Number(
+    product.acf?.price || 0
+  ).toLocaleString("en-PH")}
+</h2>
           <div
             style={{
               marginBottom: "40px",
