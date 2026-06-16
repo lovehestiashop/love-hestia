@@ -146,16 +146,12 @@ onClick={() => {
     (cartItem) => cartItem.product.id === item.id
   );
 
-  const stock =
-    Number(item.acf?.stock || 0);
+const isAvailable = Boolean(item.acf?.availability);
 
-  if (existingItem) {
-    if (existingItem.quantity >= stock) {
-      alert(
-        `Only ${stock} available in stock`
-      );
-      return;
-    }
+if (!isAvailable) {
+  alert("This item is currently unavailable.");
+  return;
+}
 
     existingItem.quantity += 1;
   } else {
