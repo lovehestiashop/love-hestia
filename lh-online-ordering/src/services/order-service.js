@@ -169,10 +169,9 @@ if (
   );
 
   await productService.updateStock(
-    orderData.product_id,
-    newStock,
-  );
-}
+  item.products.id,
+  newStock,
+);
 
 // Cart checkout
 if (orderData.cart?.length) {
@@ -183,11 +182,11 @@ if (orderData.cart?.length) {
 
     const newStock = Math.max(
       0,
-      Number(item.acf?.stock || 0) - 1,
+      Number(item.products?.acf?.stock || 0) - item.quantity,
     );
 
     await productService.updateStock(
-      item.id,
+      item.products.id,
       newStock,
     );
   }
