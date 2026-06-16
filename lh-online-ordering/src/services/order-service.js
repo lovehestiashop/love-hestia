@@ -178,6 +178,9 @@ if (
 if (orderData.cart?.length) {
   for (const item of orderData.cart) {
 console.log("FULL ITEM:", item);
+console.log("PRODUCT:", item.product);
+console.log("PRODUCT ID:", item.product?.id);
+console.log("PRODUCT OBJECT:", JSON.stringify(item.product, null, 2));
     const newStock = Math.max(
       0,
       Number(item.acf?.stock || 0) - 1,
