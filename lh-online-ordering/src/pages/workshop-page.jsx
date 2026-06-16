@@ -166,10 +166,12 @@ function WorkshopPage() {
             {data.title}
           </h1>
 
-          {/* INTRO */}
-          <div className="text-center max-w-3xl mx-auto mb-12 leading-relaxed">
-            <p>{data.intro}</p>
-          </div>
+        {/* INTRO */}
+<div className="text-center max-w-3xl mx-auto mb-12">
+  <p className="text-lg text-red-500 font-bold">
+    {data.intro}
+  </p>
+</div>
 
           {/* PRICING */}
           <div className="mb-12">
