@@ -95,17 +95,17 @@ alert("Added to cart!");
 
 };
 
-return ( <div className="bg-[#faf9f7] min-h-screen py-16 px-6">
+return ( <div className="bg-[#faf9f7] min-h-screen py-12 px-6">
 
 ```
   <div className="max-w-7xl mx-auto">
 
-    <div className="grid md:grid-cols-2 gap-16 items-start">
+    <div className="grid md:grid-cols-2 gap-12">
 
       {/* LEFT SIDE */}
       <div>
 
-        <div className="overflow-hidden rounded-xl bg-white shadow-sm">
+        <div className="bg-white rounded-lg overflow-hidden">
           <img
             src={selectedImage}
             alt={product.title.rendered}
@@ -131,14 +131,13 @@ return ( <div className="bg-[#faf9f7] min-h-screen py-16 px-6">
                 w-20
                 h-20
                 object-cover
-                rounded-md
+                rounded
                 cursor-pointer
                 border
-                transition
                 ${
                   selectedImage === image
                     ? "border-black"
-                    : "border-gray-200"
+                    : "border-gray-300"
                 }
               `}
             />
@@ -150,7 +149,7 @@ return ( <div className="bg-[#faf9f7] min-h-screen py-16 px-6">
       {/* RIGHT SIDE */}
       <div className="md:sticky md:top-10">
 
-        <h1 className="text-4xl md:text-5xl text-neutral-800 mb-4">
+        <h1 className="text-4xl text-neutral-800 mb-4">
           {product.title.rendered}
         </h1>
 
@@ -161,7 +160,7 @@ return ( <div className="bg-[#faf9f7] min-h-screen py-16 px-6">
           ).toLocaleString("en-PH")}
         </p>
 
-        <p className="text-lg text-neutral-600 leading-relaxed mb-6">
+        <p className="text-lg leading-relaxed text-neutral-600 mb-6">
           {product.acf?.product_description}
         </p>
 
@@ -177,8 +176,8 @@ return ( <div className="bg-[#faf9f7] min-h-screen py-16 px-6">
               px-8
               py-4
               border
-              border-neutral-800
-              hover:bg-neutral-800
+              border-black
+              hover:bg-black
               hover:text-white
               transition
             "
@@ -197,7 +196,7 @@ return ( <div className="bg-[#faf9f7] min-h-screen py-16 px-6">
             className="
               px-8
               py-4
-              bg-neutral-800
+              bg-black
               text-white
               hover:opacity-90
               transition
@@ -215,27 +214,36 @@ return ( <div className="bg-[#faf9f7] min-h-screen py-16 px-6">
     {/* DESCRIPTION */}
     <div className="max-w-4xl mt-24">
 
-      <h2 className="text-3xl text-neutral-800 mb-6">
+      <h2 className="text-3xl mb-6">
         Description
       </h2>
 
-      <div className="text-neutral-700 leading-relaxed">
+      <p className="leading-relaxed text-neutral-700">
         {product.acf?.product_description}
-      </div>
+      </p>
 
     </div>
 
     {/* CARE NOTES */}
-    <div className="max-w-4xl mt-16 mb-20">
+    <div className="max-w-4xl mt-16 pb-20">
 
-      <h2 className="text-3xl text-neutral-800 mb-6">
+      <h2 className="text-3xl mb-6">
         Care Notes
       </h2>
 
       <ul className="space-y-3 text-neutral-700">
-        <li>• Keep away from direct sunlight.</li>
-        <li>• Avoid humid environments.</li>
-        <li>• No watering required.</li>
+        <li>
+          • Keep away from direct sunlight.
+        </li>
+
+        <li>
+          • Avoid humid environments.
+        </li>
+
+        <li>
+          • No watering required.
+        </li>
+
         <li>
           • Preserved flowers can last for years
           with proper care.
