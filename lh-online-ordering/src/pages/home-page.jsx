@@ -78,7 +78,6 @@ if (!floristForADayImages.length) {
 }
 
 return (
-  return (
     <div className="text-neutral-700 bg-neutral-50">
 
       {/* HEADER */}
