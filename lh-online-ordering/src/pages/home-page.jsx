@@ -32,14 +32,6 @@ if (!acf) {
   );
   return;
 }
-
-if (!acf) {
-  console.error(
-    "ACF data missing from page 4973"
-  );
-  return;
-}
-
         const imageIds = [
           acf.florist_image_1,
           acf.florist_image_2,
