@@ -101,7 +101,9 @@ useEffect(() => {
     ))}
   </div>
 </div>
-
+<p>
+  {product.acf?.product_description}
+</p>
       <h1>{product.title.rendered}</h1>
 
       <h2>
