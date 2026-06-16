@@ -169,9 +169,10 @@ if (
   );
 
   await productService.updateStock(
-  item.products.id,
-  newStock,
-);
+    orderData.product_id,
+    newStock,
+  );
+}
 
 // Cart checkout
 if (orderData.cart?.length) {
@@ -180,13 +181,24 @@ if (orderData.cart?.length) {
   for (const item of orderData.cart) {
     console.log("Updating product:", item);
 
+    const productId =
+      item.products?.id || item.id;
+
+    const currentStock =
+      item.products?.acf?.stock ||
+      item.acf?.stock ||
+      0;
+
+    const quantity =
+      item.quantity || 1;
+
     const newStock = Math.max(
       0,
-      Number(item.products?.acf?.stock || 0) - item.quantity,
+      Number(currentStock) - quantity,
     );
 
     await productService.updateStock(
-      item.products.id,
+      productId,
       newStock,
     );
   }
