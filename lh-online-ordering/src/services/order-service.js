@@ -191,7 +191,5 @@ sendWebhook();
 
 return res.data;
 
-return res.data;
-
 },
 };
