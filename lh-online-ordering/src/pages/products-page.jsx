@@ -106,11 +106,11 @@ function ProductsPage() {
                 </div>
 
                 <div className="mt-3 flex flex-col items-center text-center">
-                  <h3 className="mb-1 text-sm font-medium text-neutral-800">
-                    {item.title.rendered}
-                  </h3>
+                  <h3 className="mb-2 text-xl font-semibold tracking-wide text-neutral-800">
+  {item.title.rendered}
+</h3>
 
-                  <p className="mb-2 text-sm font-bold text-neutral-600">
+<p className="mb-3 text-lg font-medium text-neutral-700">
                     ₱
                     {Number(price).toLocaleString("en-PH", {
                       minimumFractionDigits: 2,
