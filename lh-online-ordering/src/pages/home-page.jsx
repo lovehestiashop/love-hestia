@@ -20,6 +20,19 @@ function HomePage() {
   useEffect(() => {
     const loadFloristImages = async () => {
       try {
+        useEffect(() => {
+  if (!floristForADayImages.length) return;
+
+  const interval = setInterval(() => {
+    setCurrentImage(
+      (prev) =>
+        (prev + 1) %
+        floristForADayImages.length
+    );
+  }, 4000);
+
+  return () => clearInterval(interval);
+}, [floristForADayImages]);
         const res = await axios.get(
           "https://api.lovehestia.shop/wp-json/wp/v2/pages/4973?_fields=acf"
         );
