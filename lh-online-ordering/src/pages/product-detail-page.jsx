@@ -76,6 +76,7 @@ function ProductDetailPage() {
           gap: "60px",
           alignItems: "flex-start",
           flexWrap: "wrap",
+          justifyContent: "center",
         }}
       >
         {/* LEFT COLUMN */}
@@ -89,24 +90,27 @@ function ProductDetailPage() {
     alignItems: "center",
   }}
 >
-          <img
-            src={selectedImage}
-            alt={product.title.rendered}
-            style={{
-              width: "100%",
-              maxWidth: "600px",
-              display: "block",
-            }}
-          />
-
+          
+<img
+  src={selectedImage}
+  alt={product.title.rendered}
+  style={{
+    width: "100%",
+    maxWidth: "600px",
+    display: "block",
+    margin: "0 auto",
+  }}
+/>
           <div
-            style={{
-              display: "flex",
-              gap: "18px",
-              marginTop: "25px",
-              flexWrap: "wrap",
-            }}
-          >
+  style={{
+    display: "flex",
+    gap: "18px",
+    marginTop: "25px",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    width: "100%",
+  }}
+>
             {gallery.map(
               (image, index) => (
                 <img
