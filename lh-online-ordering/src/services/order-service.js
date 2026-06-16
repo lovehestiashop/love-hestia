@@ -183,12 +183,14 @@ if (orderData.cart?.length) {
     );
 
     console.log("Cart item:", item);
-console.log("Item ID:", item.id);
+    console.log("Item ID:", item.id);
 
-await productService.updateStock(
-  item.id,
-  newStock,
-);
+    await productService.updateStock(
+      item.id,
+      newStock,
+    );
+  }
+}
 
 sendWebhook();
 
