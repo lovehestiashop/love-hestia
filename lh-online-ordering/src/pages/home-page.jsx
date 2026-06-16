@@ -69,10 +69,15 @@ function HomePage() {
     );
   };
 
-  if (!floristForADayImages.length) {
-    return null;
-  }
+if (!floristForADayImages.length) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      Loading content...
+    </div>
+  );
+}
 
+return (
   return (
     <div className="text-neutral-700 bg-neutral-50">
 
