@@ -81,6 +81,7 @@ function WorkshopPage() {
   if (!data) return null;
 
   return (
+    console.log("Workshop Data:", data);
     <div>
       <HeaderComponent />
 
