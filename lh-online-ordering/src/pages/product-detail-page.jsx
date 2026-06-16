@@ -10,6 +10,7 @@ function ProductDetailPage() {
   const navigate = useNavigate();
 
   const product = state?.product;
+  const isAvailable = Boolean(product?.acf?.availability);
 
   const [gallery, setGallery] = useState([]);
   const [selectedImage, setSelectedImage] =
@@ -214,94 +215,113 @@ function ProductDetailPage() {
               }
             </p>
           </div>
+<div
+  style={{
+    marginTop: "10px",
+  }}
+>
+  {isAvailable ? (
+    <div
+      style={{
+        display: "flex",
+        gap: "15px",
+        flexWrap: "wrap",
+      }}
+    >
+      <button
+        onClick={() => {
+          const cart =
+            JSON.parse(
+              localStorage.getItem("cart")
+            ) || [];
 
-          <div
-            style={{
-              display: "flex",
-              gap: "15px",
-              flexWrap: "wrap",
-            }}
-          >
-            <button
-              onClick={() => {
-                const cart =
-                  JSON.parse(
-                    localStorage.getItem(
-                      "cart"
-                    )
-                  ) || [];
+          const existingItem =
+            cart.find(
+              (item) =>
+                item.product?.id ===
+                product.id
+            );
 
-                const existingItem =
-                  cart.find(
-                    (item) =>
-                      item.product
-                        ?.id ===
-                      product.id
-                  );
+          if (existingItem) {
+            existingItem.quantity += 1;
+          } else {
+            cart.push({
+              product,
+              quantity: 1,
+            });
+          }
 
-                if (
-                  existingItem
-                ) {
-                  existingItem.quantity += 1;
-                } else {
-                  cart.push({
-                    product,
-                    quantity: 1,
-                  });
-                }
+          localStorage.setItem(
+            "cart",
+            JSON.stringify(cart)
+          );
 
-                localStorage.setItem(
-                  "cart",
-                  JSON.stringify(
-                    cart
-                  )
-                );
+          alert("Added to cart!");
+        }}
+        style={{
+          padding: "14px 30px",
+          border: "1px solid #000",
+          background: "#fff",
+          cursor: "pointer",
+          letterSpacing: "1px",
+        }}
+      >
+        ADD TO CART
+      </button>
 
-                alert(
-                  "Added to cart!"
-                );
-              }}
-              style={{
-                padding:
-                  "14px 30px",
-                border:
-                  "1px solid #000",
-                background:
-                  "#fff",
-                cursor:
-                  "pointer",
-              }}
-            >
-              ADD TO CART
-            </button>
+      <button
+        onClick={() =>
+          navigate("/order", {
+            state: {
+              product,
+            },
+          })
+        }
+        style={{
+          padding: "14px 30px",
+          border: "none",
+          background: "#000",
+          color: "#fff",
+          cursor: "pointer",
+          letterSpacing: "1px",
+        }}
+      >
+        BUY NOW
+      </button>
+    </div>
+  ) : (
+    <div>
+      <p
+        style={{
+          color: "#8B0000",
+          fontSize: "14px",
+          letterSpacing: "3px",
+          textTransform: "uppercase",
+          marginBottom: "15px",
+          fontWeight: "600",
+        }}
+      >
+        Out of Stock
+      </p>
 
-            <button
-              onClick={() =>
-                navigate(
-                  "/order",
-                  {
-                    state: {
-                      product,
-                    },
-                  }
-                )
-              }
-              style={{
-                padding:
-                  "14px 30px",
-                border:
-                  "none",
-                background:
-                  "#000",
-                color:
-                  "#fff",
-                cursor:
-                  "pointer",
-              }}
-            >
-              BUY NOW
-            </button>
-          </div>
+      <button
+        disabled
+        style={{
+          padding: "14px 30px",
+          border: "1px solid #999",
+          background: "#f5f5f5",
+          color: "#999",
+          cursor: "not-allowed",
+          letterSpacing: "2px",
+          textTransform: "uppercase",
+        }}
+      >
+        Unavailable
+      </button>
+    </div>
+  )}
+</div>
+         
         </div>
       </div>
     </div>
