@@ -38,6 +38,8 @@ export const productService = {
   },
 
   async updateStock(productId, newStock) {
+    console.log("updateStock productId:", productId);
+console.log("updateStock newStock:", newStock);
     const token = await getToken();
 
     const formData = new FormData();
