@@ -36,14 +36,13 @@ function WorkshopPage() {
           (res) => res.data.source_url
         );
 
-       setData({
-  title: acf.workshop_title,
-  introduction: acf.workshop_introduction,
-  pricing: acf.pricing,
-  details: acf.workshop_details,
-  howToBook: acf.how_to_book,
-  images,
-});
+        setData({
+          title: acf.workshop_title,
+          intro: acf.workshop_intro,
+          pricing: acf.workshop_pricing,
+          details: acf.workshop_details,
+          images,
+        });
       } catch (error) {
         console.error(error);
       }
@@ -92,7 +91,6 @@ function WorkshopPage() {
 
           <div className="relative">
 
-            {/* LEFT */}
             <button
               onClick={prevImage}
               className="
@@ -112,10 +110,8 @@ function WorkshopPage() {
               ‹
             </button>
 
-            {/* IMAGE */}
             <div className="overflow-hidden rounded-xl">
               <img
-                key={currentImage}
                 src={data.images[currentImage]}
                 alt="Workshop"
                 className="
@@ -123,13 +119,10 @@ function WorkshopPage() {
                   h-[350px]
                   md:h-[700px]
                   object-cover
-                  transition-all
-                  duration-700
                 "
               />
             </div>
 
-            {/* RIGHT */}
             <button
               onClick={nextImage}
               className="
@@ -169,27 +162,44 @@ function WorkshopPage() {
         {/* CONTENT */}
         <div className="max-w-4xl mx-auto px-6 py-20">
 
-  <h1 className="text-center text-4xl mb-8">
-    {data.title}
-  </h1>
+          <h1 className="text-center text-4xl mb-10">
+            {data.title}
+          </h1>
 
-  {/* Introduction */}
-  <div className="mb-12 text-center text-lg leading-relaxed">
-    {data.introduction}
-  </div>
+          {/* INTRO */}
+          <div className="text-center max-w-3xl mx-auto mb-12 leading-relaxed">
+            <p>{data.intro}</p>
+          </div>
 
-  <div className="max-w-4xl mx-auto px-6 py-20">
+          {/* PRICING */}
+          <div className="mb-12">
+            <h2 className="text-2xl font-medium mb-4">
+              Pricing
+            </h2>
 
-  <div
-    className="prose prose-neutral max-w-none"
-    dangerouslySetInnerHTML={{
-      __html: data.details,
-    }}
-  />
+            <div
+              className="prose prose-neutral max-w-none"
+              dangerouslySetInnerHTML={{
+                __html: data.pricing,
+              }}
+            />
+          </div>
 
-</div>
+          {/* DETAILS */}
+          <div>
+            <h2 className="text-2xl font-medium mb-4">
+              Workshop Details
+            </h2>
 
-</div>
+            <div
+              className="prose prose-neutral max-w-none"
+              dangerouslySetInnerHTML={{
+                __html: data.details,
+              }}
+            />
+          </div>
+
+        </div>
 
       </section>
 
