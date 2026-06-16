@@ -70,7 +70,12 @@ const cartGrandTotal = state?.grandTotal || 0;
     date_and_time_of_delivery: "",
     product_ordered:
   product?.title?.rendered ||
-  cart.map((item) => item.title?.rendered).join(", "),
+  cart
+    .map(
+      (item) =>
+        item.product?.title?.rendered
+    )
+    .join(", "),
     customize_product: "",
     small_card_note: "",
     proof_of_payment: null,
