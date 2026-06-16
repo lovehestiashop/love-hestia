@@ -57,129 +57,186 @@ useEffect(() => {
   if (!product) {
     return <div>Product not found.</div>;
   }
-
-
-  return (
-    <div style={{ padding: "50px" }}>
-     <div>
-  <img
-    src={selectedImage}
-    alt={product.title.rendered}
-    style={{
-      width: "500px",
-      maxWidth: "100%",
-      marginBottom: "20px",
-    }}
-  />
-
+return (
   <div
     style={{
-      display: "flex",
-      gap: "10px",
-      flexWrap: "wrap",
+      maxWidth: "1200px",
+      margin: "0 auto",
+      padding: "50px 30px",
     }}
   >
-    {gallery.map((image, index) => (
-      <img
-        key={index}
-        src={image}
-        alt=""
-        onClick={() =>
-          setSelectedImage(image)
-        }
+    <div
+      style={{
+        display: "flex",
+        gap: "60px",
+        alignItems: "flex-start",
+        flexWrap: "wrap",
+      }}
+    >
+      {/* LEFT SIDE - IMAGE */}
+      <div
         style={{
-          width: "80px",
-          height: "80px",
-          objectFit: "cover",
-          cursor: "pointer",
-          border:
-            selectedImage === image
-              ? "2px solid black"
-              : "1px solid #ddd",
+          flex: "1",
+          minWidth: "400px",
         }}
-      />
-    ))}
-  </div>
-</div>
-<p>
-  {product.acf?.product_description}
-</p>
-      <h1>{product.title.rendered}</h1>
+      >
+        <img
+          src={selectedImage}
+          alt={product.title.rendered}
+          style={{
+            width: "100%",
+            maxWidth: "600px",
+            display: "block",
+          }}
+        />
 
-      <h2>
-        ₱
-        {Number(
-          product.acf?.price || 0
-        ).toLocaleString("en-PH")}
-      </h2>
-<div
-  style={{
-    display: "flex",
-    gap: "10px",
-    marginTop: "20px",
-    marginBottom: "20px",
-  }}
->
-  <button
-    onClick={() => {
-      const cart =
-        JSON.parse(
-          localStorage.getItem("cart")
-        ) || [];
+        {/* THUMBNAILS */}
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            marginTop: "20px",
+            flexWrap: "wrap",
+          }}
+        >
+          {gallery.map((image, index) => (
+            <img
+              key={index}
+              src={image}
+              alt=""
+              onClick={() =>
+                setSelectedImage(image)
+              }
+              style={{
+                width: "90px",
+                height: "90px",
+                objectFit: "cover",
+                cursor: "pointer",
+                border:
+                  selectedImage === image
+                    ? "2px solid #000"
+                    : "1px solid #ddd",
+              }}
+            />
+          ))}
+        </div>
+      </div>
 
-      const existingItem = cart.find(
-        (item) =>
-          item.product?.id === product.id
-      );
+      {/* RIGHT SIDE - PRODUCT INFO */}
+      <div
+        style={{
+          flex: "1",
+          minWidth: "350px",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "42px",
+            marginBottom: "10px",
+            fontWeight: "500",
+          }}
+        >
+          {product.title.rendered}
+        </h1>
 
-      if (existingItem) {
-        existingItem.quantity += 1;
-      } else {
-        cart.push({
-          product,
-          quantity: 1,
-        });
-      }
+        <h2
+          style={{
+            marginBottom: "30px",
+            fontWeight: "400",
+          }}
+        >
+          ₱
+          {Number(
+            product.acf?.price || 0
+          ).toLocaleString("en-PH")}
+        </h2>
 
-      localStorage.setItem(
-        "cart",
-        JSON.stringify(cart)
-      );
+        {/* DESCRIPTION */}
+        <div
+          style={{
+            marginBottom: "40px",
+            lineHeight: "1.9",
+            color: "#444",
+          }}
+        >
+          <p>
+            {product.acf?.product_description}
+          </p>
+        </div>
 
-      alert("Added to cart!");
-    }}
-    style={{
-      padding: "12px 25px",
-      border: "1px solid #000",
-      background: "#fff",
-      cursor: "pointer",
-    }}
-  >
-    ADD TO CART
-  </button>
+        {/* BUTTONS */}
+        <div
+          style={{
+            display: "flex",
+            gap: "15px",
+            flexWrap: "wrap",
+          }}
+        >
+          <button
+            onClick={() => {
+              const cart =
+                JSON.parse(
+                  localStorage.getItem("cart")
+                ) || [];
 
-  <button
-    onClick={() =>
-      navigate("/order", {
-        state: {
-          product,
-        },
-      })
-    }
-    style={{
-      padding: "12px 25px",
-      border: "none",
-      background: "#000",
-      color: "#fff",
-      cursor: "pointer",
-    }}
-  >
-    BUY NOW
-  </button>
-</div>
-      
+              const existingItem =
+                cart.find(
+                  (item) =>
+                    item.product?.id ===
+                    product.id
+                );
+
+              if (existingItem) {
+                existingItem.quantity += 1;
+              } else {
+                cart.push({
+                  product,
+                  quantity: 1,
+                });
+              }
+
+              localStorage.setItem(
+                "cart",
+                JSON.stringify(cart)
+              );
+
+              alert("Added to cart!");
+            }}
+            style={{
+              padding: "14px 30px",
+              border: "1px solid #000",
+              background: "#fff",
+              cursor: "pointer",
+            }}
+          >
+            ADD TO CART
+          </button>
+
+          <button
+            onClick={() =>
+              navigate("/order", {
+                state: {
+                  product,
+                },
+              })
+            }
+            style={{
+              padding: "14px 30px",
+              border: "none",
+              background: "#000",
+              color: "#fff",
+              cursor: "pointer",
+            }}
+          >
+            BUY NOW
+          </button>
+        </div>
+      </div>
     </div>
-  );
+  </div>
+);
+
+
 }
 
 export default ProductDetailPage;
