@@ -22,28 +22,57 @@ if (orderData.cart?.length) {
     console.log("Updating product:", item);
 
     const productId =
-      item.products?.id || item.id;
+      item.product?.id;
 
     const currentStock =
-      item.products?.acf?.stock ||
-      item.acf?.stock ||
-      0;
+      Number(
+        item.product?.acf?.stock || 0
+      );
 
     const quantity =
-      item.quantity || 1;
+      Number(
+        item.quantity || 1
+      );
 
     const newStock = Math.max(
       0,
-      Number(currentStock) - quantity,
+      currentStock - quantity
     );
+
+    console.log(
+      "Product ID:",
+      productId
+    );
+
+    console.log(
+      "Current Stock:",
+      currentStock
+    );
+
+    console.log(
+      "Quantity:",
+      quantity
+    );
+
+    console.log(
+      "New Stock:",
+      newStock
+    );
+
+    if (!productId) {
+      console.error(
+        "Missing Product ID",
+        item
+      );
+      continue;
+    }
 
     await productService.updateStock(
       productId,
-      newStock,
+      newStock
     );
   }
 }
-
 // sendWebhook();
 
 return res.data;
