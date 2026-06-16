@@ -41,19 +41,18 @@ function ProductsPage() {
     effectRan.current = true;
   }, []);
 
-  /** Filter by product-type */
   const filteredProducts = useMemo(() => {
-  return products
-    .filter((item) =>
-      item["product-type"]?.includes(productTypeId)
-    )
-    .sort((a, b) => {
-      const priceA = Number(a.acf?.price || 0);
-      const priceB = Number(b.acf?.price || 0);
+    return products
+      .filter((item) =>
+        item["product-type"]?.includes(productTypeId)
+      )
+      .sort((a, b) => {
+        const priceA = Number(a.acf?.price || 0);
+        const priceB = Number(b.acf?.price || 0);
 
-      return priceB - priceA;
-    });
-}, [products, productTypeId]);
+        return priceB - priceA;
+      });
+  }, [products, productTypeId]);
 
   if (loading) {
     return <p className="py-24 text-center">Loading...</p>;
@@ -68,51 +67,37 @@ function ProductsPage() {
           {title}
         </h2>
 
-        {/* 2 columns on mobile */}
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 sm:grid-cols-2 md:grid-cols-3">
-          
-      {filteredProducts.map((item) => {
-       console.log(item);
+          {filteredProducts.map((item) => {
+            const imageUrl =
+              item._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
+              "/placeholder.jpg";
 
-  const imageUrl =
-    item._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
-    "/placeholder.jpg";
+            const price =
+              item.acf?.price ||
+              item.meta?.price ||
+              item.price ||
+              0;
 
-  /** Price mapping */
-  const price =
-    item.acf?.price || item.meta?.price || item.price || 0;
-const isAvailable = Boolean(item.acf?.availability);
+            const isAvailable = Boolean(
+              item.acf?.availability
+            );
 
             return (
-              <div key={item.id} className="flex flex-col">
-                {/* Image */}
-               <div
-  className="relative aspect-[3/4] overflow-hidden bg-neutral-200 cursor-pointer"
- onClick={() =>
-  navigate(`/product/${item.id}`, {
-    state: {
-      product: item,
-    },
-  })
-}
->
-
-  <div
-  className="relative aspect-[3/4] overflow-hidden bg-neutral-200 cursor-pointer"
-  onClick={() =>
-    navigate(`/product/${item.id}`, {
-      state: {
-        product: item,
-      },
-    })
-  }
->
-  <img
-    src={imageUrl}
-    alt={item.title.rendered}
-    className="h-full w-full object-cover"
-  />
-</div>
+              <div
+                key={item.id}
+                className="flex flex-col"
+              >
+                <div
+                  className="relative aspect-[3/4] overflow-hidden bg-neutral-200 cursor-pointer"
+                  onClick={() =>
+                    navigate(`/product/${item.id}`, {
+                      state: {
+                        product: item,
+                      },
+                    })
+                  }
+                >
                   <img
                     src={imageUrl}
                     alt={item.title.rendered}
@@ -120,70 +105,83 @@ const isAvailable = Boolean(item.acf?.availability);
                   />
                 </div>
 
-                {/* Product Info */}
                 <div className="mt-3 flex flex-col items-center text-center">
                   <h3 className="mb-1 text-sm font-medium text-neutral-800">
                     {item.title.rendered}
                   </h3>
-                 
-                  {/* Price added */}
-                  <p className="mb-3 text-sm text-neutral-600 font-bold">
+
+                  <p className="mb-3 text-sm font-bold text-neutral-600">
                     ₱
-                    {Number(price).toLocaleString("en-PH", {
-                      minimumFractionDigits: 2,
-                    })}
+                    {Number(price).toLocaleString(
+                      "en-PH",
+                      {
+                        minimumFractionDigits: 2,
+                      }
+                    )}
                   </p>
 
-                 <>
-  <button
-  type="button"
-  disabled={!isAvailable}
-onClick={() => {
-  const cart =
-    JSON.parse(localStorage.getItem("cart")) || [];
+                  <button
+                    type="button"
+                    disabled={!isAvailable}
+                    onClick={() => {
+                      if (!isAvailable) {
+                        alert(
+                          "This item is currently unavailable."
+                        );
+                        return;
+                      }
 
-  const existingItem = cart.find(
-    (cartItem) => cartItem.product.id === item.id
-  );
+                      const cart =
+                        JSON.parse(
+                          localStorage.getItem("cart")
+                        ) || [];
 
-const isAvailable = Boolean(item.acf?.availability);
+                      const existingItem =
+                        cart.find(
+                          (cartItem) =>
+                            cartItem.product.id ===
+                            item.id
+                        );
 
-if (!isAvailable) {
-  alert("This item is currently unavailable.");
-  return;
-}
+                      if (existingItem) {
+                        existingItem.quantity += 1;
+                      } else {
+                        cart.push({
+                          product: item,
+                          quantity: 1,
+                        });
+                      }
 
-    existingItem.quantity += 1;
-  } else {
-    cart.push({
-      product: item,
-      quantity: 1,
-    });
-  }
+                      localStorage.setItem(
+                        "cart",
+                        JSON.stringify(cart)
+                      );
 
-  localStorage.setItem(
-    "cart",
-    JSON.stringify(cart)
-  );
+                      alert("Added to cart!");
+                    }}
+                    className="mb-2 rounded border border-neutral-800 px-6 py-2 text-sm tracking-widest uppercase"
+                  >
+                    {isAvailable
+                      ? "Add to Cart"
+                      : "Sold Out"}
+                  </button>
 
-  alert("Added to cart!");
-}}
-    className="mb-2 rounded border border-neutral-800 px-6 py-2 text-sm tracking-widest uppercase"
-  >
-    {isAvailable ? "Add to Cart" : "Sold Out"}
-  </button>
-
-  <button
-  type="button"
-  disabled={!isAvailable}
-  onClick={() =>
-    navigate("/order", { state: { product: item } })
-  }
-  className="rounded bg-black text-white px-6 py-2 text-sm tracking-widest uppercase"
->
-  {isAvailable ? "BUY NOW" : "Unavailable"}
-</button>
-</>
+                  <button
+                    type="button"
+                    disabled={!isAvailable}
+                    onClick={() =>
+                      navigate("/order", {
+                        state: {
+                          product: item,
+                        },
+                      })
+                    }
+                    className="rounded bg-black px-6 py-2 text-sm tracking-widest uppercase text-white"
+                  >
+                    {isAvailable
+                      ? "BUY NOW"
+                      : "Unavailable"}
+                  </button>
                 </div>
               </div>
             );
