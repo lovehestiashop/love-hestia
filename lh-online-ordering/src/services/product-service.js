@@ -37,22 +37,24 @@ export const productService = {
     return res.data;
   },
 
-  async updateStock(productId, newStock) {
-    const token = await getToken();
+async updateStock(productId, newStock) {
+  console.log("productId:", productId);
+  console.log("newStock:", newStock);
 
-    const formData = new FormData();
-    formData.append("acf[stock]", newStock);
+  const token = await getToken();
 
-    const res = await api.post(
-      `/wp/v2/product/${productId}`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+  const formData = new FormData();
+  formData.append("acf[stock]", newStock);
+
+  const res = await api.post(
+    `/wp/v2/product/${productId}`,
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-    );
+    },
+  );
 
-    return res.data;
-  },
-};
+  return res.data;
+}
