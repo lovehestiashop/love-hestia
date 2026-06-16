@@ -20,19 +20,6 @@ function HomePage() {
   useEffect(() => {
     const loadFloristImages = async () => {
       try {
-        useEffect(() => {
-  if (!floristForADayImages.length) return;
-
-  const interval = setInterval(() => {
-    setCurrentImage(
-      (prev) =>
-        (prev + 1) %
-        floristForADayImages.length
-    );
-  }, 4000);
-
-  return () => clearInterval(interval);
-}, [floristForADayImages]);
         const res = await axios.get(
           "https://api.lovehestia.shop/wp-json/wp/v2/pages/4973?_fields=acf"
         );
@@ -154,42 +141,29 @@ function HomePage() {
         <div className="max-w-5xl mx-auto px-4">
           <div className="relative">
 
+            {/* LEFT ARROW */}
+            <button
+              onClick={prevImage}
+              className="
+                absolute
+                left-3
+                top-1/2
+                -translate-y-1/2
+                z-10
+                w-12
+                h-12
+                rounded-full
+                bg-white/90
+                shadow-lg
+                text-3xl
+                hover:bg-white
+              "
+            >
+              ‹
+            </button>
+
            {/* IMAGE */}
-<div
-  className="overflow-hidden rounded-xl bg-white"
-  onTouchStart={(e) => {
-    window.touchStartX =
-      e.changedTouches[0].screenX;
-  }}
-  onTouchEnd={(e) => {
-    const touchEndX =
-      e.changedTouches[0].screenX;
-
-    if (
-      window.touchStartX - touchEndX >
-      50
-    ) {
-      setCurrentImage(
-        (prev) =>
-          (prev + 1) %
-          floristForADayImages.length
-      );
-    }
-
-    if (
-      touchEndX - window.touchStartX >
-      50
-    ) {
-      setCurrentImage(
-        (prev) =>
-          prev === 0
-            ? floristForADayImages.length -
-              1
-            : prev - 1
-      );
-    }
-  }}
->
+<div className="overflow-hidden rounded-xl bg-white">
   <img
     key={currentImage}
     src={floristForADayImages[currentImage]?.imgUrl}
@@ -205,6 +179,26 @@ function HomePage() {
   />
 </div>
 
+            {/* RIGHT ARROW */}
+            <button
+              onClick={nextImage}
+              className="
+                absolute
+                right-3
+                top-1/2
+                -translate-y-1/2
+                z-10
+                w-12
+                h-12
+                rounded-full
+                bg-white/90
+                shadow-lg
+                text-3xl
+                hover:bg-white
+              "
+            >
+              ›
+            </button>
 
           </div>
 
