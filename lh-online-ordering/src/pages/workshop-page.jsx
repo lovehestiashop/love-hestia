@@ -37,14 +37,13 @@ function WorkshopPage() {
         );
 
         setData({
-          title: acf.workshop_title || "",
-          intro: acf.workshop_intro || "",
-          pricing: acf.workshop_pricing || "",
-          details: acf.workshop_details || "",
+          title: acf.workshop_title,
+          pricing: acf.workshop_pricing,
+          details: acf.workshop_details,
           images,
         });
       } catch (error) {
-        console.error("Workshop Error:", error);
+        console.error(error);
       }
     };
 
@@ -63,6 +62,8 @@ function WorkshopPage() {
     return () => clearInterval(interval);
   }, [data]);
 
+  if (!data) return null;
+
   const nextImage = () => {
     setCurrentImage(
       (prev) => (prev + 1) % data.images.length
@@ -78,19 +79,13 @@ function WorkshopPage() {
     );
   };
 
-  if (!data) return null;
-
-  console.log("Workshop Data:", data);
-console.log("Workshop Intro Raw:", data?.intro);
-console.log("Workshop Intro Type:", typeof data?.intro);
-
   return (
     <div>
       <HeaderComponent />
 
       <section className="bg-[#faf9f7] text-neutral-700">
 
-        {/* HERO SLIDER */}
+        {/* Hero Slider */}
         <div className="max-w-7xl mx-auto pt-12 px-4">
 
           <div className="relative">
@@ -98,51 +93,35 @@ console.log("Workshop Intro Type:", typeof data?.intro);
             <button
               onClick={prevImage}
               className="
-                absolute
-                left-4
-                top-1/2
-                -translate-y-1/2
-                z-20
-                w-12
-                h-12
-                rounded-full
-                bg-white/90
-                shadow-lg
-                text-3xl
+                absolute left-4 top-1/2
+                -translate-y-1/2 z-20
+                w-12 h-12 rounded-full
+                bg-white/90 shadow-lg text-3xl
               "
             >
               ‹
             </button>
 
             <div className="overflow-hidden rounded-xl">
-              {data.images.length > 0 && (
-                <img
-                  src={data.images[currentImage]}
-                  alt="Workshop"
-                  className="
-                    w-full
-                    h-[350px]
-                    md:h-[700px]
-                    object-cover
-                  "
-                />
-              )}
+              <img
+                src={data.images[currentImage]}
+                alt="Workshop"
+                className="
+                  w-full
+                  h-[350px]
+                  md:h-[700px]
+                  object-cover
+                "
+              />
             </div>
 
             <button
               onClick={nextImage}
               className="
-                absolute
-                right-4
-                top-1/2
-                -translate-y-1/2
-                z-20
-                w-12
-                h-12
-                rounded-full
-                bg-white/90
-                shadow-lg
-                text-3xl
+                absolute right-4 top-1/2
+                -translate-y-1/2 z-20
+                w-12 h-12 rounded-full
+                bg-white/90 shadow-lg text-3xl
               "
             >
               ›
@@ -150,7 +129,7 @@ console.log("Workshop Intro Type:", typeof data?.intro);
 
           </div>
 
-          {/* DOTS */}
+          {/* Dots */}
           <div className="flex justify-center gap-3 mt-6">
             {data.images.map((_, index) => (
               <button
@@ -167,56 +146,52 @@ console.log("Workshop Intro Type:", typeof data?.intro);
 
         </div>
 
-        {/* CONTENT */}
+        {/* Content */}
         <div className="max-w-4xl mx-auto px-6 py-20">
 
-          <h1 className="text-center text-4xl mb-10">
+          <h1 className="text-center text-4xl mb-14">
             {data.title}
           </h1>
-          <div className="bg-yellow-100 p-4 mb-6">
-  TEST: {data.intro}
-</div>
 
-          {/* INTRO */}
-          {data.intro && (
-            <div className="text-center max-w-3xl mx-auto mb-12">
-              <p className="leading-relaxed">
-                {data.intro}
-              </p>
-            </div>
-          )}
+          {/* Pricing */}
+          <div className="mb-14">
+            <h2 className="text-2xl font-medium mb-5">
+              Pricing
+            </h2>
 
-          {/* PRICING */}
-          {data.pricing && (
-            <div className="mb-12">
-              <h2 className="text-2xl font-medium mb-4">
-                Pricing
-              </h2>
+            <div
+              className="
+                text-base
+                leading-relaxed
+                [&_ul]:list-disc
+                [&_ul]:pl-6
+                [&_ul]:space-y-2
+              "
+              dangerouslySetInnerHTML={{
+                __html: data.pricing,
+              }}
+            />
+          </div>
 
-              <div
-                className="prose prose-neutral max-w-none"
-                dangerouslySetInnerHTML={{
-                  __html: data.pricing,
-                }}
-              />
-            </div>
-          )}
+          {/* Workshop Details */}
+          <div>
+            <h2 className="text-2xl font-medium mb-5">
+              Workshop Details
+            </h2>
 
-          {/* DETAILS */}
-          {data.details && (
-            <div>
-              <h2 className="text-2xl font-medium mb-4">
-                Workshop Details
-              </h2>
-
-              <div
-                className="prose prose-neutral max-w-none"
-                dangerouslySetInnerHTML={{
-                  __html: data.details,
-                }}
-              />
-            </div>
-          )}
+            <div
+              className="
+                text-base
+                leading-relaxed
+                [&_ul]:list-disc
+                [&_ul]:pl-6
+                [&_ul]:space-y-2
+              "
+              dangerouslySetInnerHTML={{
+                __html: data.details,
+              }}
+            />
+          </div>
 
         </div>
 
