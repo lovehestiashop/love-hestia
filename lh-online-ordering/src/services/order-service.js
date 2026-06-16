@@ -176,7 +176,11 @@ if (
 
 // Cart checkout
 if (orderData.cart?.length) {
+  console.log("CART ITEMS:", orderData.cart);
+
   for (const item of orderData.cart) {
+    console.log("Updating product:", item);
+
     const newStock = Math.max(
       0,
       Number(item.acf?.stock || 0) - 1,
