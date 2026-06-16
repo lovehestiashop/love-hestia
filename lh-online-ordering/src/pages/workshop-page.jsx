@@ -24,27 +24,27 @@ function WorkshopPage() {
           acf.workshop_image_4,
         ].filter(Boolean);
 
-        const imageRequests = imageIds.map((id) =>
-          axios.get(
-            `https://api.lovehestia.shop/wp-json/wp/v2/media/${id}`
+        const imageResponses = await Promise.all(
+          imageIds.map((id) =>
+            axios.get(
+              `https://api.lovehestia.shop/wp-json/wp/v2/media/${id}`
+            )
           )
         );
-
-        const imageResponses = await Promise.all(imageRequests);
 
         const images = imageResponses.map(
           (res) => res.data.source_url
         );
 
         setData({
-          title: acf.workshop_title,
-          intro: acf.workshop_intro,
-          pricing: acf.workshop_pricing,
-          details: acf.workshop_details,
+          title: acf.workshop_title || "",
+          intro: acf.workshop_intro || "",
+          pricing: acf.workshop_pricing || "",
+          details: acf.workshop_details || "",
           images,
         });
       } catch (error) {
-        console.error(error);
+        console.error("Workshop Error:", error);
       }
     };
 
@@ -78,9 +78,15 @@ function WorkshopPage() {
     );
   };
 
-   console.log("Workshop Data:", data);
+  if (!data) return null;
+
+  console.log("Workshop Data:", data);
+  console.log("Workshop Intro:", data.intro);
+  console.log("Workshop Pricing:", data.pricing);
+  console.log("Workshop Details:", data.details);
+
+  return (
     <div>
-return (
       <HeaderComponent />
 
       <section className="bg-[#faf9f7] text-neutral-700">
@@ -110,16 +116,18 @@ return (
             </button>
 
             <div className="overflow-hidden rounded-xl">
-              <img
-                src={data.images[currentImage]}
-                alt="Workshop"
-                className="
-                  w-full
-                  h-[350px]
-                  md:h-[700px]
-                  object-cover
-                "
-              />
+              {data.images.length > 0 && (
+                <img
+                  src={data.images[currentImage]}
+                  alt="Workshop"
+                  className="
+                    w-full
+                    h-[350px]
+                    md:h-[700px]
+                    object-cover
+                  "
+                />
+              )}
             </div>
 
             <button
@@ -140,6 +148,7 @@ return (
             >
               ›
             </button>
+
           </div>
 
           {/* DOTS */}
@@ -156,6 +165,7 @@ return (
               />
             ))}
           </div>
+
         </div>
 
         {/* CONTENT */}
@@ -165,40 +175,46 @@ return (
             {data.title}
           </h1>
 
-        {/* INTRO */}
-<div className="text-center max-w-3xl mx-auto mb-12">
-  <p className="text-lg text-red-500 font-bold">
-    {data.intro}
-  </p>
-</div>
+          {/* INTRO */}
+          {data.intro && (
+            <div className="text-center max-w-3xl mx-auto mb-12">
+              <p className="leading-relaxed">
+                {data.intro}
+              </p>
+            </div>
+          )}
 
           {/* PRICING */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-medium mb-4">
-              Pricing
-            </h2>
+          {data.pricing && (
+            <div className="mb-12">
+              <h2 className="text-2xl font-medium mb-4">
+                Pricing
+              </h2>
 
-            <div
-              className="prose prose-neutral max-w-none"
-              dangerouslySetInnerHTML={{
-                __html: data.pricing,
-              }}
-            />
-          </div>
+              <div
+                className="prose prose-neutral max-w-none"
+                dangerouslySetInnerHTML={{
+                  __html: data.pricing,
+                }}
+              />
+            </div>
+          )}
 
           {/* DETAILS */}
-          <div>
-            <h2 className="text-2xl font-medium mb-4">
-              Workshop Details
-            </h2>
+          {data.details && (
+            <div>
+              <h2 className="text-2xl font-medium mb-4">
+                Workshop Details
+              </h2>
 
-            <div
-              className="prose prose-neutral max-w-none"
-              dangerouslySetInnerHTML={{
-                __html: data.details,
-              }}
-            />
-          </div>
+              <div
+                className="prose prose-neutral max-w-none"
+                dangerouslySetInnerHTML={{
+                  __html: data.details,
+                }}
+              />
+            </div>
+          )}
 
         </div>
 
