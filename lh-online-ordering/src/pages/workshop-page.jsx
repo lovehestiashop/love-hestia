@@ -36,11 +36,14 @@ function WorkshopPage() {
           (res) => res.data.source_url
         );
 
-        setData({
-          title: acf.workshop_title,
-          details: acf.workshop_details,
-          images,
-        });
+       setData({
+  title: acf.workshop_title,
+  introduction: acf.workshop_introduction,
+  pricing: acf.pricing,
+  details: acf.workshop_details,
+  howToBook: acf.how_to_book,
+  images,
+});
       } catch (error) {
         console.error(error);
       }
@@ -166,23 +169,55 @@ function WorkshopPage() {
         {/* CONTENT */}
         <div className="max-w-4xl mx-auto px-6 py-20">
 
-          <h1 className="text-center text-4xl mb-10">
-            {data.title}
-          </h1>
+  <h1 className="text-center text-4xl mb-8">
+    {data.title}
+  </h1>
+
+  {/* Introduction */}
+  <div className="mb-12 text-center text-lg leading-relaxed">
+    {data.introduction}
+  </div>
+
+  {/* Pricing */}
+  <div className="mb-12">
+    <h2 className="text-2xl font-medium mb-4">
+      Pricing
+    </h2>
 
     <div
-  className="
-    prose
-    prose-neutral
-    max-w-none
-    text-neutral-700
-  "
-  dangerouslySetInnerHTML={{
-    __html: data.details,
-  }}
-/>
+      dangerouslySetInnerHTML={{
+        __html: data.pricing,
+      }}
+    />
+  </div>
 
-        </div>
+  {/* Workshop Details */}
+  <div className="mb-12">
+    <h2 className="text-2xl font-medium mb-4">
+      Workshop Details
+    </h2>
+
+    <div
+      dangerouslySetInnerHTML={{
+        __html: data.details,
+      }}
+    />
+  </div>
+
+  {/* How To Book */}
+  <div>
+    <h2 className="text-2xl font-medium mb-4">
+      How to Book
+    </h2>
+
+    <div
+      dangerouslySetInnerHTML={{
+        __html: data.howToBook,
+      }}
+    />
+  </div>
+
+</div>
 
       </section>
 
