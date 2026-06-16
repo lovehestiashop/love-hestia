@@ -182,12 +182,13 @@ if (orderData.cart?.length) {
       Number(item.acf?.stock || 0) - 1,
     );
 
-    await productService.updateStock(
-      item.id,
-      newStock,
-    );
-  }
-}
+    console.log("Cart item:", item);
+console.log("Item ID:", item.id);
+
+await productService.updateStock(
+  item.id,
+  newStock,
+);
 
 sendWebhook();
 
