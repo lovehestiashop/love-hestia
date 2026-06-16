@@ -177,7 +177,7 @@ if (
 // Cart checkout
 if (orderData.cart?.length) {
   for (const item of orderData.cart) {
-
+console.log("FULL ITEM:", item);
     const newStock = Math.max(
       0,
       Number(item.acf?.stock || 0) - 1,
