@@ -24,7 +24,14 @@ function HomePage() {
           "https://api.lovehestia.shop/wp-json/wp/v2/pages/4973?_fields=acf"
         );
 
-        const acf = res.data.acf;
+        const acf = res.data?.acf;
+
+if (!acf) {
+  console.error(
+    "ACF data missing from page 4973"
+  );
+  return;
+}
 
         const imageIds = [
           acf.florist_image_1,
