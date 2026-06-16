@@ -302,7 +302,7 @@ function ProductDetailPage() {
           fontWeight: "600",
         }}
       >
-        Out of Stock
+        SOLD OUT
       </p>
 
       <button
