@@ -132,7 +132,7 @@ if (cart.length > 0) {
 
     if (latestStock < qtyInCart) {
       alert(
-        `${cartItem.title.rendered} only has ${latestStock} stock remaining.`
+        `${cartItem.product?.title?.rendered} only has ${latestStock} stock remaining.`
       );
 
       setIsSubmitting(false);
