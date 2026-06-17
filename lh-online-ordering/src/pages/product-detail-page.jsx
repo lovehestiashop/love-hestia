@@ -200,7 +200,10 @@ function ProductDetailPage() {
         
           <h1
             style={{
-              fontSize: "68px",
+              fontSize:
+  window.innerWidth <= 768
+    ? "42px"
+    : "68px",
               lineHeight: "0.95",
               marginBottom: "15px",
               color: "#5f5a55",
@@ -214,7 +217,10 @@ function ProductDetailPage() {
 
           <h2
             style={{
-              fontSize: "34px",
+              fontSize:
+  window.innerWidth <= 768
+    ? "24px"
+    : "34px",
               marginBottom: "40px",
               color: "#7d746c",
               fontWeight: "400",
@@ -319,7 +325,9 @@ function ProductDetailPage() {
                 }
                 style={{
                   padding:
-                    "16px 42px",
+  window.innerWidth <= 768
+    ? "14px 24px"
+    : "16px 42px",
                   border: "none",
                   background:
                     "#5d5650",
