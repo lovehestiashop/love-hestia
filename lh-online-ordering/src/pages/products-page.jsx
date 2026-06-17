@@ -173,14 +173,14 @@ function ProductsPage() {
 
                 <div className="mt-5 text-center">
 
-                  <h3
-                    className="
-                      text-[20px]
-                      md:text-[28px]
-                      font-light
-                      text-neutral-700
-                      leading-tight
-                    "
+                 <h3
+  className="
+    text-[20px]
+    md:text-[28px]
+    font-semibold
+    text-neutral-700
+    leading-tight
+  "
                     style={{
                       fontFamily:
                         "'Cormorant Garamond', serif",
