@@ -25,8 +25,8 @@ Final pricing depends on flower availability, arrangement size, and design compl
         <div>
          <h2
   className="
-    text-[42px]
-    md:text-[72px]
+    text-[34px]
+    md:text-[54px]
     mb-8
     font-light
     text-neutral-700
