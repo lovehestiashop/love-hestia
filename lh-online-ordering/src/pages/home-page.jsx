@@ -1,7 +1,5 @@
-import { homeSettingsService } from "../services/home-settings-service";
 import NavItemsComponent from "../components/nav-items";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import CollectionsSectionComponent from "../components/collections-section";
@@ -31,54 +29,6 @@ function HomePage() {
   },
 ];
 
-  useEffect(() => {
-    const loadFloristImages = async () => {
-      try {
-       const acf =
-  await homeSettingsService.getSettings();
-
-setHomeSettings(acf);
-        
-if (!acf) {
-  console.error(
-    "Home Page Settings ACF missing"
-  );
-  return;
-}
-        const imageIds = [
-          acf.florist_image_1,
-          acf.florist_image_2,
-          acf.florist_image_3,
-          acf.florist_image_4,
-        ].filter(Boolean);
-
-        const images = await Promise.all(
-          imageIds.map(async (id) => {
-            const mediaRes = await axios.get(
-              `https://api.lovehestia.shop/wp-json/wp/v2/media/${id}`
-            );
-
-            return {
-              imgUrl: mediaRes.data.source_url,
-            };
-          })
-        );
-
-        setFloristForADayImages(images);
-      } 
-      catch (error) {
-  console.error(error);
-
-  setFloristForADayImages([
-    {
-      imgUrl: workshopImage,
-    },
-  ]);
-      }
-    };
-
-    loadFloristImages();
-  }, []);
 
   const nextImage = () => {
     setCurrentImage(
@@ -94,14 +44,6 @@ if (!acf) {
           : prev - 1
     );
   };
-
-if (!floristForADayImages.length) {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      Loading content...
-    </div>
-  );
-}
 
 return (
     <div className="text-neutral-700 bg-neutral-50">
