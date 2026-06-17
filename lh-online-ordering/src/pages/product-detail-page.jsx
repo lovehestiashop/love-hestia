@@ -212,7 +212,6 @@ function ProductDetailPage() {
       "'Cormorant Garamond', serif",
   }}
 >
-          >
             {product.title.rendered}
           </h1>
 
