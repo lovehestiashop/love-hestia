@@ -9,7 +9,7 @@ function HeroSectionComponent() {
   const ticking = useRef(false);
 
  useEffect(() => {
-  async function loadHero() {
+  async function loadHero() {<
     try {
       const settings =
         await homeSettingsService.getSettings();
@@ -78,7 +78,7 @@ function HeroSectionComponent() {
 
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white px-6">
-    <h1
+    <h1>
   className="
     text-[40px]
     sm:text-[60px]
