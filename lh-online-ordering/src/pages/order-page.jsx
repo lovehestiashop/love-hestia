@@ -464,8 +464,7 @@ navigate("/shop");
   Car Delivery (₱500)
 </label>
 
-            <div className="border-t pt-6 space-y-2">
-
+            <div className="border-t border-neutral-300 pt-8 space-y-3">
   {product && (
     <>
       <div className="flex justify-between">
@@ -478,7 +477,18 @@ navigate("/shop");
         <span>₱{deliveryFee}</span>
       </div>
 
-      <div className="flex justify-between font-medium text-lg">
+      <div
+  className="
+    flex
+    justify-between
+    text-[26px]
+    text-neutral-700
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontWeight: 300,
+  }}
+>
         <span>Total</span>
         <span>₱{total}</span>
       </div>
@@ -502,7 +512,18 @@ navigate("/shop");
         <span>₱{deliveryFee}</span>
       </div>
 
-      <div className="flex justify-between font-medium text-lg">
+      <div
+  className="
+    flex
+    justify-between
+    text-[26px]
+    text-neutral-700
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontWeight: 300,
+  }}
+>
         <span>Total</span>
         <span>₱{currentCartTotal}</span>
       </div>
@@ -576,11 +597,31 @@ navigate("/shop");
                   className="h-full w-full object-cover"
                 />
               </div>
-              <h2 className="mt-6 text-lg font-medium uppercase tracking-wide text-neutral-800">
+              <h2
+  className="
+    mt-6
+    text-[34px]
+    text-neutral-700
+    leading-none
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontWeight: 300,
+  }}
+>
                 {product.title.rendered}
               </h2>
 
-              <p>{product.acf.product_description}</p>
+              <p
+  className="
+    mt-3
+    text-[15px]
+    leading-8
+    text-neutral-600
+  "
+>
+  {product.acf.product_description}
+</p>
             </div>
           )}
         </div>
