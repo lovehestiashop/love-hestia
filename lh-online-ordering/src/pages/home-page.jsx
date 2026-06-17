@@ -64,8 +64,6 @@ return (
       {/* CUSTOM ARRANGEMENTS */}
       <CustomArrangementSectionComponent />
 
-      {/* OUR STORY */}
-      <OurStorySectionComponent />
 
       {/* WORKSHOP */}
       <section className="relative h-[400px] md:h-[600px] text-white text-center overflow-hidden">
@@ -196,5 +194,6 @@ return (
     </div>
   );
 }
-
+  {/* OUR STORY */}
+      <OurStorySectionComponent />
 export default HomePage;
