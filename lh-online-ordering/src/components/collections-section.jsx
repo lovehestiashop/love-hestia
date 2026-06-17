@@ -24,9 +24,22 @@ function CollectionsSectionComponent() {
 
   return (
     <section className="bg-neutral-50 py-20 text-center">
-      <h2 className="mb-14 md:text-[36px] text-3xl font-medium text-neutral-800">
-        Our Collections
-      </h2>
+      <h2
+  className="
+    mb-16
+    text-center
+    text-[42px]
+    md:text-[72px]
+    font-light
+    text-neutral-700
+    leading-none
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+  }}
+>
+  Our Collections
+</h2>
 
       {/* MOBILE */}
       <div className="md:hidden max-w-5xl mx-auto px-6">
@@ -97,7 +110,17 @@ function CollectionsSectionComponent() {
                 <div className="absolute inset-0 bg-black/25 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               </div>
 
-              <p className="text-[13px] font-medium tracking-widest uppercase text-neutral-800">
+             <p
+  className="
+    text-[22px]
+    md:text-[30px]
+    font-light
+    text-neutral-700
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+  }}
+>
                 {item.title}
               </p>
             </div>
