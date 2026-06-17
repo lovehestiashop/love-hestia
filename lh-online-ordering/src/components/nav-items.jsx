@@ -2,7 +2,10 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 const navItemClass = `
-  relative
+  uppercase
+  tracking-[0.15em]
+  text-[13px]
+  text-neutral-700
   transition-all
   duration-300
   hover:text-neutral-500
@@ -19,46 +22,30 @@ function NavItemsComponent() {
   }, []);
 
   return (
-    <nav className="w-full px-6 md:px-12">
+    <nav className="w-full px-6">
       <ul
         className="
           flex
-          flex-wrap
           items-center
           justify-center
           gap-8
-          md:gap-14
-          text-[22px]
-          md:text-[28px]
-          text-neutral-700
+          md:gap-12
         "
-        style={{
-          fontFamily: "'Cormorant Garamond', serif",
-        }}
       >
         <li>
-          <Link
-            to="/"
-            className={navItemClass}
-          >
+          <Link to="/" className={navItemClass}>
             Home
           </Link>
         </li>
 
         <li>
-          <Link
-            to="/shop"
-            className={navItemClass}
-          >
+          <Link to="/shop" className={navItemClass}>
             Shop
           </Link>
         </li>
 
         <li>
-          <Link
-            to="/faq"
-            className={navItemClass}
-          >
+          <Link to="/faq" className={navItemClass}>
             FAQ's
           </Link>
         </li>
@@ -66,13 +53,9 @@ function NavItemsComponent() {
         <li>
           <Link
             to="/cart"
-            className="flex items-center gap-2"
+            className={`${navItemClass} flex items-center gap-2`}
           >
-            <span
-              style={{
-                fontSize: "20px",
-              }}
-            >
+            <span style={{ fontSize: "15px" }}>
               🛒
             </span>
 
@@ -84,14 +67,13 @@ function NavItemsComponent() {
                   background: "#3d3421",
                   color: "#fff",
                   borderRadius: "999px",
-                  minWidth: "22px",
-                  height: "22px",
+                  minWidth: "18px",
+                  height: "18px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "11px",
-                  padding: "0 6px",
-                  fontFamily: "sans-serif",
+                  fontSize: "10px",
+                  padding: "0 4px",
                 }}
               >
                 {cartCount}
