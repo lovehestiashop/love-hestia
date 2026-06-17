@@ -162,11 +162,14 @@ function HomePage() {
       {/* WORKSHOP */}
       <section className="relative h-[400px] md:h-[600px] text-white text-center overflow-hidden">
         <div className="absolute inset-0">
-          <img
-            src={workshopImage}
-            alt="Workshop"
-            className="w-full h-full object-cover object-center"
-          />
+         <img
+  src={workshopImage}
+  alt="Workshop"
+  className="w-full h-full object-cover"
+  style={{
+    objectPosition: "center 20%",
+  }}
+/>
 
           <div className="absolute inset-0 bg-black/35"></div>
         </div>
