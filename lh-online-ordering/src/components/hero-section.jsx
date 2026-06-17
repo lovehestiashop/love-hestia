@@ -8,29 +8,29 @@ function HeroSectionComponent() {
 
   const ticking = useRef(false);
 
- useEffect(() => {
-  async function loadHero() {<
-    try {
-      const settings =
-        await homeSettingsService.getSettings();
+  useEffect(() => {
+    async function loadHero() {
+      try {
+        const settings =
+          await homeSettingsService.getSettings();
 
-      const media =
-        await mediaService.getById(
-          settings.hero_image
-        );
+        const media =
+          await mediaService.getById(
+            settings.hero_image
+          );
 
-      setHeroData({
-        image: media.source_url,
-        title: settings.hero_title,
-        subtitle: settings.hero_subtitle,
-      });
-    } catch (err) {
-      console.error(err);
+        setHeroData({
+          image: media.source_url,
+          title: settings.hero_title,
+          subtitle: settings.hero_subtitle,
+        });
+      } catch (err) {
+        console.error(err);
+      }
     }
-  }
 
-  loadHero();
-}, []);
+    loadHero();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,6 +59,7 @@ function HeroSectionComponent() {
 
   return (
     <section className="relative w-full h-[65vh] md:h-[80vh] overflow-hidden">
+
       {/* Hero Image */}
       <div
         className="absolute inset-0"
@@ -78,33 +79,36 @@ function HeroSectionComponent() {
 
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white px-6">
-    <h1>
-  className="
-    text-[40px]
-    sm:text-[60px]
-    md:text-[84px]
-    leading-[1]
-    mb-6
-    text-white
-  "
-  style={{
-    fontFamily: "'Viaoda Libre', serif",
-    fontWeight: 400,
-    letterSpacing: "0.01em",
-  }}
->
-  {heroData.title}
-</h1>
-       <p
-  className="
-    text-[15px]
-    md:text-[22px]
-    tracking-wide
-    text-white/95
-  "
->
-  {heroData.subtitle}
-</p>
+
+        <h1
+          className="
+            text-[40px]
+            sm:text-[60px]
+            md:text-[84px]
+            leading-[1]
+            mb-6
+            text-white
+          "
+          style={{
+            fontFamily: "'Viaoda Libre', serif",
+            fontWeight: 400,
+            letterSpacing: "0.01em",
+          }}
+        >
+          {heroData.title}
+        </h1>
+
+        <p
+          className="
+            text-[15px]
+            md:text-[22px]
+            tracking-wide
+            text-white/95
+          "
+        >
+          {heroData.subtitle}
+        </p>
+
       </div>
     </section>
   );
