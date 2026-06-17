@@ -90,10 +90,9 @@ function HeroSectionComponent() {
             text-white
           "
           style={{
-            fontFamily: "'Viaoda Libre', serif",
-            fontWeight: 400,
-            letterSpacing: "0.01em",
-          }}
+  fontFamily: "'Cormorant Garamond', serif",
+  fontWeight: 300,
+}}
         >
           {heroData.title}
         </h1>
