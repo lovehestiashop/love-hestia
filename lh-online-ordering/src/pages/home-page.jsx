@@ -15,9 +15,21 @@ import workshopImage from "../assets/workshop-image.jpg";
 function HomePage() {
   const [currentImage, setCurrentImage] = useState(0);
 
-  const [floristForADayImages, setFloristForADayImages] =
-    useState([]);
-  const [homeSettings, setHomeSettings] = useState(null);
+  const floristForADayImages = [
+  {
+    imgUrl:
+      "/8C9C0A66-92F7-4B30-8048-D7B962BEDF82.jpg",
+  },
+  {
+    imgUrl: "/IMG_8789.jpeg",
+  },
+  {
+    imgUrl: "/IMG_8790.jpeg",
+  },
+  {
+    imgUrl: "/IMG_8791.jpeg",
+  },
+];
 
   useEffect(() => {
     const loadFloristImages = async () => {
