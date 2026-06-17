@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const navItemClass = `
   uppercase
   tracking-[0.15em]
-  text-[13px]
+  text-[16px]
   text-neutral-700
   transition-all
   duration-300
