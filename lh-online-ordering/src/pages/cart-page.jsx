@@ -46,16 +46,22 @@ function CartPage() {
         padding: "50px 20px",
       }}
     >
-      <h1
-        style={{
-          fontSize: "42px",
-          fontWeight: "700",
-          marginBottom: "40px",
-        }}
-      >
-        My Cart
-      </h1>
-
+    
+<h1
+  className="
+    text-[48px]
+    md:text-[72px]
+    text-center
+    text-neutral-700
+    mb-12
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontWeight: 300,
+  }}
+>
+  My Cart
+</h1>
       <div
         style={{
           display: "flex",
