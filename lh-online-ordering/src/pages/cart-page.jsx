@@ -72,26 +72,34 @@ function CartPage() {
       >
         <button
           onClick={() => navigate("/")}
-          style={{
-            background: "#fff",
-            color: "#000",
-            border: "1px solid #000",
-            padding: "12px 24px",
-            cursor: "pointer",
-          }}
+         style={{
+  padding: "16px 42px",
+  border: "1px solid #8f857d",
+  background: "#faf9f7",
+  color: "#5f5a55",
+  cursor: "pointer",
+  letterSpacing: "0.25em",
+  textTransform: "uppercase",
+  fontSize: "11px",
+  fontWeight: "500",
+}}
         >
           Home
         </button>
 
         <button
           onClick={() => navigate("/shop")}
-          style={{
-            background: "#000",
-            color: "#fff",
-            border: "none",
-            padding: "12px 24px",
-            cursor: "pointer",
-          }}
+        style={{
+  padding: "16px 42px",
+  border: "none",
+  background: "#6c635c",
+  color: "#fff",
+  cursor: "pointer",
+  letterSpacing: "0.25em",
+  textTransform: "uppercase",
+  fontSize: "11px",
+  fontWeight: "500",
+}}
         >
           + Add More Items
         </button>
@@ -398,17 +406,18 @@ fontWeight: "400",
                   },
                 })
               }
-             style={{
+            style={{
   marginTop: "25px",
   padding: "16px 42px",
-  background: "#4a4338",
+  background: "#6c635c",
   color: "#fff",
   border: "none",
   cursor: "pointer",
-  letterSpacing: "0.12em",
+  letterSpacing: "0.25em",
   textTransform: "uppercase",
-  fontSize: "13px",
-}} 
+  fontSize: "11px",
+  fontWeight: "500",
+}}
             >
               CHECKOUT
             </button>
