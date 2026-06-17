@@ -24,12 +24,12 @@ Through every bouquet and every workshop, the mission remains the same: to share
         </div>
 
         <div className="order-2 md:order-1">
-          <h2
+         <h2
   className="
     text-[30px]
     md:text-[42px]
     mb-8
-    font-light
+    font-semibold
     text-neutral-700
     leading-none
   "
