@@ -8,28 +8,29 @@ function HeroSectionComponent() {
 
   const ticking = useRef(false);
 
-  useEffect(() => {
-    axios
-      .get(
-        "https://api.lovehestia.shop/wp-json/wp/v2/pages/4973?_fields=acf"
-      )
-      .then(async (res) => {
-        const acf = res.data.acf;
+ useEffect(() => {
+  async function loadHero() {
+    try {
+      const settings =
+        await homeSettingsService.getSettings();
 
-        const mediaRes = await axios.get(
-          `https://api.lovehestia.shop/wp-json/wp/v2/media/${acf.hero_image}`
+      const media =
+        await mediaService.getById(
+          settings.hero_image
         );
 
-        setHeroData({
-          image: mediaRes.data.source_url,
-          title: acf.hero_title,
-          subtitle: acf.hero_subtitle,
-        });
-      })
-      .catch((err) => {
-        console.error(err);
+      setHeroData({
+        image: media.source_url,
+        title: settings.hero_title,
+        subtitle: settings.hero_subtitle,
       });
-  }, []);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  loadHero();
+}, []);
 
   useEffect(() => {
     const handleScroll = () => {
