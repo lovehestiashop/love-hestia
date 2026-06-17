@@ -30,7 +30,7 @@ function CollectionsSectionComponent() {
     text-center
     text-[42px]
     md:text-[72px]
-    font-light
+    font-semibold
     text-neutral-700
     leading-none
   "
