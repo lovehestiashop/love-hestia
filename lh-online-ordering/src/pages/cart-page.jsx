@@ -402,13 +402,30 @@ fontWeight: "600",
             <h2
   style={{
     marginTop: "10px",
-    fontFamily: "'Cormorant Garamond', serif",
-    fontSize:
-  isMobile ? "22px" : "30px",
-    fontWeight: "400",
     color: "#5f5a55",
   }}
 >
+  <span
+    style={{
+      fontFamily: "'Cormorant Garamond', serif",
+      fontSize: isMobile ? "22px" : "30px",
+      fontWeight: "400",
+    }}
+  >
+    Total:
+  </span>
+
+  <span
+    style={{
+      fontFamily: "'Roboto', sans-serif",
+      fontSize: isMobile ? "20px" : "28px",
+      fontWeight: "600",
+      marginLeft: "8px",
+    }}
+  >
+    ₱{grandTotal.toLocaleString("en-PH")}
+  </span>
+</h2>
               Total: ₱
               {grandTotal.toLocaleString(
                 "en-PH"
