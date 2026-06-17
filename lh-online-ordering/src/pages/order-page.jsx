@@ -109,10 +109,41 @@ const cartGrandTotal = state?.grandTotal || 0;
     setIsSubmitting(true);
 
     try {
-   
+      // REAL-TIME STOCK CHECK
+if (cart.length > 0) {
+  const latestProducts =
+    await productService.getAll();
+
+  for (const cartItem of cart) {
+   const latestProduct =
+  latestProducts.find(
+    (p) =>
+      p.id === cartItem.product?.id
+  );
+
+    const latestStock =
+      Number(latestProduct?.acf?.stock || 0);
+
+    const qtyInCart = cart.filter(
+  (item) =>
+    item.product?.id ===
+    cartItem.product?.id
+).length;
+
+    if (latestStock < qtyInCart) {
+      alert(
+        `${cartItem.product?.title?.rendered} only has ${latestStock} stock remaining.`
+      );
+
+      setIsSubmitting(false);
+      return;
+    }
+  }
+}
     await orderService.createOrder({
   ...form,
   product_id: product?.id,
+  current_stock: product?.acf?.stock,
   cart,
   date_and_time_of_delivery: formatDateTime(
     form.date_and_time_of_delivery,
@@ -153,18 +184,7 @@ navigate("/shop");
           >
             {!product && !isCartCheckout && (
   <div>
-    <h3
-  className="
-    mb-5
-    text-[32px]
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
->
+    <h3 className="mb-4 font-medium uppercase tracking-wide">
       Customize Your Arrangement
     </h3>
                 <textarea
@@ -179,18 +199,7 @@ navigate("/shop");
               </div>
             )}
 
-            <h3
-  className="
-    mb-5
-    text-[32px]
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
->
+            <h3 className="mb-4 font-medium uppercase tracking-wide">
               Your Information
             </h3>
 
@@ -224,18 +233,7 @@ navigate("/shop");
               className="w-full border p-3 mb-3"
             />
 
-           <h3
-  className="
-    mb-5
-    text-[32px]
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
->
+            <h3 className="mb-4 font-medium uppercase tracking-wide">
               Receiver's Information (optional)
             </h3>
 
@@ -258,18 +256,7 @@ navigate("/shop");
             />
 
             {/* DELIVERY DETAILS */}
-            <h3
-  className="
-    mb-5
-    text-[32px]
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
->
+            <h3 className="mb-4 font-medium uppercase tracking-wide">
               Delivery Details
             </h3>
 
@@ -313,18 +300,7 @@ navigate("/shop");
               className="w-full border p-3 mb-3"
             />
 
-            <<h3
-  className="
-    mb-5
-    text-[32px]
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
->
+            <h3 className="mb-4 font-medium uppercase tracking-wide">
               Delivery Area
             </h3>
 
@@ -403,18 +379,7 @@ navigate("/shop");
 
 </div>
 
-            <h3
-  className="
-    mb-5
-    text-[32px]
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
->
+            <h3 className="mb-4 font-medium uppercase tracking-wide">
               Payment
             </h3>
 
