@@ -503,9 +503,18 @@ navigate("/shop");
       </div>
 
       <div className="flex justify-between">
-        <span>Subtotal</span>
-        <span>₱{cartSubtotal}</span>
-      </div>
+  <span>Subtotal</span>
+
+  <span
+    style={{
+      fontFamily: "'Roboto', sans-serif",
+      fontWeight: "600",
+      color: "#5f5a55",
+    }}
+  >
+    ₱{cartSubtotal.toLocaleString("en-PH")}
+  </span>
+</div>
 
       <div className="flex justify-between">
         <span>Delivery Fee</span>
@@ -513,20 +522,30 @@ navigate("/shop");
       </div>
 
       <div
-  className="
-    flex
-    justify-between
-    text-[26px]
-    text-neutral-700
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
+  className="flex justify-between items-center mt-2"
 >
-        <span>Total</span>
-        <span>₱{currentCartTotal}</span>
-      </div>
+  <span
+    style={{
+      fontFamily: "'Cormorant Garamond', serif",
+      fontSize: "30px",
+      fontWeight: "300",
+      color: "#5f5a55",
+    }}
+  >
+    Total
+  </span>
+
+  <span
+    style={{
+      fontFamily: "'Roboto', sans-serif",
+      fontSize: "24px",
+      fontWeight: "600",
+      color: "#5f5a55",
+    }}
+  >
+    ₱{currentCartTotal.toLocaleString("en-PH")}
+  </span>
+</div>
     </>
   )}
 
