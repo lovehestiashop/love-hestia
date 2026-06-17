@@ -12,7 +12,8 @@ const navItemClass = `
 `;
 
 function NavItemsComponent() {
-  const [cartCount, setCartCount] = useState(0);
+ const [cartCount, setCartCount] = useState(0);
+const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const cart =
@@ -21,8 +22,11 @@ function NavItemsComponent() {
     setCartCount(cart.length);
   }, []);
 
-  return (
-    <nav className="w-full px-6">
+ return (
+  <nav className="w-full">
+
+    {/* Desktop Navigation */}
+    <div className="hidden md:block">
       <ul
         className="
           flex
@@ -82,7 +86,82 @@ function NavItemsComponent() {
           </Link>
         </li>
       </ul>
-    </nav>
+    </div>
+
+    {/* Mobile Navigation */}
+    <div className="md:hidden px-6">
+      <div className="flex items-center justify-between">
+
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="text-3xl text-neutral-700"
+        >
+          ☰
+        </button>
+
+        <Link
+          to="/cart"
+          className="relative text-2xl"
+        >
+          🛒
+
+          {cartCount > 0 && (
+            <span
+              className="
+                absolute
+                -top-2
+                -right-3
+                bg-[#3d3421]
+                text-white
+                text-[10px]
+                rounded-full
+                min-w-[18px]
+                h-[18px]
+                flex
+                items-center
+                justify-center
+              "
+            >
+              {cartCount}
+            </span>
+          )}
+        </Link>
+
+      </div>
+
+      {menuOpen && (
+        <div className="mt-6 flex flex-col gap-5">
+
+          <Link
+            to="/"
+            className={navItemClass}
+            onClick={() => setMenuOpen(false)}
+          >
+            Home
+          </Link>
+
+          <Link
+            to="/shop"
+            className={navItemClass}
+            onClick={() => setMenuOpen(false)}
+          >
+            Shop
+          </Link>
+
+          <Link
+            to="/faq"
+            className={navItemClass}
+            onClick={() => setMenuOpen(false)}
+          >
+            FAQ's
+          </Link>
+
+        </div>
+      )}
+
+    </div>
+  </nav>
+);
   );
 }
 
