@@ -63,15 +63,21 @@ function HomePage() {
       
         {/* FLORIST FOR A DAY */}
       <section className="py-16 bg-neutral-50 text-center">
-        <h1
-          className="text-[42px] md:text-[80px] mb-4 whitespace-nowrap"
-          style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: 300,
-          }}
-        >
-          Florist for a Day
-        </h1>
+       <h1
+  className="
+    text-[42px]
+    md:text-[80px]
+    mb-4
+    whitespace-nowrap
+    text-neutral-700
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontWeight: 600,
+  }}
+>
+  Florist for a Day
+</h1>
 
         <p className="italic text-base md:text-lg mb-10 max-w-2xl mx-auto px-6">
           "There's no wrong way to make a bouquet. If it makes you smile,
