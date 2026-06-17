@@ -426,11 +426,7 @@ fontWeight: "600",
     ₱{grandTotal.toLocaleString("en-PH")}
   </span>
 </h2>
-              Total: ₱
-              {grandTotal.toLocaleString(
-                "en-PH"
-              )}
-            </h2>
+        
 
             <p
               style={{
