@@ -205,7 +205,18 @@ navigate("/shop");
                   onChange={handleChange}
                   placeholder="Describe your custom arrangement*"
                   rows="4"
-                  className="w-full border p-3 mb-3"
+                  className="
+  w-full
+  border
+  border-neutral-300
+  bg-white
+  px-4
+  py-3
+  text-neutral-700
+  focus:outline-none
+  focus:border-neutral-500
+  mb-3
+"
                 />
               </div>
             )}
@@ -232,7 +243,18 @@ navigate("/shop");
               onChange={handleChange}
               type="text"
               placeholder="Name*"
-              className="w-full border p-3 mb-3"
+              className="
+  w-full
+  border
+  border-neutral-300
+  bg-white
+  px-4
+  py-3
+  text-neutral-700
+  focus:outline-none
+  focus:border-neutral-500
+  mb-3
+"
             />
 
             <input
@@ -242,7 +264,18 @@ navigate("/shop");
               onChange={handleChange}
               type="text"
               placeholder="Number*"
-              className="w-full border p-3 mb-3"
+              className="
+  w-full
+  border
+  border-neutral-300
+  bg-white
+  px-4
+  py-3
+  text-neutral-700
+  focus:outline-none
+  focus:border-neutral-500
+  mb-3
+"
             />
 
             <input
@@ -252,7 +285,18 @@ navigate("/shop");
               onChange={handleChange}
               type="text"
               placeholder="Facebook or Instagram name*"
-              className="w-full border p-3 mb-3"
+              className="
+  w-full
+  border
+  border-neutral-300
+  bg-white
+  px-4
+  py-3
+  text-neutral-700
+  focus:outline-none
+  focus:border-neutral-500
+  mb-3
+"
             />
 
             <h3
@@ -276,7 +320,18 @@ navigate("/shop");
               onChange={handleChange}
               type="text"
               placeholder="Receiver's name"
-              className="w-full border p-3 mb-3"
+              className="
+  w-full
+  border
+  border-neutral-300
+  bg-white
+  px-4
+  py-3
+  text-neutral-700
+  focus:outline-none
+  focus:border-neutral-500
+  mb-3
+"
             />
 
             <input
@@ -285,7 +340,18 @@ navigate("/shop");
               onChange={handleChange}
               type="text"
               placeholder="Receiver's number"
-              className="w-full border p-3 mb-3"
+              className="
+  w-full
+  border
+  border-neutral-300
+  bg-white
+  px-4
+  py-3
+  text-neutral-700
+  focus:outline-none
+  focus:border-neutral-500
+  mb-3
+"
             />
 
             {/* DELIVERY DETAILS */}
@@ -332,7 +398,18 @@ navigate("/shop");
               onChange={handleChange}
               placeholder="Delivery address*"
               rows="3"
-              className="w-full border p-3 mb-3"
+              className="
+  w-full
+  border
+  border-neutral-300
+  bg-white
+  px-4
+  py-3
+  text-neutral-700
+  focus:outline-none
+  focus:border-neutral-500
+  mb-3
+"
             />
 
             <textarea
