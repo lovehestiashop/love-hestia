@@ -49,8 +49,8 @@ function CartPage() {
     
 <h1
   className="
-    text-[56px]
-    md:text-[82px]
+   text-[42px]
+md:text-[82px]
     text-center
     text-neutral-700
     mb-14
@@ -136,8 +136,8 @@ function CartPage() {
                   item.product?.title?.rendered
                 }
                 style={{
-                  width: "160px",
-                  height: "220px",
+                 width: isMobile ? "120px" : "160px",
+height: isMobile ? "160px" : "220px",
                   objectFit: "cover",
                   flexShrink: 0,
                 }}
@@ -162,7 +162,8 @@ function CartPage() {
   style={{
     marginBottom: "10px",
     fontFamily: "'Cormorant Garamond', serif",
-    fontSize: "32px",
+    fontSize:
+  isMobile ? "22px" : "32px",
     fontWeight: "400",
     color: "#3d3d3d",
   }}
@@ -303,7 +304,8 @@ function CartPage() {
                   <p
                     style={{
                       fontFamily: "'Cormorant Garamond', serif",
-fontSize: "34px",
+fontSize:
+  isMobile ? "22px" : "34px",
 fontWeight: "400",
                       marginBottom: "20px",
                     }}
@@ -351,7 +353,8 @@ fontWeight: "400",
   style={{
     marginBottom: "20px",
     fontFamily: "'Cormorant Garamond', serif",
-    fontSize: "36px",
+    fontSize:
+  isMobile ? "28px" : "36px",
     fontWeight: "400",
     color: "#3d3d3d",
   }}
@@ -374,7 +377,8 @@ fontWeight: "400",
   style={{
     marginTop: "10px",
     fontFamily: "'Cormorant Garamond', serif",
-    fontSize: "30px",
+    fontSize:
+  isMobile ? "22px" : "30px",
     fontWeight: "400",
     color: "#5f5a55",
   }}
@@ -410,7 +414,8 @@ fontWeight: "400",
               }
             style={{
   marginTop: "25px",
-  padding: "16px 42px",
+  padding:
+  isMobile ? "14px 28px" : "16px 42px",
   background: "#6c635c",
   color: "#fff",
   border: "none",
