@@ -160,7 +160,7 @@ function HomePage() {
       </section>
 
       {/* WORKSHOP */}
-      <section className="relative h-[500px] md:h-[750px] text-white text-center overflow-hidden">
+      <section className="relative h-[500px] md:h-[800px] text-white text-center overflow-hidden">
         <div className="absolute inset-0">
        
 <img
@@ -168,7 +168,7 @@ function HomePage() {
   alt="Workshop"
   className="w-full h-full object-cover"
   style={{
-    objectPosition: "center 15%",
+    objectPosition: "center 5%",
   }}
 />
           <div className="absolute inset-0 bg-black/35"></div>
