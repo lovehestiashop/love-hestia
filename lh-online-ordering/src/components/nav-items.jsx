@@ -161,7 +161,6 @@ const [menuOpen, setMenuOpen] = useState(false);
 
     </div>
   </nav>
-);
   );
 }
 
