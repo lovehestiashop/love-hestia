@@ -347,10 +347,11 @@ fontWeight: "400",
             }}
           >
           <h2
+  <h2
   style={{
-    marginBottom: "25px",
+    marginBottom: "20px",
     fontFamily: "'Cormorant Garamond', serif",
-    fontSize: "42px",
+    fontSize: "36px",
     fontWeight: "400",
     color: "#3d3d3d",
   }}
@@ -370,13 +371,14 @@ fontWeight: "400",
             </p>
 
             <h2
-              style={{
-                marginTop: "5px",
-                fontFamily: "'Cormorant Garamond', serif",
-fontSize: "42px",
-fontWeight: "400",
-              }}
-            >
+  style={{
+    marginTop: "10px",
+    fontFamily: "'Cormorant Garamond', serif",
+    fontSize: "30px",
+    fontWeight: "400",
+    color: "#5f5a55",
+  }}
+>
               Total: ₱
               {grandTotal.toLocaleString(
                 "en-PH"
