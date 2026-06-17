@@ -315,8 +315,8 @@ height: isMobile ? "160px" : "220px",
                  <p
   style={{
     fontFamily: "'Roboto', sans-serif",
-    fontSize: isMobile ? "24px" : "36px",
-    fontWeight: "700",
+   fontSize: isMobile ? "20px" : "28px",
+fontWeight: "600",
     marginBottom: "20px",
     color: "#5f5a55",
   }}
