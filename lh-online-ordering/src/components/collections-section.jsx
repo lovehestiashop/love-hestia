@@ -2,25 +2,25 @@ import { Link } from "react-router-dom";
 
 function CollectionsSectionComponent() {
   const collections = [
-    {
-      title: "Flower Bouquets",
-      image:
-        "https://api.lovehestia.shop/wp-content/uploads/2026/06/IMG_9440.jpeg",
-      productKey: 5,
-    },
-    {
-      title: "Vase Arrangements",
-      image:
-        "https://api.lovehestia.shop/wp-content/uploads/2026/06/IMG_9438.jpeg",
-      productKey: 6,
-    },
-    {
-      title: "Flower Dome",
-      image:
-        "https://api.lovehestia.shop/wp-content/uploads/2026/01/DSC02766.jpg",
-      productKey: 7,
-    },
-  ];
+  {
+    title: "Flower Bouquets",
+    image:
+      "https://api.lovehestia.shop/wp-content/uploads/2026/06/IMG_9440.jpeg",
+    productKey: 5,
+  },
+  {
+    title: "Vase Arrangements",
+    image:
+      "https://api.lovehestia.shop/wp-content/uploads/2026/06/IMG_9439.jpeg",
+    productKey: 6,
+  },
+  {
+    title: "Flower Dome",
+    image:
+      "https://api.lovehestia.shop/wp-content/uploads/2026/01/DSC02766.jpg",
+    productKey: 7,
+  },
+];
 
   return (
     <section className="bg-neutral-50 py-20 text-center">
