@@ -3,25 +3,52 @@ import { Link } from "react-router-dom";
 
 function FooterComponent() {
   return (
-    <footer className="bg-[#f6f6f6] text-neutral-700">
+    <footer className="bg-[#faf9f7] text-neutral-700">
+
       {/* TOP SECTION */}
-      <div className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div className="max-w-6xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 gap-16">
+
         {/* QUICK LINKS */}
         <div>
-          <h3 className="font-medium mb-10">Quick links</h3>
-          <ul className="space-y-2 text-sm">
+          <h3
+            className="
+              text-[34px]
+              md:text-[42px]
+              text-neutral-700
+              mb-8
+              leading-none
+            "
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+            }}
+          >
+            Quick Links
+          </h3>
+
+          <ul className="space-y-4">
             <li>
-              <Link to="/" className="hover:underline">
+              <Link
+                to="/"
+                className="text-[15px] tracking-wide hover:text-black transition"
+              >
                 Home
               </Link>
             </li>
+
             <li>
-              <Link to="/shop" className="hover:underline">
+              <Link
+                to="/shop"
+                className="text-[15px] tracking-wide hover:text-black transition"
+              >
                 Shop
               </Link>
             </li>
+
             <li>
-              <Link to="/faq" className="hover:underline">
+              <Link
+                to="/faq"
+                className="text-[15px] tracking-wide hover:text-black transition"
+              >
                 FAQ's
               </Link>
             </li>
@@ -30,48 +57,72 @@ function FooterComponent() {
 
         {/* CONTACT */}
         <div>
-          <h3 className="font-medium mb-10">Contact Us</h3>
-          <p className="text-sm mb-4">lovehestiashop@gmail.com</p>
-          <p className="text-sm mb-4">
-            Instagram: <span className="font-medium">@lovehestiaflowers</span>.
-          </p>
-          <p className="text-sm">
-            <span className="font-medium">+63961 712 9672</span>.
-          </p>
+          <h3
+            className="
+              text-[34px]
+              md:text-[42px]
+              text-neutral-700
+              mb-8
+              leading-none
+            "
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+            }}
+          >
+            Contact Us
+          </h3>
+
+          <div className="space-y-4 text-[15px] text-neutral-600">
+            <p>lovehestiashop@gmail.com</p>
+
+            <p>
+              Instagram: @lovehestiaflowers
+            </p>
+
+            <p>
+              +63 961 712 9672
+            </p>
+          </div>
         </div>
+
       </div>
 
       {/* DIVIDER */}
-      <div className="border-t border-[#dbdbdb]" />
+      <div className="border-t border-neutral-200"></div>
 
-      {/* BOTTOM SECTION */}
-      <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col items-center gap-4">
-        {/* SOCIAL ICONS */}
-        <div className="flex gap-6 text-neutral-600">
+      {/* BOTTOM */}
+      <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col items-center">
+
+        <div className="flex gap-8 mb-5">
+
           <a
             href="https://www.facebook.com/giftshophestia"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Hestia Facebook"
-            className="hover:text-black transition-colors"
+            aria-label="Facebook"
+            className="text-neutral-500 hover:text-neutral-800 transition"
           >
-            <FaFacebookF className="cursor-pointer text-lg" />
+            <FaFacebookF size={20} />
           </a>
 
           <a
             href="https://www.instagram.com/lovehestiaflowers"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Hestia Instagram"
-            className="hover:text-black transition-colors"
+            aria-label="Instagram"
+            className="text-neutral-500 hover:text-neutral-800 transition"
           >
-            <FaInstagram className="cursor-pointer text-lg" />
+            <FaInstagram size={20} />
           </a>
+
         </div>
 
-        {/* COPYRIGHT */}
-        <p className="text-xs text-neutral-500">© 2026, Love Hestia</p>
+        <p className="text-[13px] tracking-wide text-neutral-500">
+          © 2026 Love Hestia
+        </p>
+
       </div>
+
     </footer>
   );
 }
