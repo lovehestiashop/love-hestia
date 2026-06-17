@@ -497,10 +497,19 @@ navigate("/shop");
 
   {!product && cart.length > 0 && (
     <>
-      <div className="flex justify-between">
-        <span>Cart Items</span>
-        <span>{cart.length}</span>
-      </div>
+     <div className="flex justify-between">
+  <span>Cart Items</span>
+
+  <span
+    style={{
+      fontFamily: "'Roboto', sans-serif",
+      fontWeight: "600",
+      color: "#5f5a55",
+    }}
+  >
+    {cart.length}
+  </span>
+</div>
 
       <div className="flex justify-between">
   <span>Subtotal</span>
