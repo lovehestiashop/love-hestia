@@ -28,7 +28,7 @@ Final pricing depends on flower availability, arrangement size, and design compl
     text-[30px]
     md:text-[42px]
     mb-8
-    font-light
+    font-semibold
     text-neutral-700
     leading-none
   "
