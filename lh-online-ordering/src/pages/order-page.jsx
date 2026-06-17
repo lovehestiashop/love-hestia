@@ -167,7 +167,7 @@ navigate("/shop");
     <div>
       <HeaderComponent />
 
-      <section className="bg-[#faf9f7] py-24">
+      <section className="bg-neutral-50 py-24">
         <div
           className={`mx-auto px-6 grid gap-12 ${
             product
@@ -184,18 +184,7 @@ navigate("/shop");
           >
             {!product && !isCartCheckout && (
   <div>
-   <h3
-  className="
-    mb-5
-    text-[32px]
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
->
+    <h3 className="mb-4 font-medium uppercase tracking-wide">
       Customize Your Arrangement
     </h3>
                 <textarea
@@ -205,34 +194,12 @@ navigate("/shop");
                   onChange={handleChange}
                   placeholder="Describe your custom arrangement*"
                   rows="4"
-                  className="
-  w-full
-  border
-  border-neutral-300
-  bg-white
-  px-4
-  py-3
-  text-neutral-700
-  focus:outline-none
-  focus:border-neutral-500
-  mb-3
-"
+                  className="w-full border p-3 mb-3"
                 />
               </div>
             )}
 
-           <h3
-  className="
-    mb-5
-    text-[32px]
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
->
+            <h3 className="mb-4 font-medium uppercase tracking-wide">
               Your Information
             </h3>
 
@@ -243,18 +210,7 @@ navigate("/shop");
               onChange={handleChange}
               type="text"
               placeholder="Name*"
-              className="
-  w-full
-  border
-  border-neutral-300
-  bg-white
-  px-4
-  py-3
-  text-neutral-700
-  focus:outline-none
-  focus:border-neutral-500
-  mb-3
-"
+              className="w-full border p-3 mb-3"
             />
 
             <input
@@ -264,18 +220,7 @@ navigate("/shop");
               onChange={handleChange}
               type="text"
               placeholder="Number*"
-              className="
-  w-full
-  border
-  border-neutral-300
-  bg-white
-  px-4
-  py-3
-  text-neutral-700
-  focus:outline-none
-  focus:border-neutral-500
-  mb-3
-"
+              className="w-full border p-3 mb-3"
             />
 
             <input
@@ -285,32 +230,10 @@ navigate("/shop");
               onChange={handleChange}
               type="text"
               placeholder="Facebook or Instagram name*"
-              className="
-  w-full
-  border
-  border-neutral-300
-  bg-white
-  px-4
-  py-3
-  text-neutral-700
-  focus:outline-none
-  focus:border-neutral-500
-  mb-3
-"
+              className="w-full border p-3 mb-3"
             />
 
-            <h3
-  className="
-    mb-5
-    text-[32px]
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
->
+            <h3 className="mb-4 font-medium uppercase tracking-wide">
               Receiver's Information (optional)
             </h3>
 
@@ -320,18 +243,7 @@ navigate("/shop");
               onChange={handleChange}
               type="text"
               placeholder="Receiver's name"
-              className="
-  w-full
-  border
-  border-neutral-300
-  bg-white
-  px-4
-  py-3
-  text-neutral-700
-  focus:outline-none
-  focus:border-neutral-500
-  mb-3
-"
+              className="w-full border p-3 mb-3"
             />
 
             <input
@@ -340,33 +252,11 @@ navigate("/shop");
               onChange={handleChange}
               type="text"
               placeholder="Receiver's number"
-              className="
-  w-full
-  border
-  border-neutral-300
-  bg-white
-  px-4
-  py-3
-  text-neutral-700
-  focus:outline-none
-  focus:border-neutral-500
-  mb-3
-"
+              className="w-full border p-3 mb-3"
             />
 
             {/* DELIVERY DETAILS */}
-            <h3
-  className="
-    mb-5
-    text-[32px]
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
->
+            <h3 className="mb-4 font-medium uppercase tracking-wide">
               Delivery Details
             </h3>
 
@@ -398,18 +288,7 @@ navigate("/shop");
               onChange={handleChange}
               placeholder="Delivery address*"
               rows="3"
-              className="
-  w-full
-  border
-  border-neutral-300
-  bg-white
-  px-4
-  py-3
-  text-neutral-700
-  focus:outline-none
-  focus:border-neutral-500
-  mb-3
-"
+              className="w-full border p-3 mb-3"
             />
 
             <textarea
@@ -421,18 +300,7 @@ navigate("/shop");
               className="w-full border p-3 mb-3"
             />
 
-            <h3
-  className="
-    mb-5
-    text-[32px]
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
->
+            <h3 className="mb-4 font-medium uppercase tracking-wide">
               Delivery Area
             </h3>
 
@@ -464,7 +332,8 @@ navigate("/shop");
   Car Delivery (₱500)
 </label>
 
-            <div className="border-t border-neutral-300 pt-8 space-y-3">
+            <div className="border-t pt-6 space-y-2">
+
   {product && (
     <>
       <div className="flex justify-between">
@@ -477,18 +346,7 @@ navigate("/shop");
         <span>₱{deliveryFee}</span>
       </div>
 
-      <div
-  className="
-    flex
-    justify-between
-    text-[26px]
-    text-neutral-700
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
->
+      <div className="flex justify-between font-medium text-lg">
         <span>Total</span>
         <span>₱{total}</span>
       </div>
@@ -497,80 +355,33 @@ navigate("/shop");
 
   {!product && cart.length > 0 && (
     <>
-     <div className="flex justify-between">
-  <span>Cart Items</span>
-
-  <span
-    style={{
-      fontFamily: "'Roboto', sans-serif",
-      fontWeight: "600",
-      color: "#5f5a55",
-    }}
-  >
-    {cart.length}
-  </span>
-</div>
+      <div className="flex justify-between">
+        <span>Cart Items</span>
+        <span>{cart.length}</span>
+      </div>
 
       <div className="flex justify-between">
-  <span>Subtotal</span>
-
-  <span
-    style={{
-      fontFamily: "'Roboto', sans-serif",
-      fontWeight: "600",
-      color: "#5f5a55",
-    }}
-  >
-    ₱{cartSubtotal.toLocaleString("en-PH")}
-  </span>
-</div>
+        <span>Subtotal</span>
+        <span>₱{cartSubtotal}</span>
+      </div>
 
       <div className="flex justify-between">
         <span>Delivery Fee</span>
         <span>₱{deliveryFee}</span>
       </div>
 
-  <div className="flex justify-between items-center mt-2">
-  <span
-    style={{
-      fontSize: "18px",
-      fontWeight: "500",
-      color: "#5f5a55",
-    }}
-  >
-    Total
-  </span>
-
-  <span
-    style={{
-      fontFamily: "'Roboto', sans-serif",
-      fontSize: "24px",
-      fontWeight: "600",
-      color: "#5f5a55",
-    }}
-  >
-    ₱{currentCartTotal.toLocaleString("en-PH")}
-  </span>
-</div>
-
+      <div className="flex justify-between font-medium text-lg">
+        <span>Total</span>
+        <span>₱{currentCartTotal}</span>
+      </div>
     </>
   )}
+
 </div>
 
-<h3
-  className="
-    mb-5
-    text-[32px]
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
->
-  Payment
-</h3>
+            <h3 className="mb-4 font-medium uppercase tracking-wide">
+              Payment
+            </h3>
 
             <QrComponent />
 
@@ -591,20 +402,7 @@ navigate("/shop");
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`
-
-  w-full
-  flex
-  items-center
-  justify-center
-  gap-3
-  py-4
-  text-[13px]
-  tracking-[0.25em]
-  uppercase
-  transition
-  mb-3
- ${
+              className={`w-full flex items-center justify-center gap-3 py-3 uppercase tracking-widest transition mb-3 ${
                 isSubmitting
                   ? "bg-neutral-400 cursor-not-allowed"
                   : "bg-neutral-800 hover:bg-neutral-700 hover:cursor-pointer text-white"
@@ -635,31 +433,11 @@ navigate("/shop");
                   className="h-full w-full object-cover"
                 />
               </div>
-              <h2
-  className="
-    mt-6
-    text-[34px]
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 300,
-  }}
->
+              <h2 className="mt-6 text-lg font-medium uppercase tracking-wide text-neutral-800">
                 {product.title.rendered}
               </h2>
 
-              <p
-  className="
-    mt-3
-    text-[15px]
-    leading-8
-    text-neutral-600
-  "
->
-  {product.acf.product_description}
-</p>
+              <p>{product.acf.product_description}</p>
             </div>
           )}
         </div>
