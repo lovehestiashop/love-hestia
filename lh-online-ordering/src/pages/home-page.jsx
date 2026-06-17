@@ -60,37 +60,8 @@ function HomePage() {
 
       {/* CUSTOM ARRANGEMENTS */}
       <CustomArrangementSectionComponent />
-
-      {/* WORKSHOP */}
-      <section className="relative h-[400px] md:h-[600px] text-white text-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src={workshopImage}
-            alt="Workshop"
-            className="w-full h-full object-cover object-center"
-          />
-
-          <div className="absolute inset-0 bg-black/35"></div>
-        </div>
-
-        <div className="relative z-10 flex h-full flex-col items-center justify-center px-6">
-          <h1 className="text-3xl md:text-5xl mb-3">
-            Private Dried Flower Workshop
-          </h1>
-
-          <p className="mb-5 text-sm md:text-base">
-            Birthdays · Bridal Shower · Events
-          </p>
-
-          <Link to="/workshop">
-            <button className="border border-white px-6 py-2 rounded-full text-sm hover:bg-white hover:text-neutral-800 transition">
-              Learn more
-            </button>
-          </Link>
-        </div>
-      </section>
-
-      {/* FLORIST FOR A DAY */}
+      
+        {/* FLORIST FOR A DAY */}
       <section className="py-16 bg-neutral-50 text-center">
         <h1
           className="text-[42px] md:text-[80px] mb-4 whitespace-nowrap"
@@ -185,6 +156,35 @@ function HomePage() {
               )
             )}
           </div>
+        </div>
+      </section>
+
+      {/* WORKSHOP */}
+      <section className="relative h-[400px] md:h-[600px] text-white text-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src={workshopImage}
+            alt="Workshop"
+            className="w-full h-full object-cover object-center"
+          />
+
+          <div className="absolute inset-0 bg-black/35"></div>
+        </div>
+
+        <div className="relative z-10 flex h-full flex-col items-center justify-center px-6">
+          <h1 className="text-3xl md:text-5xl mb-3">
+            Private Dried Flower Workshop
+          </h1>
+
+          <p className="mb-5 text-sm md:text-base">
+            Birthdays · Bridal Shower · Events
+          </p>
+
+          <Link to="/workshop">
+            <button className="border border-white px-6 py-2 rounded-full text-sm hover:bg-white hover:text-neutral-800 transition">
+              Learn more
+            </button>
+          </Link>
         </div>
       </section>
 
