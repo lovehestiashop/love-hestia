@@ -530,7 +530,7 @@ navigate("/shop");
         <span>₱{deliveryFee}</span>
       </div>
 
-   <div className="flex justify-between items-center mt-2">
+  <div className="flex justify-between items-center mt-2">
   <span
     style={{
       fontSize: "18px",
@@ -553,7 +553,11 @@ navigate("/shop");
   </span>
 </div>
 
-            <h3
+    </>
+  )}
+</div>
+
+<h3
   className="
     mb-5
     text-[32px]
@@ -565,12 +569,8 @@ navigate("/shop");
     fontWeight: 300,
   }}
 >
-                  </>
-  )}
-
-</div>
-              Payment
-            </h3>
+  Payment
+</h3>
 
             <QrComponent />
 
