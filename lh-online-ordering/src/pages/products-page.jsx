@@ -206,8 +206,7 @@ function ProductsPage() {
                       {
                         minimumFractionDigits: 2,
                       }
-                    )}{" "}
-                    PHP
+                    )}
                   </p>
 
                   {!isAvailable && (
