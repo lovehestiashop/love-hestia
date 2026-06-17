@@ -49,18 +49,19 @@ function CartPage() {
     
 <h1
   className="
-    text-[48px]
-    md:text-[72px]
+    text-[56px]
+    md:text-[82px]
     text-center
     text-neutral-700
-    mb-12
+    mb-14
   "
   style={{
     fontFamily: "'Cormorant Garamond', serif",
     fontWeight: 300,
+    letterSpacing: "-0.02em",
   }}
 >
-  My Cart
+  Your Selection
 </h1>
       <div
         style={{
@@ -149,11 +150,15 @@ function CartPage() {
                 }}
               >
                 <div>
-                  <h3
-                    style={{
-                      marginBottom: "10px",
-                    }}
-                  >
+                 <h3
+  style={{
+    marginBottom: "10px",
+    fontFamily: "'Cormorant Garamond', serif",
+    fontSize: "32px",
+    fontWeight: "400",
+    color: "#3d3d3d",
+  }}
+>
                     {
                       item.product?.title
                         ?.rendered
@@ -161,11 +166,13 @@ function CartPage() {
                   </h3>
 
                   <p
-                    style={{
-                      marginBottom: "15px",
-                      color: "#666",
-                    }}
-                  >
+  style={{
+    marginBottom: "20px",
+    color: "#7a7a7a",
+    fontSize: "15px",
+    letterSpacing: "0.05em",
+  }}
+>
                     Price: ₱
                     {Number(
                       item.product?.acf?.price || 0
@@ -178,9 +185,9 @@ function CartPage() {
                       alignItems: "center",
                       justifyContent:
                         "space-between",
-                      width: "120px",
+                      width: "140px",
                       border: "1px solid #ddd",
-                      borderRadius: "8px",
+                      borderRadius: "999px",
                       padding: "10px 14px",
                       marginBottom: "12px",
                       background: "#fff",
@@ -287,8 +294,9 @@ function CartPage() {
                 >
                   <p
                     style={{
-                      fontSize: "22px",
-                      fontWeight: "500",
+                      fontFamily: "'Cormorant Garamond', serif",
+fontSize: "34px",
+fontWeight: "400",
                       marginBottom: "20px",
                     }}
                   >
