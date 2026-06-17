@@ -10,7 +10,10 @@ function ProductDetailPage() {
   const navigate = useNavigate();
 
   const product = state?.product;
-  const isAvailable = Boolean(product?.acf?.availability);
+
+  const isAvailable = Boolean(
+    product?.acf?.availability
+  );
 
   const [gallery, setGallery] = useState([]);
   const [selectedImage, setSelectedImage] =
@@ -66,82 +69,84 @@ function ProductDetailPage() {
   return (
     <div
       style={{
-        maxWidth: "1200px",
+        maxWidth: "1400px",
         margin: "0 auto",
-        padding: "50px 30px",
+        padding: "60px 30px",
+        background: "#faf9f7",
+        minHeight: "100vh",
       }}
     >
-      
+      {/* BREADCRUMB */}
+
       <div
-  style={{
-    marginBottom: "30px",
-    fontSize: "14px",
-    color: "#666",
-  }}
->
-  <span
-    onClick={() => navigate("/")}
-    style={{ cursor: "pointer" }}
-  >
-    Home
-  </span>
+        style={{
+          marginBottom: "50px",
+          fontSize: "13px",
+          color: "#8b8b8b",
+          letterSpacing: "2px",
+          textTransform: "uppercase",
+        }}
+      >
+        <span
+          onClick={() => navigate("/")}
+          style={{
+            cursor: "pointer",
+          }}
+        >
+          Home
+        </span>
 
-  {" / "}
+        {" / "}
 
-  <span
-    onClick={() => navigate("/shop")}
-    style={{ cursor: "pointer" }}
-  >
-    Shop
-  </span>
+        <span
+          onClick={() => navigate("/shop")}
+          style={{
+            cursor: "pointer",
+          }}
+        >
+          Shop
+        </span>
 
-  {" / "}
+        {" / "}
 
-  <span>
-    {product.title.rendered}
-  </span>
-</div>
+        <span>
+          {product.title.rendered}
+        </span>
+      </div>
+
       <div
         style={{
           display: "flex",
-          gap: "60px",
-          alignItems: "flex-start",
+          gap: "80px",
           flexWrap: "wrap",
-          justifyContent: "center",
+          alignItems: "flex-start",
         }}
       >
         {/* LEFT COLUMN */}
+
         <div
-  style={{
-    flex: 1,
-    minWidth: 0,
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  }}
->
-          
-<img
-  src={selectedImage}
-  alt={product.title.rendered}
-  style={{
-    width: "100%",
-    maxWidth: "600px",
-    display: "block",
-    margin: "0 auto",
-  }}
-/>
+          style={{
+            flex: 1,
+            minWidth: "350px",
+          }}
+        >
+          <img
+            src={selectedImage}
+            alt={product.title.rendered}
+            style={{
+              width: "100%",
+              display: "block",
+            }}
+          />
+
           <div
-  style={{
-    display: "flex",
-    gap: "18px",
-    marginTop: "25px",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    width: "100%",
-  }}
->
+            style={{
+              display: "flex",
+              gap: "12px",
+              marginTop: "25px",
+              flexWrap: "wrap",
+            }}
+          >
             {gallery.map(
               (image, index) => (
                 <img
@@ -149,22 +154,20 @@ function ProductDetailPage() {
                   src={image}
                   alt=""
                   onClick={() =>
-                    setSelectedImage(
-                      image
-                    )
+                    setSelectedImage(image)
                   }
                   style={{
-                    width: "130px",
-                    height: "180px",
+                    width: "100px",
+                    height: "130px",
                     objectFit: "cover",
                     cursor: "pointer",
+                    borderRadius: "6px",
                     border:
-                      selectedImage ===
-                      image
-                        ? "2px solid #000"
+                      selectedImage === image
+                        ? "1px solid #555"
                         : "1px solid #ddd",
                     transition:
-                      "0.3s ease",
+                      "all 0.3s ease",
                   }}
                 />
               )
@@ -173,6 +176,7 @@ function ProductDetailPage() {
         </div>
 
         {/* RIGHT COLUMN */}
+
         <div
           style={{
             flex: 1,
@@ -181,32 +185,42 @@ function ProductDetailPage() {
         >
           <h1
             style={{
-              fontSize: "42px",
-              marginBottom: "10px",
-              fontWeight: "500",
+              fontSize: "68px",
+              lineHeight: "0.95",
+              marginBottom: "15px",
+              color: "#5f5a55",
+              fontWeight: "300",
+              fontFamily:
+                "'Cormorant Garamond', serif",
             }}
           >
             {product.title.rendered}
           </h1>
 
           <h2
-  style={{
-    marginBottom: "40px",
-    fontSize: "28px",
-    fontWeight: "700",
-    color: "#000",
-  }}
->
-  ₱
-  {Number(
-    product.acf?.price || 0
-  ).toLocaleString("en-PH")}
-</h2>
+            style={{
+              fontSize: "34px",
+              marginBottom: "40px",
+              color: "#7d746c",
+              fontWeight: "400",
+              fontFamily:
+                "'Cormorant Garamond', serif",
+            }}
+          >
+            ₱
+            {Number(
+              product.acf?.price || 0
+            ).toLocaleString("en-PH")}{" "}
+            PHP
+          </h2>
+
           <div
             style={{
-              marginBottom: "40px",
-              lineHeight: "1.9",
-              color: "#444",
+              maxWidth: "550px",
+              lineHeight: "2",
+              color: "#666",
+              fontSize: "15px",
+              marginBottom: "50px",
             }}
           >
             <p>
@@ -216,113 +230,142 @@ function ProductDetailPage() {
               }
             </p>
           </div>
-<div
-  style={{
-    marginTop: "10px",
-  }}
->
-  {isAvailable ? (
-    <div
-      style={{
-        display: "flex",
-        gap: "15px",
-        flexWrap: "wrap",
-      }}
-    >
-      <button
-        onClick={() => {
-          const cart =
-            JSON.parse(
-              localStorage.getItem("cart")
-            ) || [];
 
-          const existingItem =
-            cart.find(
-              (item) =>
-                item.product?.id ===
-                product.id
-            );
+          {isAvailable ? (
+            <div
+              style={{
+                display: "flex",
+                gap: "15px",
+                flexWrap: "wrap",
+              }}
+            >
+              <button
+                onClick={() => {
+                  const cart =
+                    JSON.parse(
+                      localStorage.getItem(
+                        "cart"
+                      )
+                    ) || [];
 
-          if (existingItem) {
-            existingItem.quantity += 1;
-          } else {
-            cart.push({
-              product,
-              quantity: 1,
-            });
-          }
+                  const existingItem =
+                    cart.find(
+                      (item) =>
+                        item.product?.id ===
+                        product.id
+                    );
 
-          localStorage.setItem(
-            "cart",
-            JSON.stringify(cart)
-          );
+                  if (existingItem) {
+                    existingItem.quantity += 1;
+                  } else {
+                    cart.push({
+                      product,
+                      quantity: 1,
+                    });
+                  }
 
-          alert("Added to cart!");
-        }}
-        style={{
-          padding: "14px 30px",
-          border: "1px solid #000",
-          background: "#fff",
-          cursor: "pointer",
-          letterSpacing: "1px",
-        }}
-      >
-        ADD TO CART
-      </button>
+                  localStorage.setItem(
+                    "cart",
+                    JSON.stringify(cart)
+                  );
 
-      <button
-        onClick={() =>
-          navigate("/order", {
-            state: {
-              product,
-            },
-          })
-        }
-        style={{
-          padding: "14px 30px",
-          border: "none",
-          background: "#000",
-          color: "#fff",
-          cursor: "pointer",
-          letterSpacing: "1px",
-        }}
-      >
-        BUY NOW
-      </button>
-    </div>
-  ) : (
-    <div>
-      <p
-        style={{
-          color: "#8B0000",
-          fontSize: "14px",
-          letterSpacing: "3px",
-          textTransform: "uppercase",
-          marginBottom: "15px",
-          fontWeight: "600",
-        }}
-      >
-        SOLD OUT
-      </p>
+                  alert(
+                    "Added to cart!"
+                  );
+                }}
+                style={{
+                  padding:
+                    "16px 42px",
+                  border:
+                    "1px solid #888",
+                  background:
+                    "#ffffff",
+                  cursor: "pointer",
+                  letterSpacing:
+                    "3px",
+                  textTransform:
+                    "uppercase",
+                  fontSize: "12px",
+                }}
+              >
+                Add to Cart
+              </button>
 
-      <button
-        disabled
-        style={{
-          padding: "14px 30px",
-          border: "1px solid #999",
-          background: "#f5f5f5",
-          color: "#999",
-          cursor: "not-allowed",
-          letterSpacing: "2px",
-          textTransform: "uppercase",
-        }}
-      >
-        Unavailable
-      </button>
-    </div>
-  )}
-</div>
-         
+              <button
+                onClick={() =>
+                  navigate(
+                    "/order",
+                    {
+                      state: {
+                        product,
+                      },
+                    }
+                  )
+                }
+                style={{
+                  padding:
+                    "16px 42px",
+                  border: "none",
+                  background:
+                    "#5d5650",
+                  color: "#fff",
+                  cursor: "pointer",
+                  letterSpacing:
+                    "3px",
+                  textTransform:
+                    "uppercase",
+                  fontSize: "12px",
+                }}
+              >
+                Buy Now
+              </button>
+            </div>
+          ) : (
+            <div>
+              <p
+                style={{
+                  color:
+                    "#8b8b8b",
+                  letterSpacing:
+                    "4px",
+                  textTransform:
+                    "uppercase",
+                  marginBottom:
+                    "20px",
+                  fontFamily:
+                    "'Cormorant Garamond', serif",
+                  fontSize:
+                    "16px",
+                }}
+              >
+                Sold Out
+              </p>
+
+              <button
+                disabled
+                style={{
+                  padding:
+                    "16px 42px",
+                  border:
+                    "1px solid #ccc",
+                  background:
+                    "#f3f3f3",
+                  color:
+                    "#999",
+                  cursor:
+                    "not-allowed",
+                  letterSpacing:
+                    "3px",
+                  textTransform:
+                    "uppercase",
+                  fontSize:
+                    "12px",
+                }}
+              >
+                Unavailable
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
