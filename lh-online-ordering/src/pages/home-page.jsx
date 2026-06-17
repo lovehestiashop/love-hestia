@@ -1,3 +1,4 @@
+import { homeSettingsService } from "../services/home-settings-service";
 import NavItemsComponent from "../components/nav-items";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -16,6 +17,7 @@ function HomePage() {
 
   const [floristForADayImages, setFloristForADayImages] =
     useState([]);
+  const [homeSettings, setHomeSettings] = useState(null);
 
   useEffect(() => {
     const loadFloristImages = async () => {
