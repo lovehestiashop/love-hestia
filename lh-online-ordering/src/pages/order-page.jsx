@@ -530,14 +530,11 @@ navigate("/shop");
         <span>₱{deliveryFee}</span>
       </div>
 
-      <div
-  className="flex justify-between items-center mt-2"
->
+   <div className="flex justify-between items-center mt-2">
   <span
     style={{
-      fontFamily: "'Cormorant Garamond', serif",
-      fontSize: "30px",
-      fontWeight: "300",
+      fontSize: "18px",
+      fontWeight: "500",
       color: "#5f5a55",
     }}
   >
@@ -554,10 +551,6 @@ navigate("/shop");
   >
     ₱{currentCartTotal.toLocaleString("en-PH")}
   </span>
-</div>
-    </>
-  )}
-
 </div>
 
             <h3
