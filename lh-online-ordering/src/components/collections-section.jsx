@@ -60,9 +60,19 @@ function CollectionsSectionComponent() {
                   <div className="absolute inset-0 bg-black/25 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                 </div>
 
-                <p className="mt-4 text-[12px] font-medium tracking-widest uppercase text-neutral-800">
-                  {item.title}
-                </p>
+                <p
+  className="
+    mt-4
+    text-[16px]
+    font-medium
+    text-neutral-800
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+  }}
+>
+  {item.title}
+</p>
               </div>
             </Link>
           ))}
@@ -83,10 +93,19 @@ function CollectionsSectionComponent() {
 
                 <div className="absolute inset-0 bg-black/25 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               </div>
-
-              <p className="mt-4 text-[12px] font-medium tracking-widest uppercase text-neutral-800">
-                {collections[2].title}
-              </p>
+<p
+  className="
+    mt-4
+    text-[16px]
+    font-medium
+    text-neutral-800
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+  }}
+>
+  {item.title}
+</p>
             </div>
           </Link>
         </div>
@@ -110,13 +129,17 @@ function CollectionsSectionComponent() {
                 <div className="absolute inset-0 bg-black/25 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               </div>
 
-             <p
+            <p
   className="
-    text-[22px]
-    md:text-[30px]
-    font-light
+    text-[26px]
+    md:text-[34px]
+    font-medium
     text-neutral-700
   "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+  }}
+>
   style={{
     fontFamily: "'Cormorant Garamond', serif",
   }}
