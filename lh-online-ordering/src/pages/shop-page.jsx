@@ -30,20 +30,18 @@ function ShopPage() {
       <HeaderComponent />
 
       <section className="py-20 md:py-24">
-
         <h2
           className="
-            mb-16
+            mb-20
             text-center
-            text-[42px]
-            md:text-[72px]
+            text-[52px]
+            md:text-[82px]
             font-light
             text-neutral-700
             leading-none
           "
           style={{
-            fontFamily:
-              "'Cormorant Garamond', serif",
+            fontFamily: "'Cormorant Garamond', serif",
           }}
         >
           Collections
@@ -56,7 +54,7 @@ function ShopPage() {
             max-w-7xl
             grid-cols-1
             gap-8
-            px-5
+            px-6
             sm:grid-cols-2
             md:grid-cols-3
             md:gap-10
@@ -94,37 +92,36 @@ function ShopPage() {
                     className="
                       absolute
                       inset-0
-                      bg-black/20
+                      bg-black/10
                       transition-all
                       duration-500
-                      group-hover:bg-black/30
+                      group-hover:bg-black/20
                     "
                   />
                 </div>
 
-                <div className="mt-5 text-center">
+                <div className="mt-4 text-center">
                   <h3
-  className="
-    text-[30px]
-    md:text-[40px]
-    font-light
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily:
-      "'Cormorant Garamond', serif",
-  }}
->
-  {item.title}
-</h3>
+                    className="
+                      text-[34px]
+                      md:text-[48px]
+                      font-light
+                      text-neutral-700
+                      leading-none
+                    "
+                    style={{
+                      fontFamily:
+                        "'Cormorant Garamond', serif",
+                    }}
+                  >
+                    {item.title}
+                  </h3>
                 </div>
 
               </div>
             </Link>
           ))}
         </div>
-
       </section>
 
       <FooterComponent />
