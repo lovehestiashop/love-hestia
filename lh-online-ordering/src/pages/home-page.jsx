@@ -22,12 +22,11 @@ function HomePage() {
   useEffect(() => {
     const loadFloristImages = async () => {
       try {
-        const res = await axios.get(
-          "https://api.lovehestia.shop/wp-json/wp/v2/pages/4973?_fields=acf"
-        );
+       const acf =
+  await homeSettingsService.getSettings();
 
-        const acf = res.data?.acf;
-
+setHomeSettings(acf);
+        
 if (!acf) {
   console.error(
     "Home Page Settings ACF missing"
