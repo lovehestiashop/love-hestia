@@ -174,7 +174,7 @@ height: isMobile ? "160px" : "220px",
                     }
                   </h3>
 
-                  <p
+             <p
   style={{
     marginBottom: "20px",
     color: "#7a7a7a",
@@ -182,11 +182,21 @@ height: isMobile ? "160px" : "220px",
     letterSpacing: "0.05em",
   }}
 >
-                    Price: ₱
-                    {Number(
-                      item.product?.acf?.price || 0
-                    ).toLocaleString("en-PH")}
-                  </p>
+  Price:
+  <span
+    style={{
+      fontFamily: "'Roboto', sans-serif",
+      fontWeight: "600",
+      marginLeft: "4px",
+      color: "#5f5a55",
+    }}
+  >
+    ₱
+    {Number(
+      item.product?.acf?.price || 0
+    ).toLocaleString("en-PH")}
+  </span>
+</p> 
 
                   <div
                     style={{
@@ -246,12 +256,13 @@ height: isMobile ? "160px" : "220px",
                     </button>
 
                     <span
-                      style={{
-                        fontWeight: "600",
-                      }}
-                    >
-                      {item.quantity}
-                    </span>
+  style={{
+    fontFamily: "'Roboto', sans-serif",
+    fontWeight: "700",
+  }}
+>
+  {item.quantity}
+</span>
 
                     <button
                       onClick={() => {
@@ -301,23 +312,22 @@ height: isMobile ? "160px" : "220px",
                       : "0",
                   }}
                 >
-                  <p
-                    style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-fontSize:
-  isMobile ? "22px" : "34px",
-fontWeight: "400",
-                      marginBottom: "20px",
-                    }}
-                  >
-                    ₱
-                    {(
-                      Number(
-                        item.product?.acf
-                          ?.price || 0
-                      ) * item.quantity
-                    ).toLocaleString("en-PH")}
-                  </p>
+                 <p
+  style={{
+    fontFamily: "'Roboto', sans-serif",
+    fontSize: isMobile ? "24px" : "36px",
+    fontWeight: "700",
+    marginBottom: "20px",
+    color: "#5f5a55",
+  }}
+>
+  ₱
+  {(
+    Number(
+      item.product?.acf?.price || 0
+    ) * item.quantity
+  ).toLocaleString("en-PH")}
+</p>
 
                   <button
                     onClick={() =>
@@ -361,17 +371,33 @@ fontWeight: "400",
 >
   Order Summary
 </h2>
-            <p>
-              <strong>Subtotal:</strong> ₱
-              {subtotal.toLocaleString("en-PH")}
-            </p>
+          <p>
+  <strong>Subtotal:</strong>
+  <span
+    style={{
+      fontFamily: "'Roboto', sans-serif",
+      fontWeight: "700",
+      marginLeft: "4px",
+    }}
+  >
+    ₱{subtotal.toLocaleString("en-PH")}
+  </span>
+</p>  
 
-            <p>
-              <strong>
-                Starting Delivery Fee:
-              </strong>{" "}
-              ₱200
-            </p>
+           <p>
+  <strong>
+    Starting Delivery Fee:
+  </strong>
+  <span
+    style={{
+      fontFamily: "'Roboto', sans-serif",
+      fontWeight: "700",
+      marginLeft: "4px",
+    }}
+  >
+    ₱200
+  </span>
+</p>
 
             <h2
   style={{
