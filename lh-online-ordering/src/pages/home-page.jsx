@@ -168,7 +168,7 @@ function HomePage() {
   alt="Workshop"
   className="w-full h-full object-cover"
   style={{
-    objectPosition: "center 5%",
+    objectPosition: "center 70%",
   }}
 />
           <div className="absolute inset-0 bg-black/35"></div>
