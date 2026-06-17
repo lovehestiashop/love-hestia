@@ -565,6 +565,10 @@ navigate("/shop");
     fontWeight: 300,
   }}
 >
+                  </>
+  )}
+
+</div>
               Payment
             </h3>
 
