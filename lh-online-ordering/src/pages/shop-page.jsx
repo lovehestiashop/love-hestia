@@ -104,19 +104,20 @@ function ShopPage() {
 
                 <div className="mt-5 text-center">
                   <h3
-                    className="
-                      text-[24px]
-                      md:text-[30px]
-                      font-light
-                      text-neutral-700
-                    "
-                    style={{
-                      fontFamily:
-                        "'Cormorant Garamond', serif",
-                    }}
-                  >
-                    {item.title}
-                  </h3>
+  className="
+    text-[30px]
+    md:text-[40px]
+    font-light
+    text-neutral-700
+    leading-none
+  "
+  style={{
+    fontFamily:
+      "'Cormorant Garamond', serif",
+  }}
+>
+  {item.title}
+</h3>
                 </div>
 
               </div>
