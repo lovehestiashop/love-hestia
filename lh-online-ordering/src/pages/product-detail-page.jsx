@@ -199,18 +199,19 @@ function ProductDetailPage() {
         >
         
           <h1
-            style={{
-              fontSize:
-  window.innerWidth <= 768
-    ? "42px"
-    : "68px",
-              lineHeight: "0.95",
-              marginBottom: "15px",
-              color: "#5f5a55",
-              fontWeight: "300",
-              fontFamily:
-                "'Cormorant Garamond', serif",
-            }}
+  style={{
+    fontSize:
+      window.innerWidth <= 768
+        ? "34px"
+        : "52px",
+    lineHeight: "1",
+    marginBottom: "15px",
+    color: "#5f5a55",
+    fontWeight: "300",
+    fontFamily:
+      "'Cormorant Garamond', serif",
+  }}
+>
           >
             {product.title.rendered}
           </h1>
