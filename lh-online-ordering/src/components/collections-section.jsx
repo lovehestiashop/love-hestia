@@ -1,55 +1,23 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
 
 function CollectionsSectionComponent() {
-  const [collections, setCollections] = useState([]);
-
-  useEffect(() => {
-    const loadCollections = async () => {
-      try {
-        const pageRes = await axios.get(
-          "https://api.lovehestia.shop/wp-json/wp/v2/pages/4973?_fields=acf"
-        );
-
-        const acf = pageRes.data.acf;
-
-        const image1 = await axios.get(
-          `https://api.lovehestia.shop/wp-json/wp/v2/media/${acf.collection_image_1}`
-        );
-
-        const image2 = await axios.get(
-          `https://api.lovehestia.shop/wp-json/wp/v2/media/${acf.collection_image_2}`
-        );
-
-        const image3 = await axios.get(
-          `https://api.lovehestia.shop/wp-json/wp/v2/media/${acf.collection_image_3}`
-        );
-
-        setCollections([
-          {
-            title: acf.collection_title_1,
-            image: image1.data.source_url,
-            productKey: 5,
-          },
-          {
-            title: acf.collection_title_2,
-            image: image2.data.source_url,
-            productKey: 6,
-          },
-          {
-            title: acf.collection_title_3,
-            image: image3.data.source_url,
-            productKey: 7,
-          },
-        ]);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    loadCollections();
-  }, []);
+const collections = [
+  {
+    title: "Flower Bouquets",
+    image: "/images/flower-bouquets.jpg",
+    productKey: 5,
+  },
+  {
+    title: "Vase Arrangements",
+    image: "/images/vase-arrangements.jpg",
+    productKey: 6,
+  },
+  {
+    title: "Flower Dome",
+    image: "/images/flower-dome.jpg",
+    productKey: 7,
+  },
+];
 
   if (collections.length === 0) {
     return null;
