@@ -23,11 +23,31 @@ Final pricing depends on flower availability, arrangement size, and design compl
 
         {/* Content */}
         <div>
-          <h2 className="text-[36px] mb-5 text-neutral-800">
+         <h2
+  className="
+    text-[42px]
+    md:text-[72px]
+    mb-8
+    font-light
+    text-neutral-700
+    leading-none
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+  }}
+>
             {data.title}
           </h2>
 
-          <p className="text-sm md:text-base leading-relaxed whitespace-pre-line">
+          <p
+  className="
+    text-[15px]
+    md:text-[18px]
+    leading-[2]
+    text-neutral-600
+    whitespace-pre-line
+  "
+>
             {data.text}
           </p>
         </div>
