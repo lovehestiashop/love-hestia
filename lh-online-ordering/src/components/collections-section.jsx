@@ -104,7 +104,7 @@ function CollectionsSectionComponent() {
     fontFamily: "'Cormorant Garamond', serif",
   }}
 >
-  {item.title}
+  {collections[2].title}
 </p>
             </div>
           </Link>
