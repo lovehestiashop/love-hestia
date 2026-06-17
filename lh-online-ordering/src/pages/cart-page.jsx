@@ -314,11 +314,14 @@ fontWeight: "400",
                       removeFromCart(index)
                     }
                     style={{
-                      padding: "10px 20px",
-                      border: "1px solid #000",
-                      background: "#fff",
-                      cursor: "pointer",
-                    }}
+  padding: "12px 24px",
+  border: "1px solid #d6d6d6",
+  background: "#faf9f7",
+  cursor: "pointer",
+  fontSize: "13px",
+  letterSpacing: "0.08em",
+  textTransform: "uppercase",
+}}
                   >
                     Remove
                   </button>
@@ -335,14 +338,17 @@ fontWeight: "400",
               textAlign: "right",
             }}
           >
-            <h2
-              style={{
-                marginBottom: "20px",
-              }}
-            >
-              Order Summary
-            </h2>
-
+          <h2
+  style={{
+    marginBottom: "25px",
+    fontFamily: "'Cormorant Garamond', serif",
+    fontSize: "42px",
+    fontWeight: "400",
+    color: "#3d3d3d",
+  }}
+>
+  Order Summary
+</h2>
             <p>
               <strong>Subtotal:</strong> ₱
               {subtotal.toLocaleString("en-PH")}
@@ -358,8 +364,9 @@ fontWeight: "400",
             <h2
               style={{
                 marginTop: "5px",
-                fontSize: "22px",
-                fontWeight: "700",
+                fontFamily: "'Cormorant Garamond', serif",
+fontSize: "42px",
+fontWeight: "400",
               }}
             >
               Total: ₱
@@ -391,15 +398,17 @@ fontWeight: "400",
                   },
                 })
               }
-              style={{
-                marginTop: "20px",
-                padding: "14px 30px",
-                background: "#000",
-                color: "#fff",
-                border: "none",
-                cursor: "pointer",
-                letterSpacing: "1px",
-              }}
+             style={{
+  marginTop: "25px",
+  padding: "16px 42px",
+  background: "#4a4338",
+  color: "#fff",
+  border: "none",
+  cursor: "pointer",
+  letterSpacing: "0.12em",
+  textTransform: "uppercase",
+  fontSize: "13px",
+}} 
             >
               CHECKOUT
             </button>
