@@ -26,8 +26,8 @@ Through every bouquet and every workshop, the mission remains the same: to share
         <div className="order-2 md:order-1">
           <h2
   className="
-    text-[42px]
-    md:text-[72px]
+    text-[34px]
+    md:text-[54px]
     mb-8
     font-light
     text-neutral-700
