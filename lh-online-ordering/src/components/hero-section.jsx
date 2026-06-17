@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import { homeSettingsService } from "../services/home-settings-service";
+import { mediaService } from "../services/media-service";
 
 function HeroSectionComponent() {
   const [offsetY, setOffsetY] = useState(0);
