@@ -183,6 +183,29 @@ function ProductDetailPage() {
             minWidth: "350px",
           }}
         >
+          <div
+  style={{
+    display: "flex",
+    justifyContent: "flex-end",
+    marginBottom: "25px",
+  }}
+>
+  <button
+    onClick={() => navigate("/cart")}
+    style={{
+      padding: "12px 24px",
+      border: "1px solid #d6d0c8",
+      background: "#faf9f7",
+      cursor: "pointer",
+      fontSize: "12px",
+      letterSpacing: "0.15em",
+      textTransform: "uppercase",
+      color: "#5f5a55",
+    }}
+  >
+    🛒 View Cart
+  </button>
+</div>
           <h1
             style={{
               fontSize: "68px",
