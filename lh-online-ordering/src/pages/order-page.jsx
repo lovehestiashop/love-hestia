@@ -167,7 +167,7 @@ navigate("/shop");
     <div>
       <HeaderComponent />
 
-      <section className="bg-neutral-50 py-24">
+      <section className="bg-[#faf9f7] py-24">
         <div
           className={`mx-auto px-6 grid gap-12 ${
             product
