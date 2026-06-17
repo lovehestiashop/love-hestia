@@ -498,7 +498,16 @@ navigate("/shop");
   {!product && cart.length > 0 && (
     <>
      <div className="flex justify-between">
-  <span>Cart Items</span>
+  <span
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontSize: "24px",
+    fontWeight: "300",
+    color: "#5f5a55",
+  }}
+>
+  Cart Items
+</span>
 
   <span
     style={{
@@ -512,7 +521,16 @@ navigate("/shop");
 </div>
 
       <div className="flex justify-between">
-  <span>Subtotal</span>
+  <span
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontSize: "24px",
+    fontWeight: "300",
+    color: "#5f5a55",
+  }}
+>
+  Subtotal
+</span>
 
   <span
     style={{
@@ -526,7 +544,16 @@ navigate("/shop");
 </div>
 
       <div className="flex justify-between">
-        <span>Delivery Fee</span>
+        <span
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontSize: "24px",
+    fontWeight: "300",
+    color: "#5f5a55",
+  }}
+>
+  Delivery Fee
+</span>
         <span>₱{deliveryFee}</span>
       </div>
 
