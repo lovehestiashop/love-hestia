@@ -566,7 +566,20 @@ navigate("/shop");
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full flex items-center justify-center gap-3 py-3 uppercase tracking-widest transition mb-3 ${
+              className={`
+
+  w-full
+  flex
+  items-center
+  justify-center
+  gap-3
+  py-4
+  text-[13px]
+  tracking-[0.25em]
+  uppercase
+  transition
+  mb-3
+ ${
                 isSubmitting
                   ? "bg-neutral-400 cursor-not-allowed"
                   : "bg-neutral-800 hover:bg-neutral-700 hover:cursor-pointer text-white"
