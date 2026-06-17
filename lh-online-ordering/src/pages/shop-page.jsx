@@ -26,38 +26,104 @@ function ShopPage() {
   ];
 
   return (
-    <div>
+    <div className="bg-[#faf9f7]">
       <HeaderComponent />
 
-      <section className="bg-neutral-50 py-24">
-        <h2 className="mb-14 text-center text-3xl font-medium text-neutral-800">
+      <section className="py-20 md:py-24">
+
+        <h2
+          className="
+            mb-16
+            text-center
+            text-[42px]
+            md:text-[72px]
+            font-light
+            text-neutral-700
+            leading-none
+          "
+          style={{
+            fontFamily:
+              "'Cormorant Garamond', serif",
+          }}
+        >
           Collections
         </h2>
 
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-6 sm:grid-cols-2 md:grid-cols-3">
+        <div
+          className="
+            mx-auto
+            grid
+            max-w-7xl
+            grid-cols-1
+            gap-8
+            px-5
+            sm:grid-cols-2
+            md:grid-cols-3
+            md:gap-10
+          "
+        >
           {collections.map((item) => (
             <Link
               key={item.title}
               to={`/shop/${item.productKey}`}
             >
-              <div className="group relative aspect-[3/4] cursor-pointer overflow-hidden">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                />
+              <div className="group">
 
-                <div className="absolute inset-0 bg-black/25 opacity-80 transition-opacity duration-500 group-hover:opacity-100" />
+                <div
+                  className="
+                    relative
+                    aspect-[3/4]
+                    overflow-hidden
+                  "
+                >
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="
+                      h-full
+                      w-full
+                      object-cover
+                      transition-transform
+                      duration-700
+                      ease-out
+                      group-hover:scale-105
+                    "
+                  />
 
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <h3 className="text-[15px] font-medium tracking-widest uppercase text-white">
+                  <div
+                    className="
+                      absolute
+                      inset-0
+                      bg-black/20
+                      transition-all
+                      duration-500
+                      group-hover:bg-black/30
+                    "
+                  />
+                </div>
+
+                <div className="mt-5 text-center">
+                  <h3
+                    className="
+                      text-[24px]
+                      md:text-[30px]
+                      font-light
+                      text-neutral-700
+                    "
+                    style={{
+                      fontFamily:
+                        "'Cormorant Garamond', serif",
+                    }}
+                  >
                     {item.title}
                   </h3>
                 </div>
+
               </div>
             </Link>
           ))}
         </div>
+
       </section>
 
       <FooterComponent />
