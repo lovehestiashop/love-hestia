@@ -113,7 +113,6 @@ const cartGrandTotal = state?.grandTotal || 0;
     await orderService.createOrder({
   ...form,
   product_id: product?.id,
-  current_stock: product?.acf?.stock,
   cart,
   date_and_time_of_delivery: formatDateTime(
     form.date_and_time_of_delivery,
