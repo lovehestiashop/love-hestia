@@ -184,7 +184,18 @@ navigate("/shop");
           >
             {!product && !isCartCheckout && (
   <div>
-    <h3 className="mb-4 font-medium uppercase tracking-wide">
+   <h3
+  className="
+    mb-5
+    text-[32px]
+    text-neutral-700
+    leading-none
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontWeight: 300,
+  }}
+>
       Customize Your Arrangement
     </h3>
                 <textarea
@@ -199,7 +210,18 @@ navigate("/shop");
               </div>
             )}
 
-            <h3 className="mb-4 font-medium uppercase tracking-wide">
+           <h3
+  className="
+    mb-5
+    text-[32px]
+    text-neutral-700
+    leading-none
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontWeight: 300,
+  }}
+>
               Your Information
             </h3>
 
@@ -233,7 +255,18 @@ navigate("/shop");
               className="w-full border p-3 mb-3"
             />
 
-            <h3 className="mb-4 font-medium uppercase tracking-wide">
+            <h3
+  className="
+    mb-5
+    text-[32px]
+    text-neutral-700
+    leading-none
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontWeight: 300,
+  }}
+>
               Receiver's Information (optional)
             </h3>
 
@@ -256,7 +289,18 @@ navigate("/shop");
             />
 
             {/* DELIVERY DETAILS */}
-            <h3 className="mb-4 font-medium uppercase tracking-wide">
+            <h3
+  className="
+    mb-5
+    text-[32px]
+    text-neutral-700
+    leading-none
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontWeight: 300,
+  }}
+>
               Delivery Details
             </h3>
 
@@ -300,7 +344,18 @@ navigate("/shop");
               className="w-full border p-3 mb-3"
             />
 
-            <h3 className="mb-4 font-medium uppercase tracking-wide">
+            <h3
+  className="
+    mb-5
+    text-[32px]
+    text-neutral-700
+    leading-none
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontWeight: 300,
+  }}
+>
               Delivery Area
             </h3>
 
@@ -379,7 +434,18 @@ navigate("/shop");
 
 </div>
 
-            <h3 className="mb-4 font-medium uppercase tracking-wide">
+            <h3
+  className="
+    mb-5
+    text-[32px]
+    text-neutral-700
+    leading-none
+  "
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontWeight: 300,
+  }}
+>
               Payment
             </h3>
 
