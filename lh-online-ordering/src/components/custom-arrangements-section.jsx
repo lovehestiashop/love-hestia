@@ -1,42 +1,21 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-
 function CustomArrangementSectionComponent() {
-  const [data, setData] = useState(null);
+  const data = {
+    title: "Custom Arrangements",
+    image:
+      "https://api.lovehestia.shop/wp-content/uploads/2026/06/IMG_9437.jpeg",
+    text: `We'd love to create a personalized dried-flower arrangement just for you.
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const pageRes = await axios.get(
-          "https://api.lovehestia.shop/wp-json/wp/v2/pages/4973?_fields=acf"
-        );
+Each design is thoughtfully crafted based on your chosen color palette, inspiration photos, and gifting needs.
 
-        const acf = pageRes.data.acf;
+Final pricing depends on flower availability, arrangement size, and design complexity.
 
-        const imageRes = await axios.get(
-          `https://api.lovehestia.shop/wp-json/wp/v2/media/${acf.custom_arrangement_image}`
-        );
-
-        setData({
-          image: imageRes.data.source_url,
-          title: acf.custom_arrangement_title,
-          text: acf.custom_arrangement_text,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    loadData();
-  }, []);
-
-  if (!data) return null;
+Every piece is handmade with care, making each bouquet uniquely yours.`,
+  };
 
   return (
     <section className="py-12 bg-[#faf9f7] text-neutral-800">
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center px-6">
 
-        {/* Image */}
         <div>
           <img
             src={data.image}
@@ -45,7 +24,6 @@ function CustomArrangementSectionComponent() {
           />
         </div>
 
-        {/* Content */}
         <div>
           <h2 className="text-[36px] mb-5 text-neutral-800">
             {data.title}
