@@ -88,13 +88,48 @@ function ProductDetailPage() {
   }}
 >
   <div
+  style={{
+    marginBottom: "50px",
+    fontSize: "13px",
+    color: "#8b8b8b",
+    letterSpacing: "2px",
+    textTransform: "uppercase",
+  }}
+>
+  <span
+    onClick={() => navigate("/")}
+    style={{ cursor: "pointer" }}
+  >
+    Home
+  </span>
+
+  {" / "}
+
+  <span
+    onClick={() => navigate("/shop")}
+    style={{ cursor: "pointer" }}
+  >
+    Shop
+  </span>
+
+  {" / "}
+
+  <span>
+    {product.title.rendered}
+  </span>
+
+  {" / "}
+
+  <span
+    onClick={() => navigate("/cart")}
     style={{
-      fontSize: "13px",
-      color: "#8b8b8b",
-      letterSpacing: "2px",
-      textTransform: "uppercase",
+      cursor: "pointer",
+      color: "#5f5a55",
     }}
   >
+    Cart
+  </span>
+</div>
     <span
       onClick={() => navigate("/")}
       style={{
@@ -122,21 +157,6 @@ function ProductDetailPage() {
     </span>
   </div>
 
-  <button
-    onClick={() => navigate("/cart")}
-    style={{
-      padding: "10px 20px",
-      border: "1px solid #d8d2c8",
-      background: "#faf9f7",
-      cursor: "pointer",
-      fontSize: "14px",
-      fontFamily: "'Cormorant Garamond', serif",
-      letterSpacing: "0.1em",
-      color: "#5f5a55",
-    }}
-  >
-    View Cart
-  </button>
 </div>
 
       <div
@@ -215,21 +235,6 @@ function ProductDetailPage() {
     marginBottom: "25px",
   }}
 >
-  <button
-    onClick={() => navigate("/cart")}
-    style={{
-      padding: "12px 24px",
-      border: "1px solid #d6d0c8",
-      background: "#faf9f7",
-      cursor: "pointer",
-      fontSize: "12px",
-      letterSpacing: "0.15em",
-      textTransform: "uppercase",
-      color: "#5f5a55",
-    }}
-  >
-    🛒 View Cart
-  </button>
 </div>
           <h1
             style={{
