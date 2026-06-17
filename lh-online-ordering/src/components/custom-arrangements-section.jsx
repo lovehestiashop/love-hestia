@@ -4,11 +4,9 @@ function CustomArrangementSectionComponent() {
     image:
       "https://api.lovehestia.shop/wp-content/uploads/2026/06/IMG_9437.jpeg",
     text: `We'd love to create a personalized dried-flower arrangement just for you.
-
 Each design is thoughtfully crafted based on your chosen color palette, inspiration photos, and gifting needs.
 
 Final pricing depends on flower availability, arrangement size, and design complexity.
-
 Every piece is handmade with care, making each bouquet uniquely yours.`,
   };
 
