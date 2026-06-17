@@ -1,36 +1,21 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-
 function OurStorySectionComponent() {
-  const [data, setData] = useState(null);
+  const data = {
+    image: "/Our story.jpeg",
+    title: "Our Story",
+    text: `Love Hestia began in 2022, born from healing, hope, and a renewed sense of purpose.
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const pageRes = await axios.get(
-          "https://api.lovehestia.shop/wp-json/wp/v2/pages/4973?_fields=acf"
-        );
+Like many, the journey was shaped by the uncertainty of the pandemic. In the quiet stillness that followed, dried flowers became a new source of comfort and creativity.
 
-        const acf = pageRes.data.acf;
+With no background in floral design, the very first bouquet I created was sold right away. That small moment sparked something much bigger—a path that felt unexpected but meant to be.
 
-        const imageRes = await axios.get(
-          `https://api.lovehestia.shop/wp-json/wp/v2/media/${acf.our_story_image}`
-        );
+What started as a small, comforting hobby slowly grew into a passion and eventually a business. From offering locally sourced dried flowers, Love Hestia has expanded into creating premium preserved blooms that can last for years with proper care.
 
-        setData({
-          image: imageRes.data.source_url,
-          title: acf.our_story_title,
-          text: acf.our_story_text,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    };
+Every arrangement is crafted with intention, care, and heart, perfect for gifting or adding warmth to any space.
 
-    loadData();
-  }, []);
+Today, Love Hestia also offers dried flower workshops, teaching others how to create pieces they can proudly take home.
 
-  if (!data) return null;
+Through every bouquet and every workshop, the mission remains the same: to share joy, creativity, and a little warmth, one flower at a time.`,
+  };
 
   return (
     <section className="py-12 bg-neutral-50">
