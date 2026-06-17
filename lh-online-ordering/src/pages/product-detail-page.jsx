@@ -78,16 +78,9 @@ function ProductDetailPage() {
     >
       {/* BREADCRUMB */}
 
-      <div
-  style={{
-    marginBottom: "50px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexWrap: "wrap",
-  }}
->
-  <div
+   {/* BREADCRUMB */}
+
+<div
   style={{
     marginBottom: "50px",
     fontSize: "13px",
@@ -98,7 +91,9 @@ function ProductDetailPage() {
 >
   <span
     onClick={() => navigate("/")}
-    style={{ cursor: "pointer" }}
+    style={{
+      cursor: "pointer",
+    }}
   >
     Home
   </span>
@@ -107,7 +102,9 @@ function ProductDetailPage() {
 
   <span
     onClick={() => navigate("/shop")}
-    style={{ cursor: "pointer" }}
+    style={{
+      cursor: "pointer",
+    }}
   >
     Shop
   </span>
@@ -129,34 +126,6 @@ function ProductDetailPage() {
   >
     Cart
   </span>
-</div>
-    <span
-      onClick={() => navigate("/")}
-      style={{
-        cursor: "pointer",
-      }}
-    >
-      Home
-    </span>
-
-    {" / "}
-
-    <span
-      onClick={() => navigate("/shop")}
-      style={{
-        cursor: "pointer",
-      }}
-    >
-      Shop
-    </span>
-
-    {" / "}
-
-    <span>
-      {product.title.rendered}
-    </span>
-  </div>
-
 </div>
 
       <div
@@ -228,14 +197,7 @@ function ProductDetailPage() {
             minWidth: "350px",
           }}
         >
-          <div
-  style={{
-    display: "flex",
-    justifyContent: "flex-end",
-    marginBottom: "25px",
-  }}
->
-</div>
+        
           <h1
             style={{
               fontSize: "68px",
