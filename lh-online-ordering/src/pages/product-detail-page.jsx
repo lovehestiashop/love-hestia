@@ -216,24 +216,23 @@ function ProductDetailPage() {
           </h1>
 
           <h2
-            style={{
-              fontSize:
-  window.innerWidth <= 768
-    ? "24px"
-    : "34px",
-              marginBottom: "40px",
-              color: "#7d746c",
-              fontWeight: "400",
-              fontFamily:
-                "'Cormorant Garamond', serif",
-            }}
-          >
-            ₱
-            {Number(
-              product.acf?.price || 0
-            ).toLocaleString("en-PH")}{" "}
-            PHP
-          </h2>
+  style={{
+    fontSize:
+      window.innerWidth <= 768
+        ? "22px"
+        : "28px",
+    marginBottom: "40px",
+    color: "#5f5a55",
+    fontWeight: "600",
+    fontFamily:
+      "'Roboto', sans-serif",
+  }}
+>
+  ₱
+  {Number(
+    product.acf?.price || 0
+  ).toLocaleString("en-PH")}
+</h2>
 
           <div
             style={{
