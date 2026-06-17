@@ -160,7 +160,7 @@ function HomePage() {
       </section>
 
       {/* WORKSHOP */}
-      <section className="relative h-[400px] md:h-[600px] text-white text-center overflow-hidden">
+      <section className="relative h-[500px] md:h-[750px] text-white text-center overflow-hidden">
         <div className="absolute inset-0">
        
 <img
