@@ -140,10 +140,7 @@ function CollectionsSectionComponent() {
     fontFamily: "'Cormorant Garamond', serif",
   }}
 >
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-  }}
->
+
                 {item.title}
               </p>
             </div>
