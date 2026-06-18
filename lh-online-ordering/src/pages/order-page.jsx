@@ -109,41 +109,10 @@ const cartGrandTotal = state?.grandTotal || 0;
     setIsSubmitting(true);
 
     try {
-      // REAL-TIME STOCK CHECK
-if (cart.length > 0) {
-  const latestProducts =
-    await productService.getAll();
-
-  for (const cartItem of cart) {
-   const latestProduct =
-  latestProducts.find(
-    (p) =>
-      p.id === cartItem.product?.id
-  );
-
-    const latestStock =
-      Number(latestProduct?.acf?.stock || 0);
-
-    const qtyInCart = cart.filter(
-  (item) =>
-    item.product?.id ===
-    cartItem.product?.id
-).length;
-
-    if (latestStock < qtyInCart) {
-      alert(
-        `${cartItem.product?.title?.rendered} only has ${latestStock} stock remaining.`
-      );
-
-      setIsSubmitting(false);
-      return;
-    }
-  }
-}
+     
     await orderService.createOrder({
   ...form,
   product_id: product?.id,
-  current_stock: product?.acf?.stock,
   cart,
   date_and_time_of_delivery: formatDateTime(
     form.date_and_time_of_delivery,
