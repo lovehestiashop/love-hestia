@@ -1,4 +1,18 @@
 import api from "./api";
+import axios from "axios";
+
+// JWT token function needed by order-service.js
+export async function getToken() {
+  const res = await axios.post(
+    `${import.meta.env.VITE_API_BASE_URL}/jwt-auth/v1/token`,
+    {
+      username: "YOUR_WORDPRESS_USERNAME",
+      password: "YOUR_WORDPRESS_PASSWORD",
+    }
+  );
+
+  return res.data.token;
+}
 
 export const productService = {
   async getAll() {
