@@ -27,35 +27,13 @@ export async function getToken() {
   }
 }
 
-export const productService = {
-  async getAll() {
-    const token = await getToken();
+async getAll() {
+  const res = await api.get("/wp/v2/product", {
+    params: {
+      _embed: true,
+      per_page: 100,
+    },
+  });
 
-    const res = await api.get("/wp/v2/product", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      params: {
-        _embed: true,
-        per_page: 100,
-      },
-    });
-
-    return res.data;
-  },
-
-  async getById(id) {
-    const token = await getToken();
-
-    const res = await api.get(`/wp/v2/product/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      params: {
-        _embed: true,
-      },
-    });
-
-    return res.data;
-  },
-};
+  return res.data;
+},
