@@ -7,7 +7,7 @@ export async function getToken() {
     `${import.meta.env.VITE_API_BASE_URL}/jwt-auth/v1/token`,
     {
       username: 'Loraine', 
-      password: '*Ivi@Q!dpx#Okhxu#)(G6mFv',
+      password: 'R3o4nLhP$J@!dDc@UqBtPz)^',
     }
   );
 
