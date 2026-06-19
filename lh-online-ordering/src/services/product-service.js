@@ -6,14 +6,13 @@ export async function getToken() {
   const res = await axios.post(
     `${import.meta.env.VITE_API_BASE_URL}/jwt-auth/v1/token`,
     {
-      username: 'lovehestia_api', 
-      password: 'N^sGqjdWA5s^pV06IKsw&XxY',
+      username: import.meta.env.VITE_API_USERNAME,
+      password: import.meta.env.VITE_API_PASSWORD,
     }
   );
 
   return res.data.token;
 }
-
 export const productService = {
   async getAll() {
     const res = await api.get("/wp/v2/product", {
