@@ -6,8 +6,8 @@ export async function getToken() {
   const res = await axios.post(
     `${import.meta.env.VITE_API_BASE_URL}/jwt-auth/v1/token`,
     {
-      username: "Loraine", 
-      password: "*Ivi@Q!dpx#Okhxu#)(G6mFv",
+      username: 'Loraine', 
+      password: '*Ivi@Q!dpx#Okhxu#)(G6mFv',
     }
   );
 
