@@ -167,7 +167,7 @@ const handleButtonClick = () => {
             }px)`,
           }}
         >
-         <img
+        <img
   src={item.image}
   alt={item.title}
   loading={
