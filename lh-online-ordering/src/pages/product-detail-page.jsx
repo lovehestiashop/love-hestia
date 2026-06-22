@@ -315,22 +315,22 @@ function ProductDetailPage() {
     }}
   >
     <li>
-      Keep away from direct sunlight to
+      1. Keep away from direct sunlight to
       preserve color and texture.
     </li>
 
     <li>
-      Place in a cool, dry area away from
+      2. Place in a cool, dry area away from
       humidity and moisture.
     </li>
 
     <li>
-      Handle gently, as preserved and
+      3. Handle gently, as preserved and
       dried flowers are naturally fragile.
     </li>
 
     <li>
-      Lightly dust with a soft brush or
+      4. Lightly dust with a soft brush or
       air blower when needed.
     </li>
   </ul>
