@@ -150,7 +150,7 @@ const handleButtonClick = () => {
   }
 };
   return (
-    <section className="relative w-full h-[65vh] md:h-[80vh] overflow-hidden">
+    <section className="relative w-full h-[65vh] md:h-[70vh] overflow-hidden">
       {/* BACKGROUND IMAGES */}
 
       {slides.map((item, index) => (
@@ -167,16 +167,19 @@ const handleButtonClick = () => {
             }px)`,
           }}
         >
-          <img
-            src={item.image}
-            alt={item.title}
-            loading={
-              index === 0
-                ? "eager"
-                : "lazy"
-            }
-            className="w-full h-[110%] object-cover"
-          />
+         <img
+  src={item.image}
+  alt={item.title}
+  loading={
+    index === 0
+      ? "eager"
+      : "lazy"
+  }
+  className="w-full h-[110%] object-cover"
+  style={{
+    objectPosition: "center 20%",
+  }}
+/>
         </div>
       ))}
 
