@@ -133,12 +133,22 @@ function HeroSectionComponent() {
 
   const slide = slides[currentSlide];
 
-  const handleButtonClick = () => {
-    if (!slide.buttonLink) return;
+const handleButtonClick = () => {
+  if (!slide.buttonLink) return;
 
+  if (
+    slide.buttonLink.startsWith("http://") ||
+    slide.buttonLink.startsWith("https://")
+  ) {
+    window.open(
+      slide.buttonLink,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  } else {
     navigate(slide.buttonLink);
-  };
-
+  }
+};
   return (
     <section className="relative w-full h-[65vh] md:h-[80vh] overflow-hidden">
       {/* BACKGROUND IMAGES */}
