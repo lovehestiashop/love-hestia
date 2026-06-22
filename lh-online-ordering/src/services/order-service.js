@@ -21,13 +21,24 @@ async function uploadFile(file, token) {
   return res.data.id;
 }
 
-async function sendWebhook() {
+async function sendWebhook(orderData) {
   try {
     console.log("Triggering webhook");
 
     await api.post(
       "/aiwu/v1/webhook/12_1/",
-      {},
+      {
+        customer_name: orderData.customer_name,
+        customer_number: orderData.customer_number,
+        facebook_name: orderData.facebook_name,
+        receiver_name: orderData.receiver_name,
+        receiver_number: orderData.receiver_number,
+        product_ordered: orderData.product_ordered,
+        delivery_address: orderData.delivery_address,
+        delivery_date:
+          orderData.date_and_time_of_delivery,
+        card_note: orderData.small_card_note,
+      },
       {
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +52,6 @@ async function sendWebhook() {
     );
   }
 }
-
 export const orderService = {
   async createOrder(orderData) {
     const token = await getToken();
@@ -131,7 +141,7 @@ export const orderService = {
       }
     );
 
-    sendWebhook();
+    sendWebhook(orderData);
 
     return res.data;
   },
