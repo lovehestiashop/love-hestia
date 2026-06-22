@@ -234,22 +234,107 @@ function ProductDetailPage() {
   ).toLocaleString("en-PH")}
 </h2>
 
-          <div
-            style={{
-              maxWidth: "550px",
-              lineHeight: "2",
-              color: "#666",
-              fontSize: "15px",
-              marginBottom: "50px",
-            }}
-          >
-            <p>
-              {
-                product.acf
-                  ?.product_description
-              }
-            </p>
-          </div>
+        <div
+  style={{
+    maxWidth: "550px",
+    lineHeight: "2",
+    color: "#666",
+    fontSize: "15px",
+    marginBottom: "30px",
+  }}
+>
+  <p>
+    {
+      product.acf
+        ?.product_description
+    }
+  </p>
+</div>
+
+{/* FLOWER CARE */}
+
+<div
+  style={{
+    maxWidth: "550px",
+    marginBottom: "50px",
+    padding: "20px",
+    background: "#f7f5f2",
+    border: "1px solid #e8e3dc",
+    borderRadius: "4px",
+  }}
+>
+  <h3
+    style={{
+      fontFamily:
+        "'Cormorant Garamond', serif",
+      fontSize: "24px",
+      color: "#5f5a55",
+      marginBottom: "12px",
+      fontWeight: "500",
+    }}
+  >
+    A Timeless Keepsake
+  </h3>
+
+  <p
+    style={{
+      color: "#666",
+      fontSize: "14px",
+      lineHeight: "1.9",
+      marginBottom: "18px",
+    }}
+  >
+    Made with real preserved and dried
+    flowers, your arrangement is designed
+    to be enjoyed for 1–2 years or longer
+    with proper care. Each bloom is
+    naturally delicate and unique, making
+    every piece a lasting reminder of
+    life's meaningful moments.
+  </p>
+
+  <h4
+    style={{
+      fontSize: "14px",
+      letterSpacing: "2px",
+      textTransform: "uppercase",
+      color: "#5f5a55",
+      marginBottom: "10px",
+    }}
+  >
+    Flower Care
+  </h4>
+
+  <ul
+    style={{
+      paddingLeft: "18px",
+      margin: 0,
+      color: "#666",
+      lineHeight: "2",
+      fontSize: "14px",
+    }}
+  >
+    <li>
+      Keep away from direct sunlight to
+      preserve color and texture.
+    </li>
+
+    <li>
+      Place in a cool, dry area away from
+      humidity and moisture.
+    </li>
+
+    <li>
+      Handle gently, as preserved and
+      dried flowers are naturally fragile.
+    </li>
+
+    <li>
+      Lightly dust with a soft brush or
+      air blower when needed.
+    </li>
+  </ul>
+</div>
 
           {isAvailable ? (
             <div
