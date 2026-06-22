@@ -181,7 +181,7 @@ function HeroSectionComponent() {
           className="
             text-[42px]
             sm:text-[60px]
-            md:text-[84px]
+            md:text-[72px]
             leading-[1]
             mb-6
           "
@@ -194,15 +194,20 @@ function HeroSectionComponent() {
           {slide.title}
         </h1>
 
-        <p
-          className="
-            max-w-2xl
-            text-[15px]
-            md:text-[22px]
-            text-white/95
-            mb-8
-          "
-        >
+  <p
+  className="
+    max-w-2xl
+    text-[16px]
+    md:text-[24px]
+    text-white/95
+    mb-8
+  "
+  style={{
+    fontFamily: "'Roboto', sans-serif",
+    fontWeight: 300,
+    lineHeight: "1.8",
+  }}
+>
           {slide.subtitle}
         </p>
 
@@ -228,9 +233,19 @@ function HeroSectionComponent() {
           </button>
         )}
 
-        {/* DOTS */}
+      {/* DOTS */}
 
-        <div className="flex gap-4 mt-10">
+<div
+  className="
+    absolute
+    bottom-6
+    left-1/2
+    -translate-x-1/2
+    flex
+    gap-4
+    z-20
+  "
+>
           {slides.map(
             (_, index) => (
               <button
