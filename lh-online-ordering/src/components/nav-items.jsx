@@ -35,7 +35,7 @@ function NavItemsComponent() {
             <img
               src={logo}
               alt="Love Hestia"
-              className="h-16 w-auto"
+              className="h-32 w-auto"
             />
           </Link>
         </div>
@@ -118,7 +118,7 @@ function NavItemsComponent() {
             <img
               src={logo}
               alt="Love Hestia"
-              className="h-8 w-auto"
+              className="h-14 w-auto"
             />
           </Link>
 
