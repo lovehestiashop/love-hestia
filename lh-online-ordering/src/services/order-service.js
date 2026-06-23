@@ -121,7 +121,30 @@ export const orderService = {
       "acf[product_ordered]",
       orderData.product_ordered
     );
+formData.append(
+  "acf[product_ordered]",
+  orderData.product_ordered
+);
 
+formData.append(
+  "acf[price]",
+  orderData.price
+);
+
+formData.append(
+  "acf[delivery_fee]",
+  orderData.delivery_fee
+);
+
+formData.append(
+  "acf[grand_total]",
+  orderData.total
+);
+
+formData.append(
+  "acf[small_card_note]",
+  orderData.small_card_note || ""
+);
     formData.append(
       "acf[small_card_note]",
       orderData.small_card_note || ""
