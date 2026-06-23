@@ -244,10 +244,10 @@ navigate("/shop");
               minDate={new Date()}
               withPortal
               customInput={<DateButtonInput />}
-              filterTime={(time) => {
-                const hours = new Date(time).getHours();
-                return hours >= 9 && hours <= 18; // ✅ 9AM–6PM only
-              }}
+             filterTime={(time) => {
+  const hours = new Date(time).getHours();
+  return hours >= 8 && hours <= 18; // ✅ 8AM–6PM only
+}}
             />
 
             <textarea
