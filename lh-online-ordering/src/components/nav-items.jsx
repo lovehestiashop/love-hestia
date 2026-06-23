@@ -13,8 +13,8 @@ const navItemClass = `
 `;
 
 function NavItemsComponent() {
- const [cartCount, setCartCount] = useState(0);
-const [menuOpen, setMenuOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const cart =
@@ -23,263 +23,168 @@ const [menuOpen, setMenuOpen] = useState(false);
     setCartCount(cart.length);
   }, []);
 
- return (
-  <nav className="w-full">
+  return (
+    <nav className="w-full">
 
-   {/* Desktop Navigation */}
-<div className="hidden md:block">
+      {/* Desktop Navigation */}
+      <div className="hidden md:block">
 
-  {/* Logo */}
-  <div className="flex justify-center mb-4">
-    <Link to="/">
-      <img
-        src={logo}
-        alt="Love Hestia"
-        className="h-16 w-auto"
-      />
-    </Link>
-  </div>
+        {/* Logo */}
+        <div className="flex justify-center mb-4">
+          <Link to="/">
+            <img
+              src={logo}
+              alt="Love Hestia"
+              className="h-16 w-auto"
+            />
+          </Link>
+        </div>
 
-  {/* Menu */}
-  <ul
-    className="
-      flex
-      items-center
-      justify-center
-      gap-12
-    "
-  >
-    <li>
-      <Link to="/" className={navItemClass}>
-        Home
-      </Link>
-    </li>
+        {/* Menu */}
+        <ul
+          className="
+            flex
+            items-center
+            justify-center
+            gap-12
+          "
+        >
+          <li>
+            <Link to="/" className={navItemClass}>
+              Home
+            </Link>
+          </li>
 
-    <li>
-      <Link to="/shop" className={navItemClass}>
-        Shop
-      </Link>
-    </li>
+          <li>
+            <Link to="/shop" className={navItemClass}>
+              Shop
+            </Link>
+          </li>
 
-    <li>
-      <Link to="/faq" className={navItemClass}>
-        FAQ's
-      </Link>
-    </li>
+          <li>
+            <Link to="/faq" className={navItemClass}>
+              FAQ's
+            </Link>
+          </li>
 
-    <li>
-      <Link
-        to="/cart"
-        className={`${navItemClass} flex items-center gap-2`}
-      >
-        <span style={{ fontSize: "15px" }}>
-          🛒
-        </span>
+          <li>
+            <Link
+              to="/cart"
+              className={`${navItemClass} flex items-center gap-2`}
+            >
+              <span style={{ fontSize: "15px" }}>
+                🛒
+              </span>
 
-        <span>Cart</span>
+              <span>Cart</span>
 
-        {cartCount > 0 && (
-          <span
-            style={{
-              background: "#3d3421",
-              color: "#fff",
-              borderRadius: "999px",
-              minWidth: "18px",
-              height: "18px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "10px",
-              padding: "0 4px",
-            }}
+              {cartCount > 0 && (
+                <span
+                  style={{
+                    background: "#3d3421",
+                    color: "#fff",
+                    borderRadius: "999px",
+                    minWidth: "18px",
+                    height: "18px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "10px",
+                    padding: "0 4px",
+                  }}
+                >
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          </li>
+        </ul>
+
+      </div>
+
+      {/* Mobile Navigation */}
+      <div className="md:hidden px-6">
+
+        <div className="flex items-center justify-between">
+
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="text-3xl text-neutral-700"
           >
-            {cartCount}
-          </span>
-        )}
-      </Link>
-    </li>
-  </ul>
-</div>
-      <ul
-        className="
-          flex
-          items-center
-          justify-center
-          gap-8
-          md:gap-12
-        "
-      >
-        <li>
-          <Link to="/" className={navItemClass}>
-            Home
-          </Link>
-        </li>
+            ☰
+          </button>
 
-        <li>
-          <Link to="/shop" className={navItemClass}>
-            Shop
+          <Link to="/">
+            <img
+              src={logo}
+              alt="Love Hestia"
+              className="h-8 w-auto"
+            />
           </Link>
-        </li>
 
-        <li>
-          <Link to="/faq" className={navItemClass}>
-            FAQ's
-          </Link>
-        </li>
-
-        <li>
           <Link
             to="/cart"
-            className={`${navItemClass} flex items-center gap-2`}
+            className="relative text-2xl"
           >
-            <span style={{ fontSize: "15px" }}>
-              🛒
-            </span>
-
-            <span>Cart</span>
+            🛒
 
             {cartCount > 0 && (
               <span
-                style={{
-                  background: "#3d3421",
-                  color: "#fff",
-                  borderRadius: "999px",
-                  minWidth: "18px",
-                  height: "18px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "10px",
-                  padding: "0 4px",
-                }}
+                className="
+                  absolute
+                  -top-2
+                  -right-3
+                  bg-[#3d3421]
+                  text-white
+                  text-[10px]
+                  rounded-full
+                  min-w-[18px]
+                  h-[18px]
+                  flex
+                  items-center
+                  justify-center
+                "
               >
                 {cartCount}
               </span>
             )}
           </Link>
-        </li>
-      </ul>
-    </div>
 
-    {/* Mobile Navigation */}
-    <div className="md:hidden px-6">
-     
-      <div className="flex items-center justify-between">
+        </div>
 
-  <button
-    onClick={() => setMenuOpen(!menuOpen)}
-    className="text-3xl text-neutral-700"
-  >
-    ☰
-  </button>
+        {menuOpen && (
+          <div className="mt-6 flex flex-col gap-5">
 
-  <Link to="/">
-    <img
-      src={logo}
-      alt="Love Hestia"
-      className="h-8 w-auto"
-    />
-  </Link>
-
-  <Link
-    to="/cart"
-    className="relative text-2xl"
-  >
-    🛒
-
-    {cartCount > 0 && (
-      <span
-        className="
-          absolute
-          -top-2
-          -right-3
-          bg-[#3d3421]
-          text-white
-          text-[10px]
-          rounded-full
-          min-w-[18px]
-          h-[18px]
-          flex
-          items-center
-          justify-center
-        "
-      >
-        {cartCount}
-      </span>
-    )}
-  </Link>
-
-</div>
-
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="text-3xl text-neutral-700"
-        >
-          ☰
-        </button>
-
-        <Link
-          to="/cart"
-          className="relative text-2xl"
-        >
-          🛒
-
-          {cartCount > 0 && (
-            <span
-              className="
-                absolute
-                -top-2
-                -right-3
-                bg-[#3d3421]
-                text-white
-                text-[10px]
-                rounded-full
-                min-w-[18px]
-                h-[18px]
-                flex
-                items-center
-                justify-center
-              "
+            <Link
+              to="/"
+              className={navItemClass}
+              onClick={() => setMenuOpen(false)}
             >
-              {cartCount}
-            </span>
-          )}
-        </Link>
+              Home
+            </Link>
+
+            <Link
+              to="/shop"
+              className={navItemClass}
+              onClick={() => setMenuOpen(false)}
+            >
+              Shop
+            </Link>
+
+            <Link
+              to="/faq"
+              className={navItemClass}
+              onClick={() => setMenuOpen(false)}
+            >
+              FAQ's
+            </Link>
+
+          </div>
+        )}
 
       </div>
 
-      {menuOpen && (
-        <div className="mt-6 flex flex-col gap-5">
-
-          <Link
-            to="/"
-            className={navItemClass}
-            onClick={() => setMenuOpen(false)}
-          >
-            Home
-          </Link>
-
-          <Link
-            to="/shop"
-            className={navItemClass}
-            onClick={() => setMenuOpen(false)}
-          >
-            Shop
-          </Link>
-
-          <Link
-            to="/faq"
-            className={navItemClass}
-            onClick={() => setMenuOpen(false)}
-          >
-            FAQ's
-          </Link>
-
-        </div>
-      )}
-
-    </div>
-  </nav>
+    </nav>
   );
 }
 
