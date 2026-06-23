@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import logo from "../assets/love-hestia-logo-2.png";
+import logo from "../assets/love-hestia-logo-3.png";
 
 const navItemClass = `
   uppercase
