@@ -118,7 +118,7 @@ function NavItemsComponent() {
             <img
               src={logo}
               alt="Love Hestia"
-              className="h-14 w-auto"
+              className="h-12 w-auto"
             />
           </Link>
 
