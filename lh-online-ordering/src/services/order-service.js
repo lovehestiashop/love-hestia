@@ -26,19 +26,27 @@ async function sendWebhook(orderData) {
     console.log("Triggering webhook");
 
     await api.post(
-      "/aiwu/v1/webhook/12_1/",
-      {
-        customer_name: orderData.customer_name,
-        customer_number: orderData.customer_number,
-        facebook_name: orderData.facebook_name,
-        receiver_name: orderData.receiver_name,
-        receiver_number: orderData.receiver_number,
-        product_ordered: orderData.product_ordered,
-        delivery_address: orderData.delivery_address,
-        delivery_date:
-          orderData.date_and_time_of_delivery,
-        card_note: orderData.small_card_note,
-      },
+  "/aiwu/v1/webhook/12_1/",
+  {
+    customer_name: orderData.customer_name,
+    customer_number: orderData.customer_number,
+    facebook_name: orderData.facebook_name,
+    receiver_name: orderData.receiver_name,
+    receiver_number: orderData.receiver_number,
+
+    product_ordered: orderData.product_ordered,
+
+    price: orderData.price,
+    delivery_fee: orderData.delivery_fee,
+    grand_total: orderData.total,
+
+    delivery_address: orderData.delivery_address,
+
+    delivery_date:
+      orderData.date_and_time_of_delivery,
+
+    card_note: orderData.small_card_note,
+  },
       {
         headers: {
           "Content-Type": "application/json",
