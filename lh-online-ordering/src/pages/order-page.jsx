@@ -110,14 +110,26 @@ const cartGrandTotal = state?.grandTotal || 0;
 
     try {
      
-    await orderService.createOrder({
+   await orderService.createOrder({
   ...form,
   product_id: product?.id,
   cart,
+
+  price,
+  delivery_fee: deliveryFee,
+
+  total: product
+    ? total
+    : currentCartTotal,
+
   date_and_time_of_delivery: formatDateTime(
     form.date_and_time_of_delivery,
   ),
-  date_time_ordered: formatDateTime(new Date().toISOString()),
+
+  date_time_ordered: formatDateTime(
+    new Date().toISOString()
+  ),
+
   product_image: product?.featured_media || "",
 });
 
