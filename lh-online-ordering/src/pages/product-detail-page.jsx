@@ -233,14 +233,15 @@ function ProductDetailPage() {
     product.acf?.price || 0
   ).toLocaleString("en-PH")}
 </h2>
-             {isAvailable ? (
-            <div
-              style={{
-                display: "flex",
-                gap: "15px",
-                flexWrap: "wrap",
-              }}
-            >
+            {isAvailable ? (
+    <div
+      style={{
+        display: "flex",
+        gap: "15px",
+        flexWrap: "wrap",
+        marginBottom: "50px",
+      }}
+    >
               <button
                 onClick={() => {
                   const cart =
