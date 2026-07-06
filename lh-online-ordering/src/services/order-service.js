@@ -26,27 +26,27 @@ async function sendWebhook(orderData) {
     console.log("Triggering webhook");
 
     await api.post(
-  "/aiwu/v1/webhook/12_1/",
-  {
-    customer_name: orderData.customer_name,
-    customer_number: orderData.customer_number,
-    facebook_name: orderData.facebook_name,
-    receiver_name: orderData.receiver_name,
-    receiver_number: orderData.receiver_number,
+      "/aiwu/v1/webhook/12_1/",
+      {
+        customer_name: orderData.customer_name,
+        customer_number: orderData.customer_number,
+        facebook_name: orderData.facebook_name,
+        receiver_name: orderData.receiver_name,
+        receiver_number: orderData.receiver_number,
 
-    product_ordered: orderData.product_ordered,
+        product_ordered: orderData.product_ordered,
 
-    price: orderData.price,
-    delivery_fee: orderData.delivery_fee,
-    grand_total: orderData.total,
+        price: orderData.price,
+        delivery_fee: orderData.delivery_fee,
+        grand_total: orderData.total,
 
-    delivery_address: orderData.delivery_address,
+        delivery_address: orderData.delivery_address,
 
-    delivery_date:
-      orderData.date_and_time_of_delivery,
+        delivery_date:
+          orderData.date_and_time_of_delivery,
 
-    card_note: orderData.small_card_note,
-  },
+        card_note: orderData.small_card_note,
+      },
       {
         headers: {
           "Content-Type": "application/json",
@@ -60,6 +60,56 @@ async function sendWebhook(orderData) {
     );
   }
 }
+
+async function sendToGoogleSheet(orderData) {
+  try {
+    await fetch(
+      "https://script.google.com/macros/s/AKfycbxvNWfJ6ECPU8TluRUBd2dNuZIx6qz-8QRRBlgwv6WR_yuRKks8w2YWFe2Tg4RgRTQUig/exec",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          order_date: orderData.date_time_ordered,
+
+          customer_name: orderData.customer_name,
+          customer_number: orderData.customer_number,
+          facebook_name: orderData.facebook_name,
+
+          receiver_name: orderData.receiver_name,
+          receiver_number: orderData.receiver_number,
+
+          product_ordered: orderData.product_ordered,
+
+          price: orderData.price,
+
+          delivery_fee: orderData.delivery_fee,
+
+          grand_total: orderData.total,
+
+          delivery_date:
+            orderData.date_and_time_of_delivery,
+
+          delivery_address:
+            orderData.delivery_address,
+
+          card_note:
+            orderData.small_card_note,
+
+          payment_proof: "",
+
+          status: "Pending",
+        }),
+      }
+    );
+
+    console.log("Google Sheet updated successfully");
+  } catch (err) {
+    console.error("Google Sheet Error:", err);
+  }
+}
+
 export const orderService = {
   async createOrder(orderData) {
     const token = await getToken();
@@ -121,30 +171,22 @@ export const orderService = {
       "acf[product_ordered]",
       orderData.product_ordered
     );
-formData.append(
-  "acf[product_ordered]",
-  orderData.product_ordered
-);
 
-formData.append(
-  "acf[price]",
-  orderData.price
-);
+    formData.append(
+      "acf[price]",
+      orderData.price
+    );
 
-formData.append(
-  "acf[delivery_fee]",
-  orderData.delivery_fee
-);
+    formData.append(
+      "acf[delivery_fee]",
+      orderData.delivery_fee
+    );
 
-formData.append(
-  "acf[grand_total]",
-  orderData.total
-);
+    formData.append(
+      "acf[grand_total]",
+      orderData.total
+    );
 
-formData.append(
-  "acf[small_card_note]",
-  orderData.small_card_note || ""
-);
     formData.append(
       "acf[small_card_note]",
       orderData.small_card_note || ""
@@ -172,7 +214,9 @@ formData.append(
       }
     );
 
-    sendWebhook(orderData);
+    await sendWebhook(orderData);
+
+    await sendToGoogleSheet(orderData);
 
     return res.data;
   },
