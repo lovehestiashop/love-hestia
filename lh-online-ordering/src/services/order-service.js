@@ -204,7 +204,7 @@ export const orderService = {
       );
     }
 
-    const res = await api.post(
+        const res = await api.post(
       "/wp/v2/customer-order",
       formData,
       {
@@ -216,17 +216,21 @@ export const orderService = {
 
     await sendWebhook(orderData);
 
-try {
-  console.log("Syncing order:", res.data.id);
+    try {
+      console.log("Syncing order:", res.data.id);
 
-  const syncResult = await api.post(
-    `/love-hestia-sync/v1/sync/${res.data.id}`
-  );
+      const syncResult = await api.post(
+        `/love-hestia-sync/v1/sync/${res.data.id}`
+      );
 
-  console.log("Sync response:", syncResult.data);
+      console.log("Sync response:", syncResult.data);
+    } catch (err) {
+      console.error(
+        "Sync failed:",
+        err.response?.data || err.message
+      );
+    }
 
-} catch (err) {
-  console.error("Sync failed:", err.response?.data || err.message);
-}
-
-return res.data;
+    return res.data;
+  },
+};
