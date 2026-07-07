@@ -216,8 +216,17 @@ export const orderService = {
 
     await sendWebhook(orderData);
 
-await api.post(
-  `/love-hestia-sync/v1/sync/${res.data.id}`
-);
+try {
+  console.log("Syncing order:", res.data.id);
+
+  const syncResult = await api.post(
+    `/love-hestia-sync/v1/sync/${res.data.id}`
+  );
+
+  console.log("Sync response:", syncResult.data);
+
+} catch (err) {
+  console.error("Sync failed:", err.response?.data || err.message);
+}
 
 return res.data;
