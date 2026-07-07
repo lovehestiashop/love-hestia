@@ -216,8 +216,8 @@ export const orderService = {
 
     await sendWebhook(orderData);
 
-    await sendToGoogleSheet(orderData);
+await api.post(
+  `/love-hestia-sync/v1/sync/${res.data.id}`
+);
 
-    return res.data;
-  },
-};
+return res.data;
