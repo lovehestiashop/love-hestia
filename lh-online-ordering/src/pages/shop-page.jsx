@@ -8,13 +8,13 @@ function ShopPage() {
     {
       title: "Flower Bouquets",
       image:
-        "https://api.lovehestia.shop/wp-content/uploads/2026/06/IMG_9440.jpeg",
+        "https://api.lovehestia.shop/wp-content/uploads/2026/07/Flower-Bouquet.jpeg",
       productKey: 5,
     },
     {
       title: "Vase Arrangements",
       image:
-        "https://api.lovehestia.shop/wp-content/uploads/2026/06/IMG_9439.jpeg",
+        "https://api.lovehestia.shop/wp-content/uploads/2026/07/Vase-arrnagements.jpeg",
       productKey: 6,
     },
     {
