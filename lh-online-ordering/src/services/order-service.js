@@ -222,7 +222,21 @@ formData.append(
         attachmentId
       );
     }
+console.log("Product ID:", orderData.product_id);
+console.log("Cart:", orderData.cart);
+console.log(
+  "Cart Items JSON:",
+  JSON.stringify(
+    orderData.cart?.map((item) => ({
+      product_id: item.product.id,
+      quantity: item.quantity,
+    }))
+  )
+);
 
+for (const pair of formData.entries()) {
+  console.log(pair[0], pair[1]);
+}
         const res = await api.post(
       "/wp/v2/customer-order",
       formData,
