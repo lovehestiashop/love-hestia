@@ -270,20 +270,23 @@ height: isMobile ? "160px" : "220px",
                           ...cart,
                         ];
 
-                        updatedCart[
-                          index
-                        ].quantity += 1;
+const stock = Number(
+  updatedCart[index].product?.acf?.stock ?? 0
+);
 
-                        setCart(
-                          updatedCart
-                        );
+if (updatedCart[index].quantity >= stock) {
+  alert(`Only ${stock} item(s) available.`);
+  return;
+}
 
-                        localStorage.setItem(
-                          "cart",
-                          JSON.stringify(
-                            updatedCart
-                          )
-                        );
+updatedCart[index].quantity += 1;
+
+setCart(updatedCart);
+
+localStorage.setItem(
+  "cart",
+  JSON.stringify(updatedCart)
+);
                       }}
                       style={{
                         border: "none",
