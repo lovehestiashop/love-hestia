@@ -252,10 +252,17 @@ for (const pair of formData.entries()) {
     try {
       console.log("Syncing order:", res.data.id);
 
-      const syncResult = await api.post(
-        `/love-hestia-sync/v1/sync/${res.data.id}`
-      );
+ const syncResult = await api.post(
+  `/love-hestia-sync/v1/sync/${res.data.id}`,
+  {
+    product_id: orderData.product_id ?? null,
 
+    cart: orderData.cart?.map((item) => ({
+      product_id: item.product.id,
+      quantity: item.quantity,
+    })) ?? [],
+  }
+);
       console.log("Sync response:", syncResult.data);
     } catch (err) {
       console.error(
