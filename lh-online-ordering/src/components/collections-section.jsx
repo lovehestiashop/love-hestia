@@ -17,7 +17,7 @@ function CollectionsSectionComponent() {
   {
     title: "Flower Dome",
     image:
-      "https://api.lovehestia.shop/wp-content/uploads/2026/01/DSC02766.jpg",
+      "https://api.lovehestia.shop/wp-content/uploads/2026/04/IMG_0566-scaled.jpeg",
     productKey: 7,
   },
 ];
