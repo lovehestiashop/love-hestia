@@ -171,10 +171,12 @@ export const orderService = {
       "acf[product_ordered]",
       orderData.product_ordered
     );
-    formData.append(
-  "acf[product_id]",
-  orderData.product_id
-);
+   if (orderData.product_id) {
+  formData.append(
+    "acf[product_id]",
+    orderData.product_id
+  );
+}
 
     formData.append(
       "acf[price]",
