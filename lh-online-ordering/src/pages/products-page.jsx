@@ -126,10 +126,11 @@ function ProductsPage() {
               item.price ||
               0;
 
-            const isAvailable =
-              Boolean(
-                item.acf?.availability
-              );
+            const stock = Number(item.acf?.stock ?? 0);
+
+const isAvailable =
+    Boolean(item.acf?.availability) &&
+    stock > 0;
 
             return (
               <div
