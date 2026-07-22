@@ -172,16 +172,29 @@ export const orderService = {
       orderData.product_ordered
     );
    if (orderData.product_id) {
+if (orderData.product_id) {
   formData.append(
     "acf[product_id]",
     orderData.product_id
   );
 }
 
-    formData.append(
-      "acf[price]",
-      orderData.price
-    );
+if (orderData.cart?.length) {
+  formData.append(
+    "acf[cart_items]",
+    JSON.stringify(
+      orderData.cart.map((item) => ({
+        product_id: item.product.id,
+        quantity: item.quantity,
+      }))
+    )
+  );
+}
+
+formData.append(
+  "acf[price]",
+  orderData.price
+);
 
     formData.append(
       "acf[delivery_fee]",
