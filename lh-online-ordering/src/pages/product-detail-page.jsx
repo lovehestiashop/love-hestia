@@ -12,7 +12,7 @@ function ProductDetailPage() {
   const product = state?.product;
 
   const isAvailable = Boolean(
-    product?.acf?.availability
+    Number(product?.acf?.stock ?? 0) > 0
   );
 
   const [gallery, setGallery] = useState([]);
