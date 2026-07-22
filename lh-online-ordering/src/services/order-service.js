@@ -168,10 +168,10 @@ export const orderService = {
     );
 
     formData.append(
-      "acf[product_ordered]",
-      orderData.product_ordered
-    );
-   if (orderData.product_id) {
+  "acf[product_ordered]",
+  orderData.product_ordered
+);
+
 if (orderData.product_id) {
   formData.append(
     "acf[product_id]",
