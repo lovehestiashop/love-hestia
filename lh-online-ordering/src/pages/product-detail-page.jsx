@@ -258,15 +258,25 @@ function ProductDetailPage() {
                         product.id
                     );
 
-                  if (existingItem) {
-                    existingItem.quantity += 1;
-                  } else {
-                    cart.push({
-                      product,
-                      quantity: 1,
-                    });
-                  }
+                if (existingItem) {
 
+    const stock = Number(product.acf?.stock ?? 0);
+
+    if (existingItem.quantity < stock) {
+        existingItem.quantity += 1;
+    } else {
+        alert("Only " + stock + " item(s) available in stock.");
+        return;
+    }
+
+} else {
+
+    cart.push({
+        product,
+        quantity: 1,
+    });
+
+}
                   localStorage.setItem(
                     "cart",
                     JSON.stringify(cart)
