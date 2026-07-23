@@ -186,12 +186,13 @@ if (orderData.product_id) {
 }
 
 if (orderData.cart?.length) {
- formData.append(
+ console.log(orderData.cart);
+  formData.append(
   "acf[cart_items]",
   JSON.stringify(
     orderData.cart.map((item) => ({
       product_id: item.product.id,
-      product_name: item.product.title,
+      product_name: item.product.title.rendered,
       quantity: item.quantity,
       unit_price: item.product.price,
       line_total: item.product.price * item.quantity,
