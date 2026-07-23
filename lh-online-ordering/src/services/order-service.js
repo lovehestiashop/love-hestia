@@ -141,6 +141,11 @@ export const orderService = {
       "acf[customer_number]",
       orderData.customer_number
     );
+    
+    formData.append(
+  "acf[customer_email]",
+  orderData.customer_email
+);
 
     formData.append(
       "acf[receiver_name]",
