@@ -184,25 +184,35 @@ navigate("/shop");
               Your Information
             </h3>
 
-            <input
-              required
-              name="customer_name"
-              value={form.customer_name}
-              onChange={handleChange}
-              type="text"
-              placeholder="Name*"
-              className="w-full border p-3 mb-3"
-            />
+         <input
+  required
+  name="customer_number"
+  value={form.customer_number}
+  onChange={handleChange}
+  type="text"
+  placeholder="Number*"
+  className="w-full border p-3 mb-3"
+/>
 
-            <input
-              required
-              name="customer_number"
-              value={form.customer_number}
-              onChange={handleChange}
-              type="text"
-              placeholder="Number*"
-              className="w-full border p-3 mb-3"
-            />
+<input
+  required
+  name="customer_email"
+  value={form.customer_email}
+  onChange={handleChange}
+  type="email"
+  placeholder="Email address*"
+  className="w-full border p-3 mb-3"
+/>
+
+<input
+  required
+  name="facebook_name"
+  value={form.facebook_name}
+  onChange={handleChange}
+  type="text"
+  placeholder="Facebook or Instagram name*"
+  className="w-full border p-3 mb-3"
+/>
 
             <input
               required
