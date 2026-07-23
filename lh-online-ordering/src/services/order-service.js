@@ -74,8 +74,9 @@ async function sendToGoogleSheet(orderData) {
           order_date: orderData.date_time_ordered,
 
           customer_name: orderData.customer_name,
-          customer_number: orderData.customer_number,
-          facebook_name: orderData.facebook_name,
+customer_number: orderData.customer_number,
+customer_email: orderData.customer_email,
+facebook_name: orderData.facebook_name,
 
           receiver_name: orderData.receiver_name,
           receiver_number: orderData.receiver_number,
