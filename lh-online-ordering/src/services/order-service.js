@@ -254,6 +254,7 @@ for (const pair of formData.entries()) {
     );
 
     await sendWebhook(orderData);
+    await sendToGoogleSheet(orderData);
 
     try {
       console.log("Syncing order:", res.data.id);
