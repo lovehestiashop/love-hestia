@@ -194,8 +194,8 @@ if (orderData.cart?.length) {
       product_id: item.product.id,
       product_name: item.product.title.rendered,
       quantity: item.quantity,
-     unit_price: item.product.price,
-line_total: item.product.price * item.quantity,
+     unit_price: item.product.acf.price,
+line_total: item.product.acf.price * item.quantity,
     }))
   )
 );
