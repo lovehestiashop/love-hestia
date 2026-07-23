@@ -111,6 +111,8 @@ const cartGrandTotal = state?.grandTotal || 0;
   await orderService.createOrder({
   ...form,
 
+  product,
+
   product_id: product ? product.id : null,
 
   cart,
