@@ -186,15 +186,18 @@ if (orderData.product_id) {
 }
 
 if (orderData.cart?.length) {
-  formData.append(
-    "acf[cart_items]",
-    JSON.stringify(
-      orderData.cart.map((item) => ({
-        product_id: item.product.id,
-        quantity: item.quantity,
-      }))
-    )
-  );
+ formData.append(
+  "acf[cart_items]",
+  JSON.stringify(
+    orderData.cart.map((item) => ({
+      product_id: item.product.id,
+      product_name: item.product.title,
+      quantity: item.quantity,
+      unit_price: item.product.price,
+      line_total: item.product.price * item.quantity,
+    }))
+  )
+);
 }
 
 formData.append(
