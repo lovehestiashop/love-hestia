@@ -60,26 +60,24 @@ const cartGrandTotal = state?.grandTotal || 0;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deliveryArea, setDeliveryArea] = useState("standard");
 
-  const [form, setForm] = useState({
+ const [form, setForm] = useState({
     customer_name: "",
     customer_number: "",
+    customer_email: "",
     facebook_name: "",
     receiver_name: "",
     receiver_number: "",
     delivery_address: "",
     date_and_time_of_delivery: "",
     product_ordered:
-  product?.title?.rendered ||
-  cart
-    .map(
-      (item) =>
-        item.product?.title?.rendered
-    )
-    .join(", "),
+      product?.title?.rendered ||
+      cart
+        .map((item) => item.product?.title?.rendered)
+        .join(", "),
     customize_product: "",
     small_card_note: "",
     proof_of_payment: null,
-  });
+});
 
   const price = product?.acf?.price || 0;
  const deliveryFee =
