@@ -186,7 +186,7 @@ if (orderData.product_id) {
 }
 
 if (orderData.cart?.length) {
- console.log(orderData.cart);
+ console.log(orderData.cart[0].product);
   formData.append(
   "acf[cart_items]",
   JSON.stringify(
