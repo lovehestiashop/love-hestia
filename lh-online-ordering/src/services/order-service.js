@@ -186,24 +186,35 @@ if (orderData.product_id) {
 }
 
 if (orderData.cart?.length) {
- console.log(orderData.cart[0].product);
-  formData.append(
-  "acf[cart_items]",
-  JSON.stringify(
- orderData.cart.map((item) => {
-  console.log("PRICE:", item.product.acf.price);
-  console.log("QTY:", item.quantity);
 
-  return {
-    product_id: item.product.id,
-    product_name: item.product.title.rendered,
-    quantity: item.quantity,
-    unit_price: item.product.acf.price,
-    line_total: item.product.acf.price * item.quantity,
-  };
-})  
-  )
-);
+  formData.append(
+    "acf[cart_items]",
+    JSON.stringify(
+      orderData.cart.map((item) => ({
+        product_id: item.product.id,
+        product_name: item.product.title.rendered,
+        quantity: item.quantity,
+        unit_price: item.product.acf.price,
+        line_total: item.product.acf.price * item.quantity,
+      }))
+    )
+  );
+
+} else if (orderData.product) {
+
+  formData.append(
+    "acf[cart_items]",
+    JSON.stringify([
+      {
+        product_id: orderData.product.id,
+        product_name: orderData.product.title.rendered,
+        quantity: 1,
+        unit_price: orderData.product.acf.price,
+        line_total: orderData.product.acf.price,
+      },
+    ])
+  );
+
 }
 
 formData.append(
