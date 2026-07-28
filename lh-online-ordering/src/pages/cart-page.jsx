@@ -388,18 +388,19 @@ fontWeight: "600",
 </p>  
 
            <p>
-  <strong>
-    Starting Delivery Fee:
-  </strong>
+<p>
+  <strong>FREE DELIVERY:</strong>
   <span
     style={{
       fontFamily: "'Roboto', sans-serif",
       fontWeight: "700",
       marginLeft: "4px",
+      color: "#4CAF50",
     }}
   >
-    ₱200
+    (Cebu City Only)
   </span>
+</p>
 </p>
 
             <h2
@@ -439,8 +440,8 @@ fontWeight: "600",
                 marginBottom: "20px",
               }}
             >
-              Final delivery fee will be
-              calculated at checkout.
+              Free delivery applies within Cebu City.
+Additional fees may apply for areas outside Cebu City.
             </p>
 
             <button
