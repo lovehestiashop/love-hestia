@@ -389,7 +389,7 @@ fontWeight: "600",
 
            <p>
 <p>
-  <strong>FREE DELIVERY:</strong>
+  <strong>Delivery Fee:</strong>
   <span
     style={{
       fontFamily: "'Roboto', sans-serif",
@@ -398,7 +398,7 @@ fontWeight: "600",
       color: "#4CAF50",
     }}
   >
-    (Cebu City Only)
+    FREE (Cebu city)
   </span>
 </p>
 </p>
