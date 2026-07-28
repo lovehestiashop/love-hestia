@@ -34,7 +34,7 @@ function CartPage() {
     0
   );
 
-  const deliveryFee = cart.length > 0 ? 200 : 0;
+  const deliveryFee = 0;
 
   const grandTotal = subtotal + deliveryFee;
 
