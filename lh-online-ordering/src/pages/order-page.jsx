@@ -9,7 +9,7 @@ import QrComponent from "../components/qr";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const STANDARD_FEE = 200;
+const STANDARD_FEE = 0;
 const SPECIAL_FEE = 250;
 const CAR_FEE = 500;
 
@@ -304,7 +304,7 @@ navigate("/shop");
     onChange={() => setDeliveryArea("standard")}
     required
   />
-  Standard Delivery (₱200)
+  FREE DELIVERY (Cebu city only)
 </label>
 
 <label className="flex items-center gap-3 mb-2">
