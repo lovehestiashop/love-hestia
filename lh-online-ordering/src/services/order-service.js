@@ -147,7 +147,11 @@ export const orderService = {
   "acf[customer_email]",
   orderData.customer_email
 );
-
+formData.append(
+  "acf[facebook_name]",
+  orderData.facebook_name
+);
+    
     formData.append(
       "acf[receiver_name]",
       orderData.receiver_name || ""
