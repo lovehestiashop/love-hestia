@@ -117,7 +117,7 @@ const cartGrandTotal = state?.grandTotal || 0;
 
   cart,
 
-  price,
+  price: product ? price : cartSubtotal,
   delivery_fee: deliveryFee,
 
   total: product
