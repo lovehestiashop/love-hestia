@@ -220,7 +220,8 @@ if (orderData.cart?.length) {
   );
 
 }
-
+console.log("Price being saved:", orderData.price);
+console.log("Cart:", orderData.cart);
 formData.append(
   "acf[price]",
   orderData.price
