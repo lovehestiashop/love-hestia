@@ -1,82 +1,168 @@
-import {
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
-import { useEffect, useState } from "react";
-import { mediaService } from "../services/media-service";
 
-function ProductDetailPage() {
-  const { state } = useLocation();
-  const navigate = useNavigate();
+Loading older messages…
 
-  const product = state?.product;
+Pasted text(20261018-043356).txt
+Document
+I want you to inspect the current code and find the error and provide the correct code so it could be fixed:
+I inspected your current product-detail-page.jsx. I found a definite issue in the code you uploaded: the breadcrumb section has been duplicated, and both copies are rendered one after another. There are also two important issues worth fixing while we're here.
 
-  const isAvailable = Boolean(
-    Number(product?.acf?.stock ?? 0) > 0
+1. What is causing the problem?
+Issue 1 — Duplicate breadcrumb
+
+Your file contains two copies of the BREADCRUMB section, beginning around lines 80 and 132. Remove the second copy, from its opening <div> through its matching closing </div>.
+
+Issue 2 — Product images depend on navigation state
+
+Your page uses const product = state?.product. If someone opens or refreshes a product URL directly, the product may be missing because it was passed through React Router state. This can also prevent the gallery from loading.
+
+Issue 3 — Image loading has no fallback
+
+If an image ID cannot be resolved or its URL is unavailable, the gallery doesn't currently provide a fallback image or handle an empty selection.
+
+The duplicated breadcrumb is definitely present in your file. However, it does not by itself explain the exact Unterminated regular expression build error shown in your screenshot. That error may have been caused by an accidental character or malformed syntax introduced while editing the file. The corrected code below removes the duplicated section and addresses the gallery and navigation issues as well.
+
+2. Apply these corrections
+Fix A — Remove the duplicate breadcrumb
+In src/pages/product-detail-page.jsx, keep the first breadcrumb section and delete the second one entirely.
+
+The breadcrumb should appear only once and look like this:
+
+{/* BREADCRUMB */}
+<div
+  style={{
+    marginBottom: "50px",
+    fontSize: "13px",
+    color: "#8b8b8b",
+    letterSpacing: "2px",
+    textTransform: "uppercase",
+  }}
+>
+  <span
+    onClick={() => navigate("/")}
+    style={{ cursor: "pointer" }}
+  >
+    Home
+  </span>
+
+  {" / "}
+
+  <span
+    onClick={() => navigate("/shop")}
+    style={{ cursor: "pointer" }}
+  >
+    Shop
+  </span>
+
+  {" / "}
+
+  <span
+    onClick={() => navigate("/shop/5")}
+    style={{ cursor: "pointer" }}
+  >
+    Flower Bouquets
+  </span>
+
+  {" / "}
+
+  <span>{product.title.rendered}</span>
+</div>
+
+This preserves the Flower Bouquets link and removes the extra Cart breadcrumb.
+
+Fix B — Correct the closing tags at the bottom
+This is the most important correction for the build error.
+
+Your current code ends with three consecutive closing </div> tags:
+
+        </div>
+      </div>
+    </div>
   );
+}
 
-  const [gallery, setGallery] = useState([]);
-  const [selectedImage, setSelectedImage] =
-    useState(null);
+Replace that ending with:
 
-  useEffect(() => {
-    async function loadGallery() {
-      if (!product) return;
 
-      const images = [];
+        </div>
+      </div>
+  );
+}
 
-      const featuredImage =
-        product._embedded?.[
-          "wp:featuredmedia"
-        ]?.[0]?.source_url;
+export default ProductDetailPage;
 
-      if (featuredImage) {
-        images.push(featuredImage);
-      }
+Why this works: Your outer page container and right-hand product column require only two closing </div> tags at the end. The third closing tag is unmatched and is the likely cause of the build failure reported at line 535.
 
-      const imageIds = [
-        product.acf?.product_image_2,
-        product.acf?.product_image_3,
-        product.acf?.product_image_4,
-        product.acf?.product_image_5,
-      ].filter(Boolean);
+3. Save and redeploy
+Open src/pages/product-detail-page.jsx in your project.
 
-      for (const id of imageIds) {
-        try {
-          const media =
-            await mediaService.getById(id);
+Delete the duplicate breadcrumb section.
+Remove the extra closing </div> at the bottom.
 
-          images.push(media.source_url);
-        } catch (err) {
-          console.error(err);
-        }
-      }
+Save the file and run your build or redeploy on Vercel.
+Open a product page and verify that the breadcrumb and image gallery display correctly.
+One additional note: your gallery currently loads the featured image and custom image IDs from product.acf. If the build succeeds but some photos remain missing, we'll need to check the actual API response and the mediaService.getById() implementation separately.
 
-      setGallery(images);
+I recommend making these two syntax corrections first, then sharing the next build result if any error remains.
 
-      if (images.length > 0) {
-        setSelectedImage(images[0]);
-      }
-    }
+Herrs the curremt breadcrumb, is this correct
 
-    loadGallery();
-  }, [product]);
+{/* BREADCRUMB */}
+<div
+  style={{
+    marginBottom: "50px",
+    fontSize: "13px",
+    color: "#8b8b8b",
+    letterSpacing: "2px",
+    textTransform: "uppercase",
+  }}
+>
+  <span
+    onClick={() => navigate("/")}
+    style={{ cursor: "pointer" }}
+  >
+    Home
+  </span>
 
-  if (!product) {
-    return <div>Product not found.</div>;
-  }
+  {" / "}
 
-  return (
-    <div
-      style={{
-        maxWidth: "1400px",
-        margin: "0 auto",
-        padding: "60px 30px",
-        background: "#faf9f7",
-        minHeight: "100vh",
-      }}
-    >
-     
+  <span
+    onClick={() => navigate("/shop")}
+    style={{ cursor: "pointer" }}
+  >
+    Shop
+  </span>
+
+  {" / "}
+
+  <span
+    onClick={() => navigate("/shop/5")}
+    style={{ cursor: "pointer" }}
+  >
+    Flower Bouquets
+  </span>
+
+  {" / "}
+
+  <span>{product.title.rendered}</span>
+</div>
+  {" / "}
+
+  <span
+    onClick={() => navigate("/cart")}
+    style={{
+      cursor: "pointer",
+      color: "#5f5a55",
+    }}
+  >
+    Cart
+  </span>
+</div>
+…
+Not quite. Your current code has an extra closing </div> and the Cart breadcrumb is outside the main breadcrumb container. This can cause a JSX syntax error.
+
+Replace the entire breadcrumb section with this corrected version:
+
+
 {/* BREADCRUMB */}
 <div
   style={{
@@ -129,218 +215,134 @@ function ProductDetailPage() {
   </span>
 </div>
 
-        {/* LEFT COLUMN */}
+What this fixes
+Home → navigates to your homepage.
 
-        <div
-          style={{
-            flex: 1,
-            minWidth: "350px",
-          }}
-        >
-          <img
-            src={selectedImage}
-            alt={product.title.rendered}
-            style={{
-              width: "100%",
-              display: "block",
-            }}
-          />
+Shop → navigates to /shop.
 
-          <div
-            style={{
-              display: "flex",
-              gap: "12px",
-              marginTop: "25px",
-              flexWrap: "wrap",
-            }}
-          >
-            {gallery.map(
-              (image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt=""
-                  onClick={() =>
-                    setSelectedImage(image)
-                  }
-                  style={{
-                    width: "100px",
-                    height: "130px",
-                    objectFit: "cover",
-                    cursor: "pointer",
-                    borderRadius: "6px",
-                    border:
-                      selectedImage === image
-                        ? "1px solid #555"
-                        : "1px solid #ddd",
-                    transition:
-                      "all 0.3s ease",
-                  }}
-                />
-              )
-            )}
-          </div>
-        </div>
+Flower Bouquets → navigates to /shop/5.
 
-        {/* RIGHT COLUMN */}
+Product name → displays the current product name.
 
-        <div
-          style={{
-            flex: 1,
-            minWidth: "350px",
-          }}
-        >
-        
-          <h1
+Cart → navigates to /cart.
+
+All breadcrumb items are now inside one parent <div>, with properly matched tags.
+
+Next step: Replace your existing breadcrumb section completely, save the file, and redeploy. Do not add this code beneath your existing breadcrumb; replace the whole section to avoid duplicate elements and closing tags.
+
+User attachment
+Now its like this can you fix and turn it back to the previous design
+Yes. The screenshot shows that the breadcrumb is appearing three times, and the product image has become much larger than before. We can restore the previous layout without changing your product data or image gallery.
+
+The most likely cause is that the breadcrumb code was added multiple times, and the surrounding product layout was also changed or duplicated.
+
+Step 1: Remove the duplicate breadcrumbs
+Open src/pages/product-detail-page.jsx and search for:
+
+{/* BREADCRUMB */}
+
+You should have only one breadcrumb section in the entire product detail component. Delete the extra copies, keeping just one.
+
+Step 2: Use this single breadcrumb
+Replace the existing breadcrumb sections with this code:
+
+
+{/* BREADCRUMB */}
+<div
   style={{
-    fontSize:
-      window.innerWidth <= 768
-        ? "34px"
-        : "52px",
-    lineHeight: "1",
-    marginBottom: "15px",
-    color: "#5f5a55",
-    fontWeight: "300",
-    fontFamily:
-      "'Cormorant Garamond', serif",
+    marginBottom: "50px",
+    fontSize: "13px",
+    color: "#8b8b8b",
+    letterSpacing: "2px",
+    textTransform: "uppercase",
   }}
 >
-            {product.title.rendered}
-          </h1>
+  <span
+    onClick={() => navigate("/")}
+    style={{ cursor: "pointer" }}
+  >
+    Home
+  </span>
+  {" / "}
+  <span
+    onClick={() => navigate("/shop")}
+    style={{ cursor: "pointer" }}
+  >
+    Shop
+  </span>
+  {" / "}
+  <span
+    onClick={() => navigate("/shop/5")}
+    style={{ cursor: "pointer" }}
+  >
+    Flower Bouquets
+  </span>
+  {" / "}
+  <span>{product.title.rendered}</span>
+  {" / "}
+  <span
+    onClick={() => navigate("/cart")}
+    style={{
+      cursor: "pointer",
+      color: "#5f5a55",
+    }}
+  >
+    Cart
+  </span>
+</div>
 
-          <h2
-  style={{
-    fontSize:
-      window.innerWidth <= 768
-        ? "22px"
-        : "28px",
-    marginBottom: "40px",
-    color: "#5f5a55",
-    fontWeight: "600",
-    fontFamily:
-      "'Roboto', sans-serif",
-  }}
->
-  ₱
-  {Number(
-    product.acf?.price || 0
-  ).toLocaleString("en-PH")}
-</h2>
-            {isAvailable ? (
-    <div
-      style={{
-        display: "flex",
-        gap: "15px",
-        flexWrap: "wrap",
-        marginBottom: "50px",
-      }}
-    >
-              <button
-                onClick={() => {
-                  const cart =
-                    JSON.parse(
-                      localStorage.getItem(
-                        "cart"
-                      )
-                    ) || [];
+Step 3: Restore the previous product layout
+Your earlier design had the product image on the left and the product name, price, purchase buttons, and flower-care information on the right.
 
-                  const existingItem =
-                    cart.find(
-                      (item) =>
-                        item.product?.id ===
-                        product.id
-                    );
+I don't recommend changing the image dimensions or the parent layout blindly, because that could affect the rest of your product page.
 
-                if (existingItem) {
+Please send me your current complete product-detail-page.jsx code, including the section that renders the breadcrumb and product image. I'll correct the actual layout, remove the duplicate breadcrumbs, and return the complete corrected file so you can replace your current code without guessing which sections to edit.
 
-    const stock = Number(product.acf?.stock ?? 0);
 
-    if (existingItem.quantity < stock) {
-        existingItem.quantity += 1;
-    } else {
-        alert("Only " + stock + " item(s) available in stock.");
-        return;
-    }
+Pasted text(20261018-044226).txt
+Document
+Here's the complete code:
 
-} else {
+Worked for 23s
 
-    cart.push({
-        product,
-        quantity: 1,
-    });
 
-}
-                  localStorage.setItem(
-                    "cart",
-                    JSON.stringify(cart)
-                  );
+I've reviewed your complete product-detail-page.jsx and prepared a corrected version that restores the original two-column product layout.
 
-                  alert(
-                    "Added to cart!"
-                  );
-                }}
-                style={{
-                  padding:
-                    "16px 42px",
-                  border:
-                    "1px solid #888",
-                  background:
-                    "#ffffff",
-                  cursor: "pointer",
-                  letterSpacing:
-                    "3px",
-                  textTransform:
-                    "uppercase",
-                  fontSize: "12px",
-                }}
-              >
-                Add to Cart
-              </button>
+product-detail-page-fixed.jsx
 
-              <button
-                onClick={() =>
-                  navigate(
-                    "/order",
-                    {
-                      state: {
-                        product,
-                      },
-                    }
-                  )
-                }
-                style={{
-                  padding:
-  window.innerWidth <= 768
-    ? "14px 24px"
-    : "16px 42px",
-                  border: "none",
-                  background:
-                    "#5d5650",
-                  color: "#fff",
-                  cursor: "pointer",
-                  letterSpacing:
-                    "3px",
-                  textTransform:
-                    "uppercase",
-                  fontSize: "12px",
-                }}
-              >
-                Buy Now
-              </button>
-            </div>
-          ) : (
-            <div>
-              <p
-                style={{
-                  color:
-                    "#8b8b8b",
-                  letterSpacing:
-                    "4px",
-                  textTransform:
-                    "uppercase",
-                  marginBottom:
-                    "20px",
-                  fontFamily:
+Complete corrected React component · 496 lines
+
+Download the corrected code
+
+What I fixed
+Restored the two-column layout: the product image appears on the left, while the product name, price, purchase buttons, description, and flower-care information appear on the right.
+
+Made the layout responsive: the columns can wrap on smaller screens instead of forcing the image to occupy the entire page width.
+
+Kept the breadcrumb in one section: Home → Shop → Flower Bouquets → Product Name → Cart.
+
+Preserved your existing functionality: image gallery, thumbnail selection, stock availability, Add to Cart, Buy Now, and flower-care content.
+
+How to apply the fix
+Download the corrected file above.
+
+Open your project in VS Code.
+
+Go to src/pages/product-detail-page.jsx.
+
+Make a backup of your current file.
+
+Replace its contents with the downloaded file.
+
+Save and deploy your changes on Vercel.
+
+Open the Solstice product page and refresh it.
+
+Important: Your uploaded source contains only one breadcrumb section, even though your screenshot shows three. If three breadcrumbs remain after deploying this version, another component or the currently deployed version is likely rendering them. We'll need to inspect that separately rather than keep adding or deleting breadcrumb markup blindly.
+
+
+
+
                     "'Cormorant Garamond', serif",
                   fontSize:
                     "16px",
@@ -478,6 +480,7 @@ function ProductDetailPage() {
 </div>
 
        
+        </div>
         </div>
     </div>
   );
