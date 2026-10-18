@@ -9,11 +9,36 @@ import QrComponent from "../components/qr";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+
 const isDeliveryDateAvailable = (date) => {
-  // Block every Sunday
+  if (!date) return false;
+
+  const month = date.getMonth();
+  const day = date.getDate();
+
+  // Allow February 14, even on Sunday
+  if (month === 1 && day === 14) {
+    return true;
+  }
+
+  // Block all other Sundays
   if (date.getDay() === 0) {
     return false;
   }
+
+  const year = date.getFullYear();
+
+  const dateKey = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+  const blockedRanges = [
+    ["2026-10-31", "2026-11-03"],
+    ["2026-12-19", "2027-01-08"],
+  ];
+
+  return !blockedRanges.some(
+    ([start, end]) => dateKey >= start && dateKey <= end
+  );
+};
 
   // Use local calendar dates to avoid timezone issues
   const year = date.getFullYear();
