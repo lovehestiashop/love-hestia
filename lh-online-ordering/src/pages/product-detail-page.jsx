@@ -76,10 +76,8 @@ function ProductDetailPage() {
         minHeight: "100vh",
       }}
     >
-      {/* BREADCRUMB */}
-
-   {/* BREADCRUMB */}
-
+     
+{/* BREADCRUMB */}
 <div
   style={{
     marginBottom: "50px",
@@ -91,9 +89,7 @@ function ProductDetailPage() {
 >
   <span
     onClick={() => navigate("/")}
-    style={{
-      cursor: "pointer",
-    }}
+    style={{ cursor: "pointer" }}
   >
     Home
   </span>
@@ -102,18 +98,23 @@ function ProductDetailPage() {
 
   <span
     onClick={() => navigate("/shop")}
-    style={{
-      cursor: "pointer",
-    }}
+    style={{ cursor: "pointer" }}
   >
     Shop
   </span>
 
   {" / "}
 
-  <span>
-    {product.title.rendered}
+  <span
+    onClick={() => navigate("/shop/5")}
+    style={{ cursor: "pointer" }}
+  >
+    Flower Bouquets
   </span>
+
+  {" / "}
+
+  <span>{product.title.rendered}</span>
 
   {" / "}
 
@@ -128,14 +129,6 @@ function ProductDetailPage() {
   </span>
 </div>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "80px",
-          flexWrap: "wrap",
-          alignItems: "flex-start",
-        }}
-      >
         {/* LEFT COLUMN */}
 
         <div
