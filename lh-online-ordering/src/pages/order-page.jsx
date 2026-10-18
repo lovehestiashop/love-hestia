@@ -287,14 +287,16 @@ navigate("/shop");
               className="w-full border p-3 mb-3"
             />
 
-            <textarea
-              name="small_card_note"
-              value={form.small_card_note}
-              onChange={handleChange}
-              placeholder="Small card note"
-              rows="2"
-              className="w-full border p-3 mb-3"
-            />
+           {/*
+<textarea
+  name="small_card_note"
+  value={form.small_card_note}
+  onChange={handleChange}
+  placeholder="Small card note"
+  rows="2"
+  className="w-full border p-3 mb-3"
+/>
+*/}
 
             <h3 className="mb-4 font-medium uppercase tracking-wide">
               Delivery Area
