@@ -9,6 +9,29 @@ import QrComponent from "../components/qr";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+const isDeliveryDateAvailable = (date) => {
+  // Block every Sunday
+  if (date.getDay() === 0) {
+    return false;
+  }
+
+  // Use local calendar dates to avoid timezone issues
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+
+  const dateKey = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+  const blockedRanges = [
+    ["2026-10-31", "2026-11-03"],
+    ["2026-12-19", "2027-01-08"],
+  ];
+
+  return !blockedRanges.some(
+    ([start, end]) => dateKey >= start && dateKey <= end
+  );
+};
+
 const STANDARD_FEE = 0;
 const SPECIAL_FEE = 250;
 const CAR_FEE = 500;
@@ -267,7 +290,7 @@ navigate("/shop");
   timeFormat="h:mm aa"
   dateFormat="MMMM d, yyyy h:mm aa"
   minDate={new Date()}
-  filterDate={(date) => date.getDay() !== 0}
+ filterDate={isDeliveryDateAvailable}
   withPortal
   customInput={<DateButtonInput />}
   filterTime={(time) => {
