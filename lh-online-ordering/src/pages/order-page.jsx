@@ -253,26 +253,29 @@ navigate("/shop");
               Delivery Details
             </h3>
 
-            <DatePicker
-              selected={selectedDate}
-              onChange={(date) => {
-                setSelectedDate(date);
-                setForm((prev) => ({
-                  ...prev,
-                  date_and_time_of_delivery: date?.toISOString(),
-                }));
-              }}
-              showTimeSelect
-              timeFormat="h:mm aa"
-              dateFormat="MMMM d, yyyy h:mm aa"
-              minDate={new Date()}
-              withPortal
-              customInput={<DateButtonInput />}
-             filterTime={(time) => {
-  const hours = new Date(time).getHours();
-  return hours >= 8 && hours <= 18; // ✅ 8AM–6PM only
-}}
-            />
+           
+<DatePicker
+  selected={selectedDate}
+  onChange={(date) => {
+    setSelectedDate(date);
+    setForm((prev) => ({
+      ...prev,
+      date_and_time_of_delivery: date?.toISOString() || "",
+    }));
+  }}
+  showTimeSelect
+  timeFormat="h:mm aa"
+  dateFormat="MMMM d, yyyy h:mm aa"
+  minDate={new Date()}
+  filterDate={(date) => date.getDay() !== 0}
+  withPortal
+  customInput={<DateButtonInput />}
+  filterTime={(time) => {
+    const hours = new Date(time).getHours();
+    return hours >= 8 && hours <= 18;
+  }}
+/>
+
 
             <textarea
               required
