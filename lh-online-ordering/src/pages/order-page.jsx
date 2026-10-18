@@ -13,10 +13,13 @@ import "react-datepicker/dist/react-datepicker.css";
 const isDeliveryDateAvailable = (date) => {
   if (!date) return false;
 
+  const year = date.getFullYear();
   const month = date.getMonth();
   const day = date.getDate();
 
-  // Allow February 14, even on Sunday
+  const dateKey = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+  // Allow Valentine's Day, even when it falls on Sunday
   if (month === 1 && day === 14) {
     return true;
   }
@@ -26,27 +29,7 @@ const isDeliveryDateAvailable = (date) => {
     return false;
   }
 
-  const year = date.getFullYear();
-
-  const dateKey = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-
-  const blockedRanges = [
-    ["2026-10-31", "2026-11-03"],
-    ["2026-12-19", "2027-01-08"],
-  ];
-
-  return !blockedRanges.some(
-    ([start, end]) => dateKey >= start && dateKey <= end
-  );
-};
-
-  // Use local calendar dates to avoid timezone issues
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDate();
-
-  const dateKey = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-
+  // Block scheduled leave dates, including both endpoints
   const blockedRanges = [
     ["2026-10-31", "2026-11-03"],
     ["2026-12-19", "2027-01-08"],
