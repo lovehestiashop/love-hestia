@@ -293,10 +293,21 @@ navigate("/shop");
  filterDate={isDeliveryDateAvailable}
   withPortal
   customInput={<DateButtonInput />}
-  filterTime={(time) => {
-    const hours = new Date(time).getHours();
-    return hours >= 8 && hours <= 18;
-  }}
+ 
+filterTime={(time) => {
+  const hours = new Date(time).getHours();
+
+  const selected = selectedDate;
+  const isValentinesDay =
+    selected &&
+    selected.getMonth() === 1 &&
+    selected.getDate() === 14;
+
+  const earliestHour = isValentinesDay ? 6 : 8;
+
+  return hours >= earliestHour && hours <= 18;
+}}
+
 />
 
 
