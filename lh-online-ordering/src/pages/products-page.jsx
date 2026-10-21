@@ -8,6 +8,7 @@ const PRODUCT_TYPE_MAP = {
   7: "Flower Dome",
   6: "Vase Arrangements",
   5: "Flower Bouquets",
+  768: "Valentine's Day",
 };
 
 const STORAGE_KEY = "all_products";
