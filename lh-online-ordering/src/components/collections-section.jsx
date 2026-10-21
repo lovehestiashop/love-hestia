@@ -2,6 +2,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
+function decodeHtmlEntities(value = "") {
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = value;
+  return textarea.value;
+}
 
 const fallbackCollections = [
   {
@@ -50,7 +55,9 @@ function CollectionsSectionComponent() {
         const fetchedCollections = response.data
           .map((item) => ({
             id: item.id,
-            title: item.title?.rendered || "Collection",
+            title: decodeHtmlEntities(
+  item.title?.rendered || "Collection"
+),
             image: item.acf?.collection_image,
             destinationPath:
               item.acf?.destination_path || "/shop",
@@ -100,7 +107,7 @@ function CollectionsSectionComponent() {
         Our Collections
       </h2>
 
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-10 px-6 md:grid-cols-4">
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-2 gap-x-4 gap-y-10 px-4 sm:px-6 md:grid-cols-4">
         {collections.map((item) => (
           <Link
             key={item.id}
