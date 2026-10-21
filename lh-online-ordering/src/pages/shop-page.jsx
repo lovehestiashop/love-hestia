@@ -172,11 +172,11 @@ function ShopPage() {
              
 <h3
   className="font-normal text-neutral-700 leading-tight"
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontSize: "clamp(28px, 4.8vw, 64px)",
-    lineHeight: 1.1,
-  }}
+ style={{
+  fontFamily: "'Cormorant Garamond', serif",
+  fontSize: "clamp(22px, 2.5vw, 34px)",
+  lineHeight: 1.2,
+}}
 >
   {item.title}
 </h3>
