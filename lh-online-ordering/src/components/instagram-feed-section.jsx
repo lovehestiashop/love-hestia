@@ -18,7 +18,25 @@ function InstagramFeedSectionComponent() {
         </p>
 
         <div className="w-full">
-          {/* Instagram feed will be embedded here */}
+          <iframe
+            src="https://www.instagram.com/lovehestiaflowers/embed"
+            title="Love Hestia Flowers Instagram feed"
+            className="w-full border-0"
+            style={{ height: "650px" }}
+            loading="lazy"
+            allowTransparency="true"
+          />
+        </div>
+
+        <div className="text-center mt-6">
+          <a
+            href="https://www.instagram.com/lovehestiaflowers/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block border border-neutral-700 rounded-full px-6 py-3 hover:bg-neutral-800 hover:text-white transition"
+          >
+            Follow us on Instagram
+          </a>
         </div>
       </div>
     </section>
