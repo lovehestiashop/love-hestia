@@ -1,29 +1,96 @@
+
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import HeaderComponent from "../components/header";
 import FooterComponent from "../components/footer";
+import api from "../services/api";
+
+const fallbackCollections = [
+  {
+    id: "bouquets",
+    title: "Flower Bouquets",
+    image:
+      "https://api.lovehestia.shop/wp-content/uploads/2026/07/Flower-Bouquet.jpeg",
+    destinationPath: "/shop/5",
+    displayOrder: 1,
+  },
+  {
+    id: "vases",
+    title: "Vase Arrangements",
+    image:
+      "https://api.lovehestia.shop/wp-content/uploads/2026/07/Vase-arrnagements.jpeg",
+    destinationPath: "/shop/6",
+    displayOrder: 2,
+  },
+  {
+    id: "dome",
+    title: "Flower Dome",
+    image:
+      "https://api.lovehestia.shop/wp-content/uploads/2026/04/IMG_0566-scaled.jpeg",
+    destinationPath: "/shop/7",
+    displayOrder: 3,
+  },
+];
+
+function decodeHtmlEntities(value = "") {
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = value;
+  return textarea.value;
+}
 
 function ShopPage() {
-  const collections = [
-    {
-      title: "Flower Bouquets",
-      image:
-        "https://api.lovehestia.shop/wp-content/uploads/2026/07/Flower-Bouquet.jpeg",
-      productKey: 5,
-    },
-    {
-      title: "Vase Arrangements",
-      image:
-        "https://api.lovehestia.shop/wp-content/uploads/2026/07/Vase-arrnagements.jpeg",
-      productKey: 6,
-    },
-    {
-      title: "Flower Dome",
-      image:
-        "https://api.lovehestia.shop/wp-content/uploads/2026/04/IMG_0566-scaled.jpeg",
-      productKey: 7,
-    },
-  ];
+  const [collections, setCollections] = useState(
+    fallbackCollections
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCollections() {
+      try {
+        const response = await api.get("/wp/v2/collection", {
+          params: {
+            acf_format: "standard",
+            per_page: 100,
+          },
+        });
+
+        const fetchedCollections = response.data
+          .map((item) => ({
+            id: item.id,
+            title: decodeHtmlEntities(
+              item.title?.rendered || "Collection"
+            ),
+            image: item.acf?.collection_image,
+            destinationPath:
+              item.acf?.destination_path || "/shop",
+            displayOrder: Number(
+              item.acf?.display_order ?? 999
+            ),
+          }))
+          .filter((item) => item.image)
+          .sort(
+            (a, b) => a.displayOrder - b.displayOrder
+          );
+
+        if (!cancelled && fetchedCollections.length > 0) {
+          setCollections(fetchedCollections);
+        }
+      } catch (error) {
+        console.error(
+          "Failed to load collections from WordPress:",
+          error
+        );
+      }
+    }
+
+    loadCollections();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className="bg-[#faf9f7]">
@@ -62,11 +129,11 @@ function ShopPage() {
         >
           {collections.map((item) => (
             <Link
-              key={item.title}
-              to={`/shop/${item.productKey}`}
+              key={item.id}
+              to={item.destinationPath}
+              className="block min-w-0"
             >
               <div className="group">
-
                 <div
                   className="
                     relative
@@ -77,6 +144,7 @@ function ShopPage() {
                   <img
                     src={item.image}
                     alt={item.title}
+                    loading="lazy"
                     className="
                       h-full
                       w-full
@@ -100,24 +168,23 @@ function ShopPage() {
                   />
                 </div>
 
-               <div className="mt-3 text-center">
-  <h3
-    className="
-      text-[42px]
-      md:text-[64px]
-      font-normal
-      text-neutral-700
-      leading-none
-    "
-    style={{
-      fontFamily:
-        "'Cormorant Garamond', serif",
-    }}
-  >
-    {item.title}
-  </h3>
-</div>
-
+                <div className="mt-3 text-center">
+                  <h3
+                    className="
+                      text-[42px]
+                      md:text-[64px]
+                      font-normal
+                      text-neutral-700
+                      leading-none
+                    "
+                    style={{
+                      fontFamily:
+                        "'Cormorant Garamond', serif",
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+                </div>
               </div>
             </Link>
           ))}
