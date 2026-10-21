@@ -7,6 +7,7 @@ import CustomArrangementSectionComponent from "../components/custom-arrangements
 import FooterComponent from "../components/footer";
 import HeroSectionComponent from "../components/hero-section";
 import OurStorySectionComponent from "../components/our-story-section";
+import InstagramFeedSection from "../components/instagram-feed-section";
 
 import workshopImage from "../assets/workshop-image.jpg";
 
@@ -197,11 +198,14 @@ function HomePage() {
         </div>
       </section>
 
-      {/* OUR STORY */}
-      <OurStorySectionComponent />
+   {/* OUR STORY */}
+<OurStorySectionComponent />
 
-      {/* FOOTER */}
-      <FooterComponent />
+{/* INSTAGRAM FEED */}
+<InstagramFeedSection />
+
+{/* FOOTER */}
+<FooterComponent />
     </div>
   );
 }
