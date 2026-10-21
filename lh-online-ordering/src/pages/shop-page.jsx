@@ -170,13 +170,13 @@ function ShopPage() {
 
                 <div className="mt-3 text-center">
                   <h3
-                    className="
-                      text-[42px]
-                      md:text-[64px]
-                      font-normal
-                      text-neutral-700
-                      leading-none
-                    "
+                   className="
+  text-[48px]
+  md:text-[72px]
+  font-normal
+  text-neutral-700
+  leading-tight
+"
                     style={{
                       fontFamily:
                         "'Cormorant Garamond', serif",
