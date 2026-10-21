@@ -112,7 +112,7 @@ function CollectionsSectionComponent() {
           <Link
             key={item.id}
             to={item.destinationPath}
-            className="block"
+            className="block min-w-0"
           >
             <div className="group flex cursor-pointer flex-col items-center">
               <div className="relative mb-4 aspect-[3/4] w-full max-w-[280px] overflow-hidden">
