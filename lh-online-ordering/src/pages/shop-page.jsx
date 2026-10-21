@@ -169,21 +169,18 @@ function ShopPage() {
                 </div>
 
                 <div className="mt-3 text-center">
-                  <h3
-                   className="
-  text-[48px]
-  md:text-[72px]
-  font-normal
-  text-neutral-700
-  leading-tight
-"
-                    style={{
-                      fontFamily:
-                        "'Cormorant Garamond', serif",
-                    }}
-                  >
-                    {item.title}
-                  </h3>
+             
+<h3
+  className="font-normal text-neutral-700 leading-tight"
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontSize: "clamp(28px, 4.8vw, 64px)",
+    lineHeight: 1.1,
+  }}
+>
+  {item.title}
+</h3>
+
                 </div>
               </div>
             </Link>
