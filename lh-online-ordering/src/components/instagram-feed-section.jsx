@@ -23,11 +23,13 @@ function InstagramFeedSectionComponent() {
   src="https://www.instagram.com/lovehestiaflowers/embed"
   title="Love Hestia Flowers Instagram feed"
   className="w-full border-0"
-  style={{
-    height: "clamp(480px, 130vw, 650px)",
-    display: "block",
-    overflow: "hidden",
-  }}
+  
+style={{
+  height: "clamp(400px, 115vw, 650px)",
+  display: "block",
+  overflow: "hidden",
+}}
+
   loading="lazy"
   allowTransparency="true"
 />
