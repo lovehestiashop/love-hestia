@@ -114,19 +114,25 @@ function ShopPage() {
           Collections
         </h2>
 
-        <div
-          className="
-            mx-auto
-            grid
-            max-w-7xl
-            grid-cols-1
-            gap-8
-            px-6
-            sm:grid-cols-2
-            md:grid-cols-3
-            md:gap-10
-          "
-        >
+       
+<div
+  className="
+    mx-auto
+    grid
+    w-full
+    max-w-7xl
+    grid-cols-2
+    gap-x-4
+    gap-y-8
+    px-4
+    sm:gap-x-6
+    sm:px-6
+    md:grid-cols-3
+    md:gap-x-10
+    md:gap-y-16
+  "
+>
+
           {collections.map((item) => (
             <Link
               key={item.id}
