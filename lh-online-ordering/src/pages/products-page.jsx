@@ -153,34 +153,31 @@ function ProductsPage() {
                     "
                   />
 
-                  {/* CENTERED SOLD OUT BADGE */}
+                  {/* BOTTOM-LEFT SOLD OUT BADGE */}
                   {!isAvailable && (
                     <div
                       className="
                         absolute
-                        inset-0
+                        bottom-2
+                        left-2
                         z-10
-                        flex
-                        items-center
-                        justify-center
                         pointer-events-none
                       "
                     >
                       <span
                         className="
+                          inline-block
                           rounded-full
-                          bg-[#f5eedc]/95
-                          px-5
-                          py-2
-                          text-xs
+                          bg-[#f5eedc]
+                          px-3
+                          py-1
+                          text-[11px]
                           font-medium
-                          tracking-[0.2em]
-                          uppercase
-                          text-neutral-700
-                          shadow-sm
+                          tracking-wide
+                          text-[#6b624f]
                         "
                       >
-                        Sold Out
+                        Sold out
                       </span>
                     </div>
                   )}
