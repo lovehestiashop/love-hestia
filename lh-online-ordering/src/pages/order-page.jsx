@@ -324,7 +324,7 @@ filterTime={(time) => {
               name="delivery_address"
               value={form.delivery_address}
               onChange={handleChange}
-              placeholder="Delivery address*"
+              placeholder="Delivery address or paste your Google Maps location link*"
               rows="3"
               className="w-full border p-3 mb-3"
             />
