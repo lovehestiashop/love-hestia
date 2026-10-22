@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import HeaderComponent from "../components/header";
@@ -38,10 +39,7 @@ function ProductsPage() {
         );
       })
       .catch((err) => {
-        console.error(
-          "Failed to load products",
-          err
-        );
+        console.error("Failed to load products", err);
       })
       .finally(() => setLoading(false));
 
@@ -51,18 +49,11 @@ function ProductsPage() {
   const filteredProducts = useMemo(() => {
     return products
       .filter((item) =>
-        item["product-type"]?.includes(
-          productTypeId
-        )
+        item["product-type"]?.includes(productTypeId)
       )
       .sort((a, b) => {
-        const priceA = Number(
-          a.acf?.price || 0
-        );
-
-        const priceB = Number(
-          b.acf?.price || 0
-        );
+        const priceA = Number(a.acf?.price || 0);
+        const priceB = Number(b.acf?.price || 0);
 
         return priceB - priceA;
       });
@@ -81,7 +72,6 @@ function ProductsPage() {
       <HeaderComponent />
 
       <section className="py-20 md:py-24">
-
         <h2
           className="
             mb-16
@@ -93,8 +83,7 @@ function ProductsPage() {
             leading-none
           "
           style={{
-            fontFamily:
-              "'Cormorant Garamond', serif",
+            fontFamily: "'Cormorant Garamond', serif",
           }}
         >
           {title}
@@ -116,10 +105,8 @@ function ProductsPage() {
         >
           {filteredProducts.map((item) => {
             const imageUrl =
-              item._embedded?.[
-                "wp:featuredmedia"
-              ]?.[0]?.source_url ||
-              "/placeholder.jpg";
+              item._embedded?.["wp:featuredmedia"]?.[0]
+                ?.source_url || "/placeholder.jpg";
 
             const price =
               item.acf?.price ||
@@ -127,38 +114,34 @@ function ProductsPage() {
               item.price ||
               0;
 
-          const stock = Number(item.acf?.stock ?? 0);
-
-const isAvailable = stock > 0;
+            const stock = Number(item.acf?.stock ?? 0);
+            const isAvailable = stock > 0;
 
             return (
               <div
                 key={item.id}
                 className="group flex flex-col"
               >
+                {/* PRODUCT IMAGE */}
                 <div
                   className="
                     relative
+                    aspect-[3/4]
                     overflow-hidden
                     cursor-pointer
-                    aspect-[3/4]
                   "
                   onClick={() =>
-                    navigate(
-                      `/product/${item.id}`,
-                      {
-                        state: {
-                          product: item,
-                        },
-                      }
-                    )
+                    navigate(`/product/${item.id}`, {
+                      state: {
+                        product: item,
+                      },
+                    })
                   }
                 >
                   <img
                     src={imageUrl}
-                    alt={
-                      item.title.rendered
-                    }
+                    alt={item.title?.rendered || "Product"}
+                    loading="lazy"
                     className="
                       h-full
                       w-full
@@ -169,24 +152,56 @@ const isAvailable = stock > 0;
                       group-hover:scale-105
                     "
                   />
+
+                  {/* CENTERED SOLD OUT BADGE */}
+                  {!isAvailable && (
+                    <div
+                      className="
+                        absolute
+                        inset-0
+                        z-10
+                        flex
+                        items-center
+                        justify-center
+                        pointer-events-none
+                      "
+                    >
+                      <span
+                        className="
+                          rounded-full
+                          bg-[#f5eedc]/95
+                          px-5
+                          py-2
+                          text-xs
+                          font-medium
+                          tracking-[0.2em]
+                          uppercase
+                          text-neutral-700
+                          shadow-sm
+                        "
+                      >
+                        Sold Out
+                      </span>
+                    </div>
+                  )}
                 </div>
 
+                {/* PRODUCT NAME AND PRICE */}
                 <div className="mt-5 text-center">
-
-                 <h3
-  className="
-    text-[20px]
-    md:text-[28px]
-    font-semibold
-    text-neutral-700
-    leading-tight
-  "
+                  <h3
+                    className="
+                      text-[20px]
+                      md:text-[28px]
+                      font-semibold
+                      text-neutral-700
+                      leading-tight
+                    "
                     style={{
                       fontFamily:
                         "'Cormorant Garamond', serif",
                     }}
                   >
-                    {item.title.rendered}
+                    {item.title?.rendered || "Product"}
                   </h3>
 
                   <p
@@ -199,42 +214,16 @@ const isAvailable = stock > 0;
                     "
                   >
                     ₱
-                    {Number(
-                      price
-                    ).toLocaleString(
-                      "en-PH",
-                      {
-                        minimumFractionDigits: 2,
-                      }
-                    )}
+                    {Number(price).toLocaleString("en-PH", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
                   </p>
-
-                  {!isAvailable && (
-                    <div className="mt-4">
-                      <span
-                        className="
-                          inline-block
-                          border
-                          border-neutral-500
-                          px-4
-                          py-1
-                          text-[10px]
-                          tracking-[0.3em]
-                          uppercase
-                          text-neutral-600
-                        "
-                      >
-                        Sold Out
-                      </span>
-                    </div>
-                  )}
-
                 </div>
               </div>
             );
           })}
         </div>
-
       </section>
 
       <FooterComponent />
