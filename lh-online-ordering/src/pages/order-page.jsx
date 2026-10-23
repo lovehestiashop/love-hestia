@@ -462,16 +462,16 @@ filterTime={(time) => {
     aria-expanded={showFreeDeliveryAreas}
     aria-controls="cebu-city-free-delivery-areas"
     className="
-      flex
-      items-center
-      gap-2
-      text-sm
-      font-medium
-      text-neutral-700
-      underline
-      underline-offset-4
-      hover:text-neutral-500
-    "
+  flex
+  items-center
+  gap-1.5
+  text-xs
+  font-medium
+  text-blue-600
+  underline
+  underline-offset-4
+  hover:text-blue-800
+"
   >
     {showFreeDeliveryAreas ? "Hide" : "Check"} free-delivery areas
     <span aria-hidden="true">
