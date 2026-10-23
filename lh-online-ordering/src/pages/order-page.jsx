@@ -44,6 +44,91 @@ const STANDARD_FEE = 0;
 const SPECIAL_FEE = 250;
 const CAR_FEE = 500;
 
+
+const CEBU_CITY_BARANGAYS = [
+  "Adlaon",
+  "Agsungot",
+  "Apas",
+  "Babag",
+  "Bacayan",
+  "Banilad",
+  "Basak Pardo",
+  "Basak San Nicolas",
+  "Binaliw",
+  "Bonbon",
+  "Budla-an",
+  "Buhisan",
+  "Bulacao",
+  "Buot-Taup Pardo",
+  "Busay",
+  "Calamba",
+  "Cambinocot",
+  "Camputhaw",
+  "Capitol Site",
+  "Carreta",
+  "Central",
+  "Cogon Pardo",
+  "Cogon Ramos",
+  "Day-as",
+  "Duljo",
+  "Ermita",
+  "Guadalupe",
+  "Guba",
+  "Hippodromo",
+  "Inayawan",
+  "Kalubihan",
+  "Kalunasan",
+  "Kamagayan",
+  "Kasambagan",
+  "Kinasang-an Pardo",
+  "Labangon",
+  "Lahug",
+  "Lorega",
+  "Lusaran",
+  "Luz",
+  "Mabini",
+  "Mabolo",
+  "Malubog",
+  "Mambaling",
+  "Pahina Central",
+  "Pahina San Nicolas",
+  "Pamutan",
+  "Pardo",
+  "Pari-an",
+  "Paril",
+  "Pasil",
+  "Pit-os",
+  "Pulangbato",
+  "Pung-ol-Sibugay",
+  "Punta Princesa",
+  "Quiot Pardo",
+  "Sambag I",
+  "Sambag II",
+  "San Antonio",
+  "San Jose",
+  "San Nicolas Central",
+  "San Roque",
+  "Santa Cruz",
+  "Sapangdaku",
+  "Sawang Calero",
+  "Sinsin",
+  "Sirao",
+  "Suba Pob.",
+  "Sudlon I",
+  "Sudlon II",
+  "T. Padilla",
+  "Tabunan",
+  "Tagbao",
+  "Talamban",
+  "Taptap",
+  "Tejero",
+  "Tinago",
+  "Tisa",
+  "To-ong Pardo",
+  "Zapatera",
+];
+
+
 // Format date as "January 1, 2025 3:00 PM"
 function formatDateTime(dateString) {
   if (!dateString) return "";
@@ -90,6 +175,20 @@ const cartGrandTotal = state?.grandTotal || 0;
   const [selectedDate, setSelectedDate] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deliveryArea, setDeliveryArea] = useState("standard");
+  
+const [showFreeDeliveryAreas, setShowFreeDeliveryAreas] =
+  useState(false);
+
+const [barangaySearch, setBarangaySearch] = useState("");
+
+const filteredBarangays = useMemo(() => {
+  const query = barangaySearch.trim().toLowerCase();
+
+  return CEBU_CITY_BARANGAYS.filter((barangay) =>
+    barangay.toLowerCase().includes(query)
+  );
+}, [barangaySearch]);
+
 
  const [form, setForm] = useState({
     customer_name: "",
@@ -353,6 +452,88 @@ filterTime={(time) => {
   />
   FREE DELIVERY (Cebu city only)
 </label>
+  
+<div className="mb-4">
+  <button
+    type="button"
+    onClick={() =>
+      setShowFreeDeliveryAreas((previous) => !previous)
+    }
+    aria-expanded={showFreeDeliveryAreas}
+    aria-controls="cebu-city-free-delivery-areas"
+    className="
+      flex
+      items-center
+      gap-2
+      text-sm
+      font-medium
+      text-neutral-700
+      underline
+      underline-offset-4
+      hover:text-neutral-500
+    "
+  >
+    {showFreeDeliveryAreas ? "Hide" : "Check"} free-delivery areas
+    <span aria-hidden="true">
+      {showFreeDeliveryAreas ? "−" : "+"}
+    </span>
+  </button>
+
+  {showFreeDeliveryAreas && (
+    <div
+      id="cebu-city-free-delivery-areas"
+      className="mt-4 border border-neutral-300 bg-white p-4"
+    >
+      <h4 className="font-medium text-neutral-800">
+        Cebu City Barangays
+      </h4>
+
+      <p className="mt-1 mb-3 text-sm text-neutral-600">
+        Search your barangay to check whether it is listed for
+        Cebu City free delivery.
+      </p>
+
+      <input
+        type="search"
+        value={barangaySearch}
+        onChange={(e) => setBarangaySearch(e.target.value)}
+        placeholder="Search barangay..."
+        aria-label="Search Cebu City barangays"
+        className="mb-3 w-full border border-neutral-300 p-2"
+      />
+
+      <p className="mb-2 text-xs text-neutral-500">
+        {filteredBarangays.length} of{" "}
+        {CEBU_CITY_BARANGAYS.length} barangays shown
+      </p>
+
+      <ul className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
+        {filteredBarangays.map((barangay) => (
+          <li
+            key={barangay}
+            className="rounded bg-neutral-50 px-3 py-2 text-neutral-700"
+          >
+            {barangay}
+          </li>
+        ))}
+      </ul>
+
+      {filteredBarangays.length === 0 && (
+        <p className="py-3 text-sm text-neutral-600">
+          No matching barangay found. Check the spelling or
+          contact Love Hestia to confirm your delivery area.
+        </p>
+      )}
+
+      <p className="mt-4 text-xs text-neutral-500">
+        This is the official barangay list for Cebu City.
+        If you are unsure which barangay your address belongs
+        to, please confirm with us before selecting free delivery.
+      </p>
+    </div>
+  )}
+</div>
+     
 
 <label className="flex items-center gap-3 mb-2">
   <input
