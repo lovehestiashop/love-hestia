@@ -91,9 +91,12 @@ function ShopPage() {
         </h2>
 
         {loading ? (
-          <p className="py-12 text-center text-sm text-neutral-500" role="status">
-            Loading collections...
-          </p>
+          <p
+  className="py-12 text-center text-lg md:text-xl text-neutral-600 font-medium"
+  role="status"
+>
+  Loading collections...
+</p>
         ) : error ? (
           <p className="py-12 text-center text-sm text-neutral-600" role="alert">
             We couldn't load the collections. Please refresh the page.
