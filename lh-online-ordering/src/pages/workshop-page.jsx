@@ -72,8 +72,9 @@ function WorkshopPage() {
   const [loading, setLoading] = useState(true);
   const [pageError, setPageError] = useState(false);
 
-  const [pricingOpen, setPricingOpen] = useState(true);
-  const [detailsOpen, setDetailsOpen] = useState(true);
+  // Both sections start CLOSED.
+  const [pricingOpen, setPricingOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const [blockedDates, setBlockedDates] = useState([]);
   const [availabilityLoading, setAvailabilityLoading] =
@@ -84,6 +85,7 @@ function WorkshopPage() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+
   const [showSuccessModal, setShowSuccessModal] =
     useState(false);
 
@@ -123,6 +125,7 @@ function WorkshopPage() {
 
         const imageResults = await Promise.all(
           imageFields.map(async (imageValue) => {
+            // Support image URLs, Image IDs, and Image objects.
             if (
               typeof imageValue === "string" &&
               /^https?:\/\//i.test(imageValue)
@@ -132,7 +135,8 @@ function WorkshopPage() {
 
             const imageId =
               typeof imageValue === "object"
-                ? imageValue.ID ?? imageValue.id
+                ? imageValue.ID ??
+                  imageValue.id
                 : imageValue;
 
             if (!imageId) return null;
@@ -282,7 +286,12 @@ function WorkshopPage() {
     const email = inquiry.email.trim();
     const location = inquiry.location.trim();
 
-    if (!name || !email || !location || !inquiry.arrangement) {
+    if (
+      !name ||
+      !email ||
+      !location ||
+      !inquiry.arrangement
+    ) {
       setSubmitError(
         "Please complete all required fields before submitting."
       );
@@ -345,8 +354,7 @@ function WorkshopPage() {
         website: websiteField,
       });
 
-      // Keep the form available after submission.
-      // Reset its values and show the success popup.
+      // Keep the form visible and reset its values after success.
       setInquiry({ ...INITIAL_INQUIRY });
       setSelectedDate(null);
       setShowSuccessModal(true);
@@ -534,6 +542,7 @@ function WorkshopPage() {
                 />
               </div>
 
+              {/* CLICKABLE SLIDESHOW DOTS */}
               {data.images.length > 1 && (
                 <div className="mt-6 flex justify-center gap-3">
                   {data.images.map((_, index) => (
@@ -574,15 +583,22 @@ function WorkshopPage() {
         {!loading && !pageError && data && (
           <div className="mx-auto max-w-4xl px-6 py-20">
 
-            <h1 className="mb-12 text-center text-4xl">
+            <h1
+              className="mb-12 text-center text-4xl font-normal text-neutral-800"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+              }}
+            >
               {data.title}
             </h1>
 
-            {/* COLLAPSIBLE PRICING */}
+            {/* COLLAPSIBLE PRICING — CLOSED BY DEFAULT */}
             <div className="mb-6 border-b border-neutral-200">
               <button
                 type="button"
-                onClick={() => setPricingOpen((open) => !open)}
+                onClick={() =>
+                  setPricingOpen((open) => !open)
+                }
                 aria-expanded={pricingOpen}
                 aria-controls="workshop-pricing-content"
                 className="
@@ -598,6 +614,7 @@ function WorkshopPage() {
                 "
               >
                 <span>Pricing</span>
+
                 <span
                   className="ml-4 text-2xl font-normal"
                   aria-hidden="true"
@@ -624,11 +641,13 @@ function WorkshopPage() {
               )}
             </div>
 
-            {/* COLLAPSIBLE WORKSHOP DETAILS */}
+            {/* COLLAPSIBLE WORKSHOP DETAILS — CLOSED BY DEFAULT */}
             <div className="mb-6 border-b border-neutral-200">
               <button
                 type="button"
-                onClick={() => setDetailsOpen((open) => !open)}
+                onClick={() =>
+                  setDetailsOpen((open) => !open)
+                }
                 aria-expanded={detailsOpen}
                 aria-controls="workshop-details-content"
                 className="
@@ -644,6 +663,7 @@ function WorkshopPage() {
                 "
               >
                 <span>Workshop Details</span>
+
                 <span
                   className="ml-4 text-2xl font-normal"
                   aria-hidden="true"
@@ -682,16 +702,21 @@ function WorkshopPage() {
                 md:p-10
               "
             >
-              <h2 className="mb-3 text-center text-2xl font-medium">
+              <h2
+                className="mb-3 text-center text-2xl font-medium"
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                }}
+              >
                 Workshop Inquiry
               </h2>
 
               <p className="mx-auto mb-8 max-w-xl text-center text-sm leading-relaxed text-neutral-600">
-                Complete all fields to send your inquiry. Select
-                your preferred date and time, then contact us on
-                Instagram to discuss your color palette and payment.
-                Your date is not reserved until we confirm your
-                booking and receive payment.
+                Complete all fields to send your inquiry.
+                Choose your preferred date and time, then contact
+                us on Instagram to discuss your color palette and
+                payment details. Your date is not reserved until
+                we confirm your booking and receive payment.
               </p>
 
               <form
@@ -794,7 +819,7 @@ function WorkshopPage() {
                   />
                 </div>
 
-                {/* ARRANGEMENT TYPE AND PRICE — REQUIRED */}
+                {/* ARRANGEMENT TYPE WITH PRICES — REQUIRED */}
                 <div>
                   <label
                     htmlFor="workshop-arrangement"
@@ -829,7 +854,7 @@ function WorkshopPage() {
                   </select>
 
                   <p className="mt-2 text-xs text-neutral-500">
-                    Minimum of 5 participants is required.
+                    A minimum of 5 participants is required.
                   </p>
                 </div>
 
@@ -900,7 +925,7 @@ function WorkshopPage() {
                   />
                 </div>
 
-                {/* SUBMISSION ERROR */}
+                {/* FORM ERROR */}
                 {submitError && (
                   <p
                     className="text-sm text-red-700"
@@ -952,32 +977,116 @@ function WorkshopPage() {
               </form>
             </div>
 
-            {/* CONTACT BUTTON */}
-            <div className="mt-20 text-center">
-              <p className="mx-auto mb-6 max-w-2xl leading-relaxed text-neutral-600">
-                Let's plan your workshop together.
-              </p>
-
-              <a
-                href={INSTAGRAM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+            {/* REVAMPED FLORAL WORKSHOP INVITATION */}
+            <div className="mt-20 px-1">
+              <div
                 className="
-                  inline-block
                   border
-                  border-neutral-800
-                  px-8
-                  py-3
-                  tracking-wide
-                  text-neutral-800
-                  transition-all
-                  duration-300
-                  hover:bg-neutral-800
-                  hover:text-white
+                  border-[#e8dfd5]
+                  bg-white
+                  px-6
+                  py-12
+                  text-center
+                  md:px-12
+                  md:py-16
                 "
               >
-                Contact Us
-              </a>
+                <p className="mb-4 text-xs uppercase tracking-[0.3em] text-neutral-500">
+                  The Love Hestia Experience
+                </p>
+
+                <h2
+                  className="mb-5 text-3xl font-normal text-neutral-800 md:text-5xl"
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                  }}
+                >
+                  Create Something Beautiful
+                </h2>
+
+                <p className="mx-auto mb-10 max-w-2xl text-sm leading-7 text-neutral-600 md:text-base">
+                  Discover the beauty of dried and preserved
+                  flowers, explore their unique characteristics,
+                  and create your own floral arrangement with
+                  hands-on guidance from our florist.
+                </p>
+
+                <div className="mx-auto mb-10 grid max-w-2xl grid-cols-1 gap-8 text-left md:grid-cols-2">
+
+                  {/* FLOWER LEARNING */}
+                  <div className="border-t border-[#e8dfd5] pt-5">
+                    <span className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+                      01
+                    </span>
+
+                    <h3
+                      className="mb-2 mt-3 text-2xl font-normal text-neutral-800"
+                      style={{
+                        fontFamily: "'Cormorant Garamond', serif",
+                      }}
+                    >
+                      Discover the Flowers
+                    </h3>
+
+                    <p className="text-sm leading-6 text-neutral-600">
+                      Learn about dried and preserved flowers,
+                      understand their differences, and discover
+                      how to care for your floral creations.
+                    </p>
+                  </div>
+
+                  {/* HANDS-ON ARRANGEMENT */}
+                  <div className="border-t border-[#e8dfd5] pt-5">
+                    <span className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+                      02
+                    </span>
+
+                    <h3
+                      className="mb-2 mt-3 text-2xl font-normal text-neutral-800"
+                      style={{
+                        fontFamily: "'Cormorant Garamond', serif",
+                      }}
+                    >
+                      Create Your Own Arrangement
+                    </h3>
+
+                    <p className="text-sm leading-6 text-neutral-600">
+                      Enjoy a hands-on floral experience and
+                      bring your arrangement to life with
+                      assistance and guidance from our florist.
+                    </p>
+                  </div>
+                </div>
+
+                <a
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="
+                    inline-block
+                    border
+                    border-neutral-800
+                    bg-neutral-800
+                    px-8
+                    py-3
+                    text-sm
+                    uppercase
+                    tracking-[0.15em]
+                    text-white
+                    transition-all
+                    duration-300
+                    hover:bg-white
+                    hover:text-neutral-800
+                  "
+                >
+                  Inquire About a Workshop
+                </a>
+
+                <p className="mt-5 text-xs leading-relaxed text-neutral-500">
+                  Message us on Instagram to discuss your preferred
+                  arrangement, color palette, and booking details.
+                </p>
+              </div>
             </div>
 
           </div>
