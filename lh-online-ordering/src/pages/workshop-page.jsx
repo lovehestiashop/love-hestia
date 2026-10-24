@@ -75,8 +75,6 @@ function WorkshopPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
-  // Submission success and popup visibility are separate so that
-  // closing the popup does not make the form available for resubmission.
   const [submitted, setSubmitted] = useState(false);
   const [showSuccessModal, setShowSuccessModal] =
     useState(false);
@@ -122,7 +120,6 @@ function WorkshopPage() {
 
         const imageResults = await Promise.all(
           imageFields.map(async (imageValue) => {
-            // Support image URL, ID, or Image Array formats.
             if (
               typeof imageValue === "string" &&
               /^https?:\/\//i.test(imageValue)
@@ -273,7 +270,7 @@ function WorkshopPage() {
     }));
   };
 
-  // SUBMIT INQUIRY TO WORDPRESS, THEN SHOW THE CONFIRMATION POPUP.
+  // SUBMIT INQUIRY, THEN SHOW THE CONFIRMATION POPUP.
   const handleInquirySubmit = async (event) => {
     event.preventDefault();
 
@@ -335,8 +332,7 @@ function WorkshopPage() {
         website: websiteField,
       });
 
-      // Stay on the website and show confirmation.
-      // Do not redirect customers automatically.
+      // Stay on the website and show the popup.
       setSubmitted(true);
       setShowSuccessModal(true);
     } catch (error) {
@@ -427,9 +423,9 @@ function WorkshopPage() {
             <p className="mb-6 text-sm leading-relaxed text-neutral-600">
               Thank you for your interest in a Love Hestia
               floral workshop! Your inquiry has been submitted
-              successfully. Please contact us on Instagram to
-              discuss your preferred date, arrangement, and
-              booking details.
+              successfully. Please message us on Instagram to
+              discuss your preferred color palette and payment
+              details so we can finalize your workshop booking.
             </p>
 
             <a
@@ -628,63 +624,30 @@ function WorkshopPage() {
               />
             </div>
 
-            {/* WORKSHOP INQUIRY */}
-            <div
-              id="workshop-inquiry"
-              className="
-                mt-16
-                border
-                border-neutral-200
-                bg-white
-                p-6
-                md:p-10
-              "
-            >
-              <h2 className="mb-3 text-center text-2xl font-medium">
-                Workshop Inquiry
-              </h2>
+            {/* HIDE THE FORM AFTER SUCCESSFUL SUBMISSION */}
+            {!submitted && (
+              <div
+                id="workshop-inquiry"
+                className="
+                  mt-16
+                  border
+                  border-neutral-200
+                  bg-white
+                  p-6
+                  md:p-10
+                "
+              >
+                <h2 className="mb-3 text-center text-2xl font-medium">
+                  Workshop Inquiry
+                </h2>
 
-              <p className="mx-auto mb-8 max-w-xl text-center text-sm leading-relaxed text-neutral-600">
-                Fill in your details and choose a preferred
-                date. Dates already confirmed and paid are
-                unavailable. Submitting this form is an inquiry
-                only and does not reserve your date.
-              </p>
+                <p className="mx-auto mb-8 max-w-xl text-center text-sm leading-relaxed text-neutral-600">
+                  Fill in your details and choose a preferred
+                  date. Dates already confirmed and paid are
+                  unavailable. Submitting this form is an inquiry
+                  only and does not reserve your date.
+                </p>
 
-              {submitted ? (
-                <div className="py-5 text-center" role="status">
-                  <h3 className="mb-3 text-xl font-medium">
-                    Your inquiry has been submitted.
-                  </h3>
-
-                  <p className="mb-6 text-sm leading-relaxed text-neutral-600">
-                    Please contact us on Instagram to discuss
-                    the details and confirm your preferred date.
-                  </p>
-
-                  <a
-                    href={INSTAGRAM_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="
-                      inline-block
-                      border
-                      border-neutral-800
-                      px-6
-                      py-3
-                      text-sm
-                      uppercase
-                      tracking-widest
-                      text-neutral-800
-                      transition
-                      hover:bg-neutral-800
-                      hover:text-white
-                    "
-                  >
-                    Contact Us on Instagram
-                  </a>
-                </div>
-              ) : (
                 <form
                   onSubmit={handleInquirySubmit}
                   className="space-y-5"
@@ -882,7 +845,7 @@ function WorkshopPage() {
                     />
                   </div>
 
-                  {/* FORM ERROR */}
+                  {/* ERROR MESSAGE */}
                   {submitError && (
                     <p
                       className="text-sm text-red-700"
@@ -926,15 +889,14 @@ function WorkshopPage() {
                   </button>
 
                   <p className="text-center text-xs leading-relaxed text-neutral-500">
-                    After submitting, please contact us on
-                    Instagram @lovehestiaflowers and let us know
-                    you've sent your inquiry. No payment is
-                    collected through this form.
+                    After submitting, please message us on
+                    Instagram @lovehestiaflowers to discuss your
+                    preferred color palette and payment details.
+                    No payment is collected through this form.
                   </p>
-
                 </form>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* CONTACT BUTTON */}
             <div className="mt-20 text-center">
