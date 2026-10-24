@@ -23,6 +23,7 @@ function ProductsPage() {
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sortOrder, setSortOrder] = useState("high-to-low");
 
   const effectRan = useRef(false);
 
@@ -33,6 +34,7 @@ function ProductsPage() {
       .getAll()
       .then((data) => {
         setProducts(data);
+
         localStorage.setItem(
           STORAGE_KEY,
           JSON.stringify(data)
@@ -52,17 +54,30 @@ function ProductsPage() {
         item["product-type"]?.includes(productTypeId)
       )
       .sort((a, b) => {
-        const priceA = Number(a.acf?.price || 0);
-        const priceB = Number(b.acf?.price || 0);
+        const priceA = Number(
+          a.acf?.price ??
+          a.meta?.price ??
+          a.price ??
+          0
+        );
 
-        return priceB - priceA;
+        const priceB = Number(
+          b.acf?.price ??
+          b.meta?.price ??
+          b.price ??
+          0
+        );
+
+        return sortOrder === "low-to-high"
+          ? priceA - priceB
+          : priceB - priceA;
       });
-  }, [products, productTypeId]);
+  }, [products, productTypeId, sortOrder]);
 
   if (loading) {
     return (
-      <p className="py-24 text-center">
-        Loading...
+      <p className="py-24 text-center text-lg md:text-xl text-neutral-600">
+        Loading products...
       </p>
     );
   }
@@ -72,9 +87,10 @@ function ProductsPage() {
       <HeaderComponent />
 
       <section className="py-20 md:py-24">
+        {/* PAGE TITLE */}
         <h2
           className="
-            mb-16
+            mb-8
             text-center
             text-[42px]
             md:text-[72px]
@@ -89,138 +105,180 @@ function ProductsPage() {
           {title}
         </h2>
 
-        <div
-          className="
-            mx-auto
-            max-w-7xl
-            grid
-            grid-cols-2
-            gap-x-6
-            gap-y-12
-            px-5
-            md:grid-cols-3
-            md:gap-x-10
-            md:gap-y-16
-          "
-        >
-          {filteredProducts.map((item) => {
-            const imageUrl =
-              item._embedded?.["wp:featuredmedia"]?.[0]
-                ?.source_url || "/placeholder.jpg";
+        {/* PRICE SORTING */}
+        <div className="mx-auto mb-10 flex max-w-7xl justify-end px-5">
+          <label className="flex items-center gap-3 text-sm text-neutral-700">
+            <span className="whitespace-nowrap">
+              Sort by price:
+            </span>
 
-            const price =
-              item.acf?.price ||
-              item.meta?.price ||
-              item.price ||
-              0;
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="
+                max-w-[190px]
+                border
+                border-neutral-300
+                bg-white
+                px-3
+                py-2
+                text-sm
+                text-neutral-700
+                focus:outline-none
+                focus:ring-1
+                focus:ring-neutral-500
+              "
+            >
+              <option value="high-to-low">
+                Highest to lowest
+              </option>
 
-            const stock = Number(item.acf?.stock ?? 0);
-            const isAvailable = stock > 0;
+              <option value="low-to-high">
+                Lowest to highest
+              </option>
+            </select>
+          </label>
+        </div>
 
-            return (
-              <div
-                key={item.id}
-                className="group flex flex-col"
-              >
-                {/* PRODUCT IMAGE */}
+        {/* PRODUCT GRID */}
+        {filteredProducts.length === 0 ? (
+          <p className="py-12 text-center text-neutral-600">
+            No products are currently available in this collection.
+          </p>
+        ) : (
+          <div
+            className="
+              mx-auto
+              max-w-7xl
+              grid
+              grid-cols-2
+              gap-x-6
+              gap-y-12
+              px-5
+              md:grid-cols-3
+              md:gap-x-10
+              md:gap-y-16
+            "
+          >
+            {filteredProducts.map((item) => {
+              const imageUrl =
+                item._embedded?.["wp:featuredmedia"]?.[0]
+                  ?.source_url || "/placeholder.jpg";
+
+              const price =
+                item.acf?.price ??
+                item.meta?.price ??
+                item.price ??
+                0;
+
+              const stock = Number(item.acf?.stock ?? 0);
+              const isAvailable = stock > 0;
+
+              return (
                 <div
-                  className="
-                    relative
-                    aspect-[3/4]
-                    overflow-hidden
-                    cursor-pointer
-                  "
-                  onClick={() =>
-                    navigate(`/product/${item.id}`, {
-                      state: {
-                        product: item,
-                      },
-                    })
-                  }
+                  key={item.id}
+                  className="group flex flex-col"
                 >
-                  <img
-                    src={imageUrl}
-                    alt={item.title?.rendered || "Product"}
-                    loading="lazy"
+                  {/* PRODUCT IMAGE */}
+                  <div
                     className="
-                      h-full
-                      w-full
-                      object-cover
-                      transition-transform
-                      duration-700
-                      ease-out
-                      group-hover:scale-105
+                      relative
+                      aspect-[3/4]
+                      overflow-hidden
+                      cursor-pointer
                     "
-                  />
-
-                  {/* BOTTOM-LEFT SOLD OUT BADGE */}
-                  {!isAvailable && (
-                    <div
+                    onClick={() =>
+                      navigate(`/product/${item.id}`, {
+                        state: {
+                          product: item,
+                        },
+                      })
+                    }
+                  >
+                    <img
+                      src={imageUrl}
+                      alt={item.title?.rendered || "Product"}
+                      loading="lazy"
                       className="
-                        absolute
-                        bottom-2
-                        left-2
-                        z-10
-                        pointer-events-none
+                        h-full
+                        w-full
+                        object-cover
+                        transition-transform
+                        duration-700
+                        ease-out
+                        group-hover:scale-105
                       "
-                    >
-                      <span
+                    />
+
+                    {/* BOTTOM-LEFT SOLD OUT BADGE */}
+                    {!isAvailable && (
+                      <div
                         className="
-                          inline-block
-                          rounded-full
-                          bg-[#f5eedc]
-                          px-3
-                          py-1
-                          text-[11px]
-                          font-medium
-                          tracking-wide
-                          text-[#6b624f]
+                          absolute
+                          bottom-2
+                          left-2
+                          z-10
+                          pointer-events-none
                         "
                       >
-                        Sold out
-                      </span>
-                    </div>
-                  )}
-                </div>
+                        <span
+                          className="
+                            inline-block
+                            rounded-full
+                            bg-[#f5eedc]
+                            px-3
+                            py-1
+                            text-[11px]
+                            font-medium
+                            tracking-wide
+                            text-[#6b624f]
+                          "
+                        >
+                          Sold out
+                        </span>
+                      </div>
+                    )}
+                  </div>
 
-                {/* PRODUCT NAME AND PRICE */}
-                <div className="mt-5 text-center">
-                  <h3
-                    className="
-                      text-[20px]
-                      md:text-[28px]
-                      font-semibold
-                      text-neutral-700
-                      leading-tight
-                    "
-                    style={{
-                      fontFamily:
-                        "'Cormorant Garamond', serif",
-                    }}
-                  >
-                    {item.title?.rendered || "Product"}
-                  </h3>
+                  {/* PRODUCT NAME AND PRICE */}
+                  <div className="mt-5 text-center">
+                    <h3
+                      className="
+                        text-[20px]
+                        md:text-[28px]
+                        font-semibold
+                        text-neutral-700
+                        leading-tight
+                      "
+                      style={{
+                        fontFamily:
+                          "'Cormorant Garamond', serif",
+                      }}
+                    >
+                      {item.title?.rendered || "Product"}
+                    </h3>
 
-                  <p
-                    className="
-                      mt-2
-                      text-[16px]
-                      md:text-[18px]
-                      text-neutral-600
-                      tracking-wide
-                    "
-                  >
-                    ₱
-                    {Number(price).toLocaleString("en-PH", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </p>
+                    <p
+                      className="
+                        mt-2
+                        text-[16px]
+                        md:text-[18px]
+                        text-neutral-600
+                        tracking-wide
+                      "
+                    >
+                      ₱
+                      {Number(price).toLocaleString("en-PH", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       <FooterComponent />
