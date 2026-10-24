@@ -150,9 +150,15 @@ function HomePage() {
         </div>
 
         <div className="relative z-10 flex h-full flex-col items-center justify-center px-6">
-          <h2 className="text-3xl md:text-5xl mb-3">
-            Private Dried Flower Workshop
-          </h2>
+          <h2
+  className="text-3xl md:text-5xl mb-3 font-normal"
+  style={{
+    fontFamily: "'Cormorant Garamond', serif",
+    fontWeight: 500,
+  }}
+>
+  Private Dried Flower Workshop
+</h2>
 
           <p className="mb-5 text-sm md:text-base">
             Birthdays · Bridal Shower · Events
