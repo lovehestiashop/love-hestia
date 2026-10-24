@@ -20,12 +20,14 @@ const INQUIRY_ENDPOINT =
 const AVAILABILITY_ENDPOINT =
   `${WORDPRESS_REST_ROOT}/love-hestia/v1/workshop-availability`;
 
+// Custom date picker button that matches the website's form styling.
 const DateButtonInput = forwardRef(
-  ({ value, onClick }, ref) => (
+  ({ value, onClick, disabled }, ref) => (
     <button
       type="button"
       onClick={onClick}
       ref={ref}
+      disabled={disabled}
       className="
         w-full
         border
@@ -35,6 +37,9 @@ const DateButtonInput = forwardRef(
         text-left
         transition
         hover:bg-neutral-50
+        disabled:cursor-not-allowed
+        disabled:bg-neutral-100
+        disabled:text-neutral-500
       "
     >
       {value || "Select preferred date & time"}
@@ -44,6 +49,7 @@ const DateButtonInput = forwardRef(
 
 DateButtonInput.displayName = "DateButtonInput";
 
+// Return a local calendar date as YYYY-MM-DD.
 function getDateKey(date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -58,7 +64,9 @@ function WorkshopPage() {
   const [loading, setLoading] = useState(true);
   const [pageError, setPageError] = useState(false);
 
+  // Dates marked Confirmed / Paid in WordPress.
   const [blockedDates, setBlockedDates] = useState([]);
+  const [availabilityLoading, setAvailabilityLoading] = useState(true);
   const [availabilityError, setAvailabilityError] = useState(false);
 
   const [selectedDate, setSelectedDate] = useState(null);
@@ -73,7 +81,7 @@ function WorkshopPage() {
     arrangement: "dried-bouquet",
   });
 
-  // Load workshop text and up to six photos from WordPress.
+  // LOAD WORKSHOP CONTENT AND UP TO SIX PHOTOS FROM WORDPRESS.
   useEffect(() => {
     let cancelled = false;
 
@@ -82,14 +90,18 @@ function WorkshopPage() {
         const response = await axios.get(
           `${WORDPRESS_API}/pages/4973`,
           {
-            params: { _fields: "acf" },
+            params: {
+              _fields: "acf",
+            },
           }
         );
 
         const acf = response.data?.acf;
 
         if (!acf) {
-          throw new Error("Workshop content was not returned.");
+          throw new Error(
+            "Workshop content was not returned."
+          );
         }
 
         const imageFields = [
@@ -101,6 +113,8 @@ function WorkshopPage() {
           acf.workshop_image_6,
         ].filter(Boolean);
 
+        // Load image details concurrently. A failed image does not
+        // prevent the remaining slideshow images from appearing.
         const imageResults = await Promise.all(
           imageFields.map(async (imageValue) => {
             if (
@@ -118,7 +132,7 @@ function WorkshopPage() {
             if (!imageId) return null;
 
             try {
-              const mediaResponse = await axios.get(
+              const imageResponse = await axios.get(
                 `${WORDPRESS_API}/media/${imageId}`,
                 {
                   params: {
@@ -127,7 +141,7 @@ function WorkshopPage() {
                 }
               );
 
-              const media = mediaResponse.data;
+              const media = imageResponse.data;
               const sizes = media.media_details?.sizes || {};
 
               return (
@@ -138,7 +152,11 @@ function WorkshopPage() {
                 null
               );
             } catch (imageError) {
-              console.error("Failed to load workshop photo:", imageError);
+              console.error(
+                "Failed to load workshop photo:",
+                imageError
+              );
+
               return null;
             }
           })
@@ -153,8 +171,13 @@ function WorkshopPage() {
           howToBook: acf.how_to_book || "",
           images: imageResults.filter(Boolean),
         });
+
+        setCurrentImage(0);
       } catch (error) {
-        console.error("Failed to load workshop page:", error);
+        console.error(
+          "Failed to load workshop page:",
+          error
+        );
 
         if (!cancelled) {
           setPageError(true);
@@ -173,26 +196,40 @@ function WorkshopPage() {
     };
   }, []);
 
-  // Load dates already blocked by confirmed, paid workshops.
-  // This endpoint will be added to WordPress in the next step.
+  // LOAD DATES THAT ARE ALREADY CONFIRMED AND PAID.
   useEffect(() => {
     let cancelled = false;
 
     async function loadAvailability() {
       try {
-        const response = await axios.get(AVAILABILITY_ENDPOINT);
+        const response = await axios.get(
+          AVAILABILITY_ENDPOINT
+        );
+
+        const dates = response.data?.blockedDates;
+
+        if (!Array.isArray(dates)) {
+          throw new Error(
+            "The workshop availability response is invalid."
+          );
+        }
 
         if (!cancelled) {
-          const dates = response.data?.blockedDates;
-
-          setBlockedDates(Array.isArray(dates) ? dates : []);
+          setBlockedDates(dates);
           setAvailabilityError(false);
         }
       } catch (error) {
-        console.warn("Workshop availability is not available yet:", error);
+        console.error(
+          "Could not load workshop availability:",
+          error
+        );
 
         if (!cancelled) {
           setAvailabilityError(true);
+        }
+      } finally {
+        if (!cancelled) {
+          setAvailabilityLoading(false);
         }
       }
     }
@@ -204,19 +241,22 @@ function WorkshopPage() {
     };
   }, []);
 
-  // Automatically advance the slideshow every five seconds.
+  // AUTOMATIC SLIDESHOW: CHANGE PHOTOS EVERY FIVE SECONDS.
   useEffect(() => {
     const imageCount = data?.images?.length ?? 0;
 
     if (imageCount < 2) return;
 
     const interval = setInterval(() => {
-      setCurrentImage((previous) => (previous + 1) % imageCount);
+      setCurrentImage(
+        (previous) => (previous + 1) % imageCount
+      );
     }, 5000);
 
     return () => clearInterval(interval);
   }, [data?.images?.length]);
 
+  // UPDATE INQUIRY FORM FIELDS.
   const handleInquiryChange = (event) => {
     const { name, value } = event.target;
 
@@ -226,35 +266,59 @@ function WorkshopPage() {
     }));
   };
 
+  // SUBMIT THE INQUIRY TO WORDPRESS.
   const handleInquirySubmit = async (event) => {
     event.preventDefault();
 
     if (submitting) return;
 
+    if (availabilityLoading) {
+      setSubmitError(
+        "Please wait while we check the available dates."
+      );
+      return;
+    }
+
+    if (availabilityError) {
+      setSubmitError(
+        "We couldn't check available dates. Please try again later or contact us on Instagram."
+      );
+      return;
+    }
+
     if (!selectedDate) {
-      setSubmitError("Please select your preferred date and time.");
+      setSubmitError(
+        "Please select your preferred date and time."
+      );
       return;
     }
 
     const preferredDate = getDateKey(selectedDate);
 
-    // Immediate client-side check. WordPress must also check this
-    // server-side to prevent duplicate confirmed bookings.
+    // Check the dates currently supplied by WordPress.
+    // The server also validates availability when saving the inquiry.
     if (blockedDates.includes(preferredDate)) {
       setSubmitError(
-        "That date is unavailable. Please choose another date."
+        "That date is already booked. Please choose another date."
       );
       return;
     }
 
+    // Read the hidden anti-spam field.
+    const websiteField =
+      event.currentTarget.elements.website?.value || "";
+
+    const preferredTime = selectedDate.toLocaleTimeString(
+      "en-PH",
+      {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      }
+    );
+
     setSubmitting(true);
     setSubmitError("");
-
-    const preferredTime = selectedDate.toLocaleTimeString("en-PH", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
 
     try {
       await axios.post(INQUIRY_ENDPOINT, {
@@ -264,14 +328,17 @@ function WorkshopPage() {
         arrangement: inquiry.arrangement,
         preferred_date: preferredDate,
         preferred_time: preferredTime,
-        website: "",
+        website: websiteField,
       });
 
-      // Show the Instagram contact option only after WordPress
-      // confirms that the inquiry was successfully saved.
+      // Show the Instagram contact instructions only when the
+      // WordPress endpoint confirms that the inquiry was saved.
       setSubmitted(true);
     } catch (error) {
-      console.error("Workshop inquiry submission failed:", error);
+      console.error(
+        "Workshop inquiry submission failed:",
+        error
+      );
 
       setSubmitError(
         error.response?.data?.message ||
@@ -290,18 +357,32 @@ function WorkshopPage() {
       <HeaderComponent />
 
       <section className="bg-[#faf9f7] text-neutral-700">
+
         {/* WORKSHOP PHOTO SLIDESHOW — NO ARROWS */}
         <div className="mx-auto max-w-7xl px-4 pt-12">
           {loading ? (
             <div
-              className="flex min-h-[350px] items-center justify-center text-lg font-medium text-neutral-600 md:min-h-[700px]"
+              className="
+                flex
+                min-h-[350px]
+                items-center
+                justify-center
+                text-lg
+                font-medium
+                text-neutral-600
+                md:min-h-[700px]
+              "
               role="status"
             >
               Loading workshop photos...
             </div>
           ) : pageError ? (
-            <p className="py-24 text-center text-neutral-600" role="alert">
-              We couldn't load the workshop page. Please refresh and try again.
+            <p
+              className="py-24 text-center text-neutral-600"
+              role="alert"
+            >
+              We couldn't load the workshop page.
+              Please refresh and try again.
             </p>
           ) : data?.images?.length > 0 ? (
             <>
@@ -312,10 +393,16 @@ function WorkshopPage() {
                   alt={`Love Hestia workshop photo ${currentImage + 1}`}
                   fetchPriority="high"
                   decoding="async"
-                  className="h-[350px] w-full object-cover md:h-[700px]"
+                  className="
+                    h-[350px]
+                    w-full
+                    object-cover
+                    md:h-[700px]
+                  "
                 />
               </div>
 
+              {/* CLICKABLE SLIDESHOW DOTS */}
               {data.images.length > 1 && (
                 <div className="mt-6 flex justify-center gap-3">
                   {data.images.map((_, index) => (
@@ -325,11 +412,21 @@ function WorkshopPage() {
                       onClick={() => setCurrentImage(index)}
                       aria-label={`Show workshop photo ${index + 1}`}
                       aria-current={
-                        currentImage === index ? "true" : undefined
+                        currentImage === index
+                          ? "true"
+                          : undefined
                       }
-                      className={`h-3 w-3 rounded-full transition-colors ${
-                        currentImage === index ? "bg-black" : "bg-gray-300"
-                      }`}
+                      className={`
+                        h-3
+                        w-3
+                        rounded-full
+                        transition-colors
+                        ${
+                          currentImage === index
+                            ? "bg-black"
+                            : "bg-gray-300"
+                        }
+                      `}
                     />
                   ))}
                 </div>
@@ -345,75 +442,139 @@ function WorkshopPage() {
         {/* WORKSHOP CONTENT */}
         {!loading && !pageError && data && (
           <div className="mx-auto max-w-4xl px-6 py-20">
+
             <h1 className="mb-14 text-center text-4xl">
               {data.title}
             </h1>
 
+            {/* PRICING */}
             <div className="mb-14">
-              <h2 className="mb-5 text-2xl font-medium">Pricing</h2>
+              <h2 className="mb-5 text-2xl font-medium">
+                Pricing
+              </h2>
+
               <div
-                className="text-base leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-2"
-                dangerouslySetInnerHTML={{ __html: data.pricing }}
+                className="
+                  text-base
+                  leading-relaxed
+                  [&_ul]:list-disc
+                  [&_ul]:pl-6
+                  [&_ul]:space-y-2
+                "
+                dangerouslySetInnerHTML={{
+                  __html: data.pricing,
+                }}
               />
             </div>
 
+            {/* WORKSHOP DETAILS */}
             <div>
               <h2 className="mb-5 text-2xl font-medium">
                 Workshop Details
               </h2>
+
               <div
-                className="text-base leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-2"
-                dangerouslySetInnerHTML={{ __html: data.details }}
+                className="
+                  text-base
+                  leading-relaxed
+                  [&_ul]:list-disc
+                  [&_ul]:pl-6
+                  [&_ul]:space-y-2
+                "
+                dangerouslySetInnerHTML={{
+                  __html: data.details,
+                }}
               />
             </div>
 
+            {/* HOW TO BOOK */}
             <div className="mt-14">
-              <h2 className="mb-5 text-2xl font-medium">How to Book</h2>
+              <h2 className="mb-5 text-2xl font-medium">
+                How to Book
+              </h2>
+
               <div
-                className="text-base leading-relaxed [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:space-y-2"
-                dangerouslySetInnerHTML={{ __html: data.howToBook }}
+                className="
+                  text-base
+                  leading-relaxed
+                  [&_ol]:list-decimal
+                  [&_ol]:pl-6
+                  [&_ol]:space-y-2
+                "
+                dangerouslySetInnerHTML={{
+                  __html: data.howToBook,
+                }}
               />
             </div>
 
             {/* WORKSHOP INQUIRY FORM */}
             <div
               id="workshop-inquiry"
-              className="mt-16 border border-neutral-200 bg-white p-6 md:p-10"
+              className="
+                mt-16
+                border
+                border-neutral-200
+                bg-white
+                p-6
+                md:p-10
+              "
             >
               <h2 className="mb-3 text-center text-2xl font-medium">
                 Workshop Inquiry
               </h2>
 
               <p className="mx-auto mb-8 max-w-xl text-center text-sm leading-relaxed text-neutral-600">
-                Tell us about your preferred workshop. We'll review your
-                request, discuss availability and pricing with you, and
-                confirm your booking after payment. No payment is needed
-                when submitting this inquiry.
+                Fill in your details and choose a preferred date.
+                Dates already confirmed and paid are unavailable.
+                Submitting this form is an inquiry only and does
+                not reserve your date.
               </p>
 
               {submitted ? (
                 <div className="text-center" role="status">
                   <h3 className="mb-3 text-xl font-medium">
-                    Your inquiry has been submitted!
+                    Your workshop inquiry has been submitted!
                   </h3>
 
                   <p className="mb-6 leading-relaxed text-neutral-600">
-                    Thank you for contacting Love Hestia. Please message us
-                    on Instagram so we can discuss the details. Your date is
-                    not reserved until we confirm your booking and payment.
+                    Thank you for contacting Love Hestia. Please
+                    message us on Instagram @lovehestiaflowers and
+                    let us know you've submitted your details.
+                    We'll discuss your preferred arrangement,
+                    location, and date. Your date will only be
+                    blocked after we manually confirm your booking
+                    and receive payment.
                   </p>
 
                   <a
                     href="https://www.instagram.com/lovehestiaflowers/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block border border-neutral-800 bg-neutral-800 px-6 py-3 text-sm uppercase tracking-widest text-white transition hover:bg-neutral-700"
+                    className="
+                      inline-block
+                      border
+                      border-neutral-800
+                      bg-neutral-800
+                      px-6
+                      py-3
+                      text-sm
+                      uppercase
+                      tracking-widest
+                      text-white
+                      transition
+                      hover:bg-neutral-700
+                    "
                   >
                     Contact @lovehestiaflowers
                   </a>
                 </div>
               ) : (
-                <form onSubmit={handleInquirySubmit} className="space-y-5">
+                <form
+                  onSubmit={handleInquirySubmit}
+                  className="space-y-5"
+                >
+
+                  {/* CUSTOMER NAME */}
                   <div>
                     <label
                       htmlFor="workshop-name"
@@ -421,6 +582,7 @@ function WorkshopPage() {
                     >
                       Name
                     </label>
+
                     <input
                       id="workshop-name"
                       name="name"
@@ -431,10 +593,19 @@ function WorkshopPage() {
                       placeholder="Enter your full name"
                       required
                       maxLength={120}
-                      className="w-full border border-neutral-300 bg-white p-3 outline-none focus:border-neutral-600"
+                      className="
+                        w-full
+                        border
+                        border-neutral-300
+                        bg-white
+                        p-3
+                        outline-none
+                        focus:border-neutral-600
+                      "
                     />
                   </div>
 
+                  {/* EMAIL */}
                   <div>
                     <label
                       htmlFor="workshop-email"
@@ -442,6 +613,7 @@ function WorkshopPage() {
                     >
                       Email address
                     </label>
+
                     <input
                       id="workshop-email"
                       name="email"
@@ -452,10 +624,19 @@ function WorkshopPage() {
                       placeholder="Enter your email address"
                       required
                       maxLength={254}
-                      className="w-full border border-neutral-300 bg-white p-3 outline-none focus:border-neutral-600"
+                      className="
+                        w-full
+                        border
+                        border-neutral-300
+                        bg-white
+                        p-3
+                        outline-none
+                        focus:border-neutral-600
+                      "
                     />
                   </div>
 
+                  {/* LOCATION */}
                   <div>
                     <label
                       htmlFor="workshop-location"
@@ -463,6 +644,7 @@ function WorkshopPage() {
                     >
                       Location
                     </label>
+
                     <input
                       id="workshop-location"
                       name="location"
@@ -473,10 +655,19 @@ function WorkshopPage() {
                       placeholder="Enter your city or event location"
                       required
                       maxLength={250}
-                      className="w-full border border-neutral-300 bg-white p-3 outline-none focus:border-neutral-600"
+                      className="
+                        w-full
+                        border
+                        border-neutral-300
+                        bg-white
+                        p-3
+                        outline-none
+                        focus:border-neutral-600
+                      "
                     />
                   </div>
 
+                  {/* ARRANGEMENT TYPE */}
                   <div>
                     <label
                       htmlFor="workshop-arrangement"
@@ -484,23 +675,34 @@ function WorkshopPage() {
                     >
                       Type of arrangement
                     </label>
+
                     <select
                       id="workshop-arrangement"
                       name="arrangement"
                       value={inquiry.arrangement}
                       onChange={handleInquiryChange}
                       required
-                      className="w-full border border-neutral-300 bg-white p-3 outline-none focus:border-neutral-600"
+                      className="
+                        w-full
+                        border
+                        border-neutral-300
+                        bg-white
+                        p-3
+                        outline-none
+                        focus:border-neutral-600
+                      "
                     >
                       <option value="dried-bouquet">
                         Dried flower bouquet
                       </option>
+
                       <option value="preserved-dome">
                         Preserved flower dome
                       </option>
                     </select>
                   </div>
 
+                  {/* PREFERRED DATE AND TIME */}
                   <div>
                     <label className="mb-2 block text-sm font-medium">
                       Preferred date and time
@@ -520,48 +722,38 @@ function WorkshopPage() {
                       filterDate={(date) =>
                         !blockedDates.includes(getDateKey(date))
                       }
-                      filterTime={(time) => {
-                        const hours = time.getHours();
-
-                        if (hours < 8 || hours > 18) {
-                          return false;
-                        }
-
-                        if (
-                          selectedDate &&
-                          getDateKey(selectedDate) === getDateKey(new Date()) &&
-                          time <= new Date()
-                        ) {
-                          return false;
-                        }
-
-                        return true;
-                      }}
+                      disabled={
+                        availabilityLoading || availabilityError
+                      }
                       withPortal
                       customInput={<DateButtonInput />}
                     />
 
                     <p className="mt-2 text-xs leading-relaxed text-neutral-500">
-                      One workshop can be confirmed per day. Your preferred
-                      date is a request, not a confirmed reservation.
+                      {availabilityLoading
+                        ? "Checking available dates..."
+                        : availabilityError
+                        ? "Available dates could not be loaded. Please try again later or contact us on Instagram."
+                        : "Choose an available date. Dates already confirmed and paid are disabled. Your date is not reserved until we confirm your booking and payment."}
                     </p>
-
-                    {availabilityError && (
-                      <p className="mt-2 text-xs text-amber-700">
-                        Live availability could not be checked. Love Hestia
-                        will confirm your requested date before booking.
-                      </p>
-                    )}
                   </div>
 
-                  {/* Honeypot field for the backend's spam check */}
+                  {/* HIDDEN ANTI-SPAM FIELD */}
                   <div
                     aria-hidden="true"
-                    className="absolute left-[-10000px] top-auto h-px w-px overflow-hidden"
+                    className="
+                      absolute
+                      left-[-10000px]
+                      top-auto
+                      h-px
+                      w-px
+                      overflow-hidden
+                    "
                   >
                     <label htmlFor="workshop-website">
                       Leave this field empty
                     </label>
+
                     <input
                       id="workshop-website"
                       name="website"
@@ -571,20 +763,43 @@ function WorkshopPage() {
                     />
                   </div>
 
+                  {/* SUBMISSION ERRORS */}
                   {submitError && (
-                    <p className="text-sm text-red-700" role="alert">
+                    <p
+                      className="text-sm text-red-700"
+                      role="alert"
+                    >
                       {submitError}
                     </p>
                   )}
 
+                  {/* SUBMIT INQUIRY — NO PAYMENT */}
                   <button
                     type="submit"
-                    disabled={submitting}
-                    className={`w-full border px-6 py-3 text-sm font-medium uppercase tracking-widest text-white transition ${
-                      submitting
-                        ? "cursor-not-allowed border-neutral-400 bg-neutral-400"
-                        : "border-neutral-800 bg-neutral-800 hover:bg-neutral-700"
-                    }`}
+                    disabled={
+                      submitting ||
+                      availabilityLoading ||
+                      availabilityError
+                    }
+                    className={`
+                      w-full
+                      border
+                      px-6
+                      py-3
+                      text-sm
+                      font-medium
+                      uppercase
+                      tracking-widest
+                      text-white
+                      transition
+                      ${
+                        submitting ||
+                        availabilityLoading ||
+                        availabilityError
+                          ? "cursor-not-allowed border-neutral-400 bg-neutral-400"
+                          : "border-neutral-800 bg-neutral-800 hover:bg-neutral-700"
+                      }
+                    `}
                   >
                     {submitting
                       ? "Submitting inquiry..."
@@ -592,14 +807,16 @@ function WorkshopPage() {
                   </button>
 
                   <p className="text-center text-xs leading-relaxed text-neutral-500">
-                    No payment is collected here. After your inquiry is
-                    successfully saved, you can contact us on Instagram.
-                    Your booking is not confirmed until Love Hestia confirms it.
+                    After submitting, please contact us on Instagram
+                    @lovehestiaflowers and tell us you've sent your
+                    inquiry. No payment is collected through this form.
                   </p>
+
                 </form>
               )}
             </div>
 
+            {/* CONTACT BUTTON */}
             <div className="mt-20 text-center">
               <p className="mx-auto mb-6 max-w-2xl leading-relaxed text-neutral-600">
                 Let's plan your workshop together.
@@ -609,11 +826,24 @@ function WorkshopPage() {
                 href="https://www.instagram.com/lovehestiaflowers/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block border border-neutral-800 px-8 py-3 tracking-wide text-neutral-800 transition-all duration-300 hover:bg-neutral-800 hover:text-white"
+                className="
+                  inline-block
+                  border
+                  border-neutral-800
+                  px-8
+                  py-3
+                  tracking-wide
+                  text-neutral-800
+                  transition-all
+                  duration-300
+                  hover:bg-neutral-800
+                  hover:text-white
+                "
               >
                 Contact Us
               </a>
             </div>
+
           </div>
         )}
       </section>
