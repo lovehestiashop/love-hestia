@@ -671,10 +671,7 @@ function WorkshopPage() {
                   </div>
                 </div>
 
-                <p className="mt-8 text-xs leading-relaxed text-neutral-500">
-                  Message us on Instagram to discuss your preferred
-                  arrangement, color palette, and booking details.
-                </p>
+            
               </div>
             </div>
 
