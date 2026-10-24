@@ -20,6 +20,9 @@ const INQUIRY_ENDPOINT =
 const AVAILABILITY_ENDPOINT =
   `${WORDPRESS_REST_ROOT}/love-hestia/v1/workshop-availability`;
 
+const INSTAGRAM_URL =
+  "https://www.instagram.com/lovehestiaflowers/";
+
 const DateButtonInput = forwardRef(
   ({ value, onClick, disabled }, ref) => (
     <button
@@ -71,6 +74,12 @@ function WorkshopPage() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+
+  // Submission success and popup visibility are separate so that
+  // closing the popup does not make the form available for resubmission.
+  const [submitted, setSubmitted] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] =
+    useState(false);
 
   const [inquiry, setInquiry] = useState({
     name: "",
@@ -194,7 +203,7 @@ function WorkshopPage() {
     };
   }, []);
 
-  // LOAD DATES CONFIRMED AND PAID IN WORDPRESS.
+  // LOAD DATES ALREADY CONFIRMED AND PAID IN WORDPRESS.
   useEffect(() => {
     let cancelled = false;
 
@@ -264,11 +273,11 @@ function WorkshopPage() {
     }));
   };
 
-  // SUBMIT THE INQUIRY TO WORDPRESS, THEN REDIRECT TO INSTAGRAM.
+  // SUBMIT INQUIRY TO WORDPRESS, THEN SHOW THE CONFIRMATION POPUP.
   const handleInquirySubmit = async (event) => {
     event.preventDefault();
 
-    if (submitting) return;
+    if (submitting || submitted) return;
 
     if (availabilityLoading) {
       setSubmitError(
@@ -326,10 +335,10 @@ function WorkshopPage() {
         website: websiteField,
       });
 
-      // Redirect only after WordPress confirms the inquiry was saved.
-      window.location.assign(
-        "https://www.instagram.com/lovehestiaflowers/"
-      );
+      // Stay on the website and show confirmation.
+      // Do not redirect customers automatically.
+      setSubmitted(true);
+      setShowSuccessModal(true);
     } catch (error) {
       console.error(
         "Workshop inquiry submission failed:",
@@ -351,6 +360,122 @@ function WorkshopPage() {
   return (
     <div className="bg-[#faf9f7]">
       <HeaderComponent />
+
+      {/* SUCCESS POPUP */}
+      {showSuccessModal && (
+        <div
+          className="
+            fixed
+            inset-0
+            z-[100]
+            flex
+            items-center
+            justify-center
+            bg-black/50
+            px-4
+            py-6
+          "
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="workshop-success-title"
+        >
+          <div
+            className="
+              relative
+              w-full
+              max-w-md
+              bg-[#faf9f7]
+              p-7
+              text-center
+              shadow-xl
+              md:p-10
+            "
+          >
+            <button
+              type="button"
+              onClick={() => setShowSuccessModal(false)}
+              aria-label="Close confirmation popup"
+              className="
+                absolute
+                right-4
+                top-3
+                text-2xl
+                text-neutral-500
+                hover:text-neutral-800
+              "
+            >
+              ×
+            </button>
+
+            <div
+              className="mb-4 text-3xl text-neutral-700"
+              aria-hidden="true"
+            >
+              ✓
+            </div>
+
+            <h2
+              id="workshop-success-title"
+              className="mb-4 text-2xl font-medium text-neutral-800"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+              }}
+            >
+              Inquiry Submitted!
+            </h2>
+
+            <p className="mb-6 text-sm leading-relaxed text-neutral-600">
+              Thank you for your interest in a Love Hestia
+              floral workshop! Your inquiry has been submitted
+              successfully. Please contact us on Instagram to
+              discuss your preferred date, arrangement, and
+              booking details.
+            </p>
+
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+                inline-block
+                w-full
+                bg-neutral-800
+                px-5
+                py-3
+                text-sm
+                font-medium
+                uppercase
+                tracking-widest
+                text-white
+                transition
+                hover:bg-neutral-700
+              "
+            >
+              Contact Us on Instagram
+            </a>
+
+            <p className="mt-4 text-xs leading-relaxed text-neutral-500">
+              Your preferred date is not reserved until Love
+              Hestia confirms your booking and payment.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => setShowSuccessModal(false)}
+              className="
+                mt-4
+                text-sm
+                text-neutral-600
+                underline
+                underline-offset-4
+                hover:text-neutral-900
+              "
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       <section className="bg-[#faf9f7] text-neutral-700">
 
@@ -503,7 +628,7 @@ function WorkshopPage() {
               />
             </div>
 
-            {/* WORKSHOP INQUIRY FORM */}
+            {/* WORKSHOP INQUIRY */}
             <div
               id="workshop-inquiry"
               className="
@@ -520,254 +645,295 @@ function WorkshopPage() {
               </h2>
 
               <p className="mx-auto mb-8 max-w-xl text-center text-sm leading-relaxed text-neutral-600">
-                Fill in your details and choose a preferred date.
-                Dates already confirmed and paid are unavailable.
-                Submitting this form is an inquiry only and does
-                not reserve your date.
+                Fill in your details and choose a preferred
+                date. Dates already confirmed and paid are
+                unavailable. Submitting this form is an inquiry
+                only and does not reserve your date.
               </p>
 
-              <form
-                onSubmit={handleInquirySubmit}
-                className="space-y-5"
-              >
-                {/* NAME */}
-                <div>
-                  <label
-                    htmlFor="workshop-name"
-                    className="mb-2 block text-sm font-medium"
-                  >
-                    Name
-                  </label>
+              {submitted ? (
+                <div className="py-5 text-center" role="status">
+                  <h3 className="mb-3 text-xl font-medium">
+                    Your inquiry has been submitted.
+                  </h3>
 
-                  <input
-                    id="workshop-name"
-                    name="name"
-                    type="text"
-                    autoComplete="name"
-                    value={inquiry.name}
-                    onChange={handleInquiryChange}
-                    placeholder="Enter your full name"
-                    required
-                    maxLength={120}
-                    className="
-                      w-full
-                      border
-                      border-neutral-300
-                      bg-white
-                      p-3
-                      outline-none
-                      focus:border-neutral-600
-                    "
-                  />
-                </div>
-
-                {/* EMAIL */}
-                <div>
-                  <label
-                    htmlFor="workshop-email"
-                    className="mb-2 block text-sm font-medium"
-                  >
-                    Email address
-                  </label>
-
-                  <input
-                    id="workshop-email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    value={inquiry.email}
-                    onChange={handleInquiryChange}
-                    placeholder="Enter your email address"
-                    required
-                    maxLength={254}
-                    className="
-                      w-full
-                      border
-                      border-neutral-300
-                      bg-white
-                      p-3
-                      outline-none
-                      focus:border-neutral-600
-                    "
-                  />
-                </div>
-
-                {/* LOCATION */}
-                <div>
-                  <label
-                    htmlFor="workshop-location"
-                    className="mb-2 block text-sm font-medium"
-                  >
-                    Location
-                  </label>
-
-                  <input
-                    id="workshop-location"
-                    name="location"
-                    type="text"
-                    autoComplete="street-address"
-                    value={inquiry.location}
-                    onChange={handleInquiryChange}
-                    placeholder="Enter your city or event location"
-                    required
-                    maxLength={250}
-                    className="
-                      w-full
-                      border
-                      border-neutral-300
-                      bg-white
-                      p-3
-                      outline-none
-                      focus:border-neutral-600
-                    "
-                  />
-                </div>
-
-                {/* ARRANGEMENT TYPE */}
-                <div>
-                  <label
-                    htmlFor="workshop-arrangement"
-                    className="mb-2 block text-sm font-medium"
-                  >
-                    Type of arrangement
-                  </label>
-
-                  <select
-                    id="workshop-arrangement"
-                    name="arrangement"
-                    value={inquiry.arrangement}
-                    onChange={handleInquiryChange}
-                    required
-                    className="
-                      w-full
-                      border
-                      border-neutral-300
-                      bg-white
-                      p-3
-                      outline-none
-                      focus:border-neutral-600
-                    "
-                  >
-                    <option value="dried-bouquet">
-                      Dried flower bouquet
-                    </option>
-
-                    <option value="preserved-dome">
-                      Preserved flower dome
-                    </option>
-                  </select>
-                </div>
-
-                {/* PREFERRED DATE AND TIME */}
-                <div>
-                  <label className="mb-2 block text-sm font-medium">
-                    Preferred date and time
-                  </label>
-
-                  <DatePicker
-                    selected={selectedDate}
-                    onChange={(date) => {
-                      setSelectedDate(date);
-                      setSubmitError("");
-                    }}
-                    showTimeSelect
-                    timeFormat="h:mm aa"
-                    timeIntervals={30}
-                    dateFormat="MMMM d, yyyy h:mm aa"
-                    minDate={today}
-                    filterDate={(date) =>
-                      !blockedDates.includes(getDateKey(date))
-                    }
-                    disabled={
-                      availabilityLoading || availabilityError
-                    }
-                    withPortal
-                    customInput={<DateButtonInput />}
-                  />
-
-                  <p className="mt-2 text-xs leading-relaxed text-neutral-500">
-                    {availabilityLoading
-                      ? "Checking available dates..."
-                      : availabilityError
-                      ? "Available dates could not be loaded. Please try again later or contact us on Instagram."
-                      : "Choose an available date. Your date is not reserved until Love Hestia confirms your booking and payment."}
+                  <p className="mb-6 text-sm leading-relaxed text-neutral-600">
+                    Please contact us on Instagram to discuss
+                    the details and confirm your preferred date.
                   </p>
-                </div>
 
-                {/* HIDDEN ANTI-SPAM FIELD */}
-                <div
-                  aria-hidden="true"
-                  className="
-                    absolute
-                    left-[-10000px]
-                    top-auto
-                    h-px
-                    w-px
-                    overflow-hidden
-                  "
+                  <a
+                    href={INSTAGRAM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="
+                      inline-block
+                      border
+                      border-neutral-800
+                      px-6
+                      py-3
+                      text-sm
+                      uppercase
+                      tracking-widest
+                      text-neutral-800
+                      transition
+                      hover:bg-neutral-800
+                      hover:text-white
+                    "
+                  >
+                    Contact Us on Instagram
+                  </a>
+                </div>
+              ) : (
+                <form
+                  onSubmit={handleInquirySubmit}
+                  className="space-y-5"
                 >
-                  <label htmlFor="workshop-website">
-                    Leave this field empty
-                  </label>
 
-                  <input
-                    id="workshop-website"
-                    name="website"
-                    type="text"
-                    tabIndex="-1"
-                    autoComplete="off"
-                  />
-                </div>
+                  {/* NAME */}
+                  <div>
+                    <label
+                      htmlFor="workshop-name"
+                      className="mb-2 block text-sm font-medium"
+                    >
+                      Name
+                    </label>
 
-                {/* ERROR MESSAGE */}
-                {submitError && (
-                  <p
-                    className="text-sm text-red-700"
-                    role="alert"
+                    <input
+                      id="workshop-name"
+                      name="name"
+                      type="text"
+                      autoComplete="name"
+                      value={inquiry.name}
+                      onChange={handleInquiryChange}
+                      placeholder="Enter your full name"
+                      required
+                      maxLength={120}
+                      className="
+                        w-full
+                        border
+                        border-neutral-300
+                        bg-white
+                        p-3
+                        outline-none
+                        focus:border-neutral-600
+                      "
+                    />
+                  </div>
+
+                  {/* EMAIL */}
+                  <div>
+                    <label
+                      htmlFor="workshop-email"
+                      className="mb-2 block text-sm font-medium"
+                    >
+                      Email address
+                    </label>
+
+                    <input
+                      id="workshop-email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      value={inquiry.email}
+                      onChange={handleInquiryChange}
+                      placeholder="Enter your email address"
+                      required
+                      maxLength={254}
+                      className="
+                        w-full
+                        border
+                        border-neutral-300
+                        bg-white
+                        p-3
+                        outline-none
+                        focus:border-neutral-600
+                      "
+                    />
+                  </div>
+
+                  {/* LOCATION */}
+                  <div>
+                    <label
+                      htmlFor="workshop-location"
+                      className="mb-2 block text-sm font-medium"
+                    >
+                      Location
+                    </label>
+
+                    <input
+                      id="workshop-location"
+                      name="location"
+                      type="text"
+                      autoComplete="street-address"
+                      value={inquiry.location}
+                      onChange={handleInquiryChange}
+                      placeholder="Enter your city or event location"
+                      required
+                      maxLength={250}
+                      className="
+                        w-full
+                        border
+                        border-neutral-300
+                        bg-white
+                        p-3
+                        outline-none
+                        focus:border-neutral-600
+                      "
+                    />
+                  </div>
+
+                  {/* ARRANGEMENT TYPE */}
+                  <div>
+                    <label
+                      htmlFor="workshop-arrangement"
+                      className="mb-2 block text-sm font-medium"
+                    >
+                      Type of arrangement
+                    </label>
+
+                    <select
+                      id="workshop-arrangement"
+                      name="arrangement"
+                      value={inquiry.arrangement}
+                      onChange={handleInquiryChange}
+                      required
+                      className="
+                        w-full
+                        border
+                        border-neutral-300
+                        bg-white
+                        p-3
+                        outline-none
+                        focus:border-neutral-600
+                      "
+                    >
+                      <option value="dried-bouquet">
+                        Dried flower bouquet
+                      </option>
+
+                      <option value="preserved-dome">
+                        Preserved flower dome
+                      </option>
+                    </select>
+                  </div>
+
+                  {/* PREFERRED DATE AND TIME */}
+                  <div>
+                    <label className="mb-2 block text-sm font-medium">
+                      Preferred date and time
+                    </label>
+
+                    <DatePicker
+                      selected={selectedDate}
+                      onChange={(date) => {
+                        setSelectedDate(date);
+                        setSubmitError("");
+                      }}
+                      showTimeSelect
+                      timeFormat="h:mm aa"
+                      timeIntervals={30}
+                      dateFormat="MMMM d, yyyy h:mm aa"
+                      minDate={today}
+                      filterDate={(date) =>
+                        !blockedDates.includes(
+                          getDateKey(date)
+                        )
+                      }
+                      disabled={
+                        availabilityLoading ||
+                        availabilityError
+                      }
+                      withPortal
+                      customInput={<DateButtonInput />}
+                    />
+
+                    <p className="mt-2 text-xs leading-relaxed text-neutral-500">
+                      {availabilityLoading
+                        ? "Checking available dates..."
+                        : availabilityError
+                        ? "Available dates could not be loaded. Please try again later or contact us on Instagram."
+                        : "Choose an available date. Your date is not reserved until Love Hestia confirms your booking and payment."}
+                    </p>
+                  </div>
+
+                  {/* HIDDEN ANTI-SPAM FIELD */}
+                  <div
+                    aria-hidden="true"
+                    className="
+                      absolute
+                      left-[-10000px]
+                      top-auto
+                      h-px
+                      w-px
+                      overflow-hidden
+                    "
                   >
-                    {submitError}
-                  </p>
-                )}
+                    <label htmlFor="workshop-website">
+                      Leave this field empty
+                    </label>
 
-                {/* SUBMIT — NO PAYMENT */}
-                <button
-                  type="submit"
-                  disabled={
-                    submitting ||
-                    availabilityLoading ||
-                    availabilityError
-                  }
-                  className={`
-                    w-full
-                    border
-                    px-6
-                    py-3
-                    text-sm
-                    font-medium
-                    uppercase
-                    tracking-widest
-                    text-white
-                    transition
-                    ${
+                    <input
+                      id="workshop-website"
+                      name="website"
+                      type="text"
+                      tabIndex="-1"
+                      autoComplete="off"
+                    />
+                  </div>
+
+                  {/* FORM ERROR */}
+                  {submitError && (
+                    <p
+                      className="text-sm text-red-700"
+                      role="alert"
+                    >
+                      {submitError}
+                    </p>
+                  )}
+
+                  {/* SUBMIT — NO PAYMENT */}
+                  <button
+                    type="submit"
+                    disabled={
                       submitting ||
                       availabilityLoading ||
                       availabilityError
-                        ? "cursor-not-allowed border-neutral-400 bg-neutral-400"
-                        : "border-neutral-800 bg-neutral-800 hover:bg-neutral-700"
                     }
-                  `}
-                >
-                  {submitting
-                    ? "Submitting inquiry..."
-                    : "Submit Workshop Inquiry"}
-                </button>
+                    className={`
+                      w-full
+                      border
+                      px-6
+                      py-3
+                      text-sm
+                      font-medium
+                      uppercase
+                      tracking-widest
+                      text-white
+                      transition
+                      ${
+                        submitting ||
+                        availabilityLoading ||
+                        availabilityError
+                          ? "cursor-not-allowed border-neutral-400 bg-neutral-400"
+                          : "border-neutral-800 bg-neutral-800 hover:bg-neutral-700"
+                      }
+                    `}
+                  >
+                    {submitting
+                      ? "Submitting inquiry..."
+                      : "Submit Workshop Inquiry"}
+                  </button>
 
-                <p className="text-center text-xs leading-relaxed text-neutral-500">
-                  After submitting, please contact us on Instagram
-                  @lovehestiaflowers and tell us you've sent your
-                  inquiry. No payment is collected through this form.
-                </p>
-              </form>
+                  <p className="text-center text-xs leading-relaxed text-neutral-500">
+                    After submitting, please contact us on
+                    Instagram @lovehestiaflowers and let us know
+                    you've sent your inquiry. No payment is
+                    collected through this form.
+                  </p>
+
+                </form>
+              )}
             </div>
 
             {/* CONTACT BUTTON */}
@@ -777,7 +943,7 @@ function WorkshopPage() {
               </p>
 
               <a
-                href="https://www.instagram.com/lovehestiaflowers/"
+                href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
