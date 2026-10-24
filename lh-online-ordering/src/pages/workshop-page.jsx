@@ -1,247 +1,329 @@
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 import FooterComponent from "../components/footer";
 import HeaderComponent from "../components/header";
 
+const WORDPRESS_API =
+  "https://api.lovehestia.shop/wp-json/wp/v2";
+
 function WorkshopPage() {
   const [data, setData] = useState(null);
   const [currentImage, setCurrentImage] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    const loadData = async () => {
+    let cancelled = false;
+
+    async function loadData() {
       try {
-        const pageRes = await axios.get(
-          "https://api.lovehestia.shop/wp-json/wp/v2/pages/4973?_fields=acf"
+        const pageResponse = await axios.get(
+          `${WORDPRESS_API}/pages/4973`,
+          {
+            params: {
+              _fields: "acf",
+            },
+          }
         );
 
-        const acf = pageRes.data.acf;
+        const acf = pageResponse.data?.acf;
 
+        if (!acf) {
+          throw new Error(
+            "Workshop page fields could not be loaded."
+          );
+        }
+
+        // Read up to six workshop images from WordPress.
         const imageIds = [
           acf.workshop_image_1,
           acf.workshop_image_2,
           acf.workshop_image_3,
           acf.workshop_image_4,
-        ].filter(Boolean);
-
-        const imageResponses = await Promise.all(
-          imageIds.map((id) =>
-            axios.get(
-              `https://api.lovehestia.shop/wp-json/wp/v2/media/${id}`
-            )
-          )
+          acf.workshop_image_5,
+          acf.workshop_image_6,
+        ].filter(
+          (id) =>
+            id !== null &&
+            id !== undefined &&
+            id !== "" &&
+            id !== false
         );
 
-        const images = imageResponses.map(
-          (res) => res.data.source_url
+        // Load image details concurrently.
+        // If one image fails, the remaining images can still display.
+        const imageResults = await Promise.all(
+          imageIds.map(async (imageId) => {
+            try {
+              const response = await axios.get(
+                `${WORDPRESS_API}/media/${imageId}`,
+                {
+                  params: {
+                    _fields: "source_url,media_details",
+                  },
+                }
+              );
+
+              const media = response.data;
+              const sizes = media.media_details?.sizes || {};
+
+              // Prefer a generated, appropriately sized image.
+              return (
+                sizes["1536x1536"]?.source_url ||
+                sizes.large?.source_url ||
+                sizes.medium_large?.source_url ||
+                media.source_url ||
+                null
+              );
+            } catch (imageError) {
+              console.error(
+                `Failed to load workshop image ${imageId}:`,
+                imageError
+              );
+
+              return null;
+            }
+          })
         );
 
-      setData({
-  title: acf.workshop_title,
-  pricing: acf.workshop_pricing,
-  details: acf.workshop_details,
-  howToBook: acf.how_to_book,
-  images,
-});
-      } catch (error) {
-        console.error(error);
+        const images = imageResults.filter(Boolean);
+
+        if (cancelled) return;
+
+        setData({
+          title: acf.workshop_title || "Workshop",
+          pricing: acf.workshop_pricing || "",
+          details: acf.workshop_details || "",
+          howToBook: acf.how_to_book || "",
+          images,
+        });
+
+        setCurrentImage(0);
+      } catch (loadError) {
+        console.error(
+          "Failed to load workshop page:",
+          loadError
+        );
+
+        if (!cancelled) {
+          setError(true);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
-    };
+    }
 
     loadData();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
+  // Automatically change photos every five seconds.
   useEffect(() => {
-    if (!data?.images?.length) return;
+    const imageCount = data?.images?.length ?? 0;
+
+    if (imageCount < 2) {
+      return;
+    }
 
     const interval = setInterval(() => {
       setCurrentImage(
-        (prev) => (prev + 1) % data.images.length
+        (previous) => (previous + 1) % imageCount
       );
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [data]);
-
-  if (!data) return null;
-
-  const nextImage = () => {
-    setCurrentImage(
-      (prev) => (prev + 1) % data.images.length
-    );
-  };
-
-  const prevImage = () => {
-    setCurrentImage(
-      (prev) =>
-        prev === 0
-          ? data.images.length - 1
-          : prev - 1
-    );
-  };
+  }, [data?.images?.length]);
 
   return (
-    <div>
+    <div className="bg-[#faf9f7]">
       <HeaderComponent />
 
       <section className="bg-[#faf9f7] text-neutral-700">
-
-        {/* Hero Slider */}
-        <div className="max-w-7xl mx-auto pt-12 px-4">
-
-          <div className="relative">
-
-            <button
-              onClick={prevImage}
+        {/* WORKSHOP PHOTO SLIDESHOW */}
+        <div className="mx-auto max-w-7xl px-4 pt-12">
+          {loading ? (
+            <div
               className="
-                absolute left-4 top-1/2
-                -translate-y-1/2 z-20
-                w-12 h-12 rounded-full
-                bg-white/90 shadow-lg text-3xl
+                flex
+                min-h-[350px]
+                items-center
+                justify-center
+                text-lg
+                font-medium
+                text-neutral-600
+                md:min-h-[700px]
               "
+              role="status"
             >
-              ‹
-            </button>
+              Loading workshop photos...
+            </div>
+          ) : error ? (
+            <p
+              className="py-24 text-center text-neutral-600"
+              role="alert"
+            >
+              We couldn't load the workshop page.
+              Please refresh and try again.
+            </p>
+          ) : data.images.length > 0 ? (
+            <>
+              {/* IMAGE — NO ARROWS */}
+              <div className="overflow-hidden rounded-xl">
+                <img
+                  key={data.images[currentImage]}
+                  src={data.images[currentImage]}
+                  alt={`Love Hestia workshop photo ${currentImage + 1}`}
+                  fetchPriority="high"
+                  decoding="async"
+                  className="
+                    h-[350px]
+                    w-full
+                    object-cover
+                    md:h-[700px]
+                  "
+                />
+              </div>
 
-            <div className="overflow-hidden rounded-xl">
-              <img
-                src={data.images[currentImage]}
-                alt="Workshop"
+              {/* NAVIGATION DOTS */}
+              {data.images.length > 1 && (
+                <div className="mt-6 flex justify-center gap-3">
+                  {data.images.map((_, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => setCurrentImage(index)}
+                      aria-label={`Show workshop photo ${index + 1}`}
+                      aria-current={
+                        currentImage === index
+                          ? "true"
+                          : undefined
+                      }
+                      className={`
+                        h-3
+                        w-3
+                        rounded-full
+                        transition-colors
+                        ${
+                          currentImage === index
+                            ? "bg-black"
+                            : "bg-gray-300"
+                        }
+                      `}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            <p className="py-24 text-center text-neutral-600">
+              No workshop photos are available yet.
+            </p>
+          )}
+        </div>
+
+        {/* WORKSHOP CONTENT */}
+        {!loading && !error && data && (
+          <div className="mx-auto max-w-4xl px-6 py-20">
+            <h1 className="mb-14 text-center text-4xl">
+              {data.title}
+            </h1>
+
+            {/* PRICING */}
+            <div className="mb-14">
+              <h2 className="mb-5 text-2xl font-medium">
+                Pricing
+              </h2>
+
+              <div
                 className="
-                  w-full
-                  h-[350px]
-                  md:h-[700px]
-                  object-cover
+                  text-base
+                  leading-relaxed
+                  [&_ul]:list-disc
+                  [&_ul]:pl-6
+                  [&_ul]:space-y-2
                 "
+                dangerouslySetInnerHTML={{
+                  __html: data.pricing,
+                }}
               />
             </div>
 
-            <button
-              onClick={nextImage}
-              className="
-                absolute right-4 top-1/2
-                -translate-y-1/2 z-20
-                w-12 h-12 rounded-full
-                bg-white/90 shadow-lg text-3xl
-              "
-            >
-              ›
-            </button>
+            {/* WORKSHOP DETAILS */}
+            <div>
+              <h2 className="mb-5 text-2xl font-medium">
+                Workshop Details
+              </h2>
 
-          </div>
-
-          {/* Dots */}
-          <div className="flex justify-center gap-3 mt-6">
-            {data.images.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentImage(index)}
-                className={`w-3 h-3 rounded-full ${
-                  currentImage === index
-                    ? "bg-black"
-                    : "bg-gray-300"
-                }`}
+              <div
+                className="
+                  text-base
+                  leading-relaxed
+                  [&_ul]:list-disc
+                  [&_ul]:pl-6
+                  [&_ul]:space-y-2
+                "
+                dangerouslySetInnerHTML={{
+                  __html: data.details,
+                }}
               />
-            ))}
+            </div>
+
+            {/* HOW TO BOOK */}
+            <div className="mt-14">
+              <h2 className="mb-5 text-2xl font-medium">
+                How to Book
+              </h2>
+
+              <div
+                className="
+                  text-base
+                  leading-relaxed
+                  [&_ol]:list-decimal
+                  [&_ol]:pl-6
+                  [&_ol]:space-y-2
+                "
+                dangerouslySetInnerHTML={{
+                  __html: data.howToBook,
+                }}
+              />
+            </div>
+
+            {/* CONTACT BUTTON */}
+            <div className="mt-20 text-center">
+              <p className="mx-auto mb-6 max-w-2xl leading-relaxed text-neutral-600">
+                Let's plan your workshop together.
+              </p>
+
+              <a
+                href="https://www.instagram.com/lovehestiaflowers"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  inline-block
+                  border
+                  border-neutral-800
+                  px-8
+                  py-3
+                  tracking-wide
+                  text-neutral-800
+                  transition-all
+                  duration-300
+                  hover:bg-neutral-800
+                  hover:text-white
+                "
+              >
+                Contact Us
+              </a>
+            </div>
           </div>
-
-        </div>
-
-        {/* Content */}
-        <div className="max-w-4xl mx-auto px-6 py-20">
-
-          <h1 className="text-center text-4xl mb-14">
-            {data.title}
-          </h1>
-
-          {/* Pricing */}
-          <div className="mb-14">
-            <h2 className="text-2xl font-medium mb-5">
-              Pricing
-            </h2>
-
-            <div
-              className="
-                text-base
-                leading-relaxed
-                [&_ul]:list-disc
-                [&_ul]:pl-6
-                [&_ul]:space-y-2
-              "
-              dangerouslySetInnerHTML={{
-                __html: data.pricing,
-              }}
-            />
-          </div>
-
-          {/* Workshop Details */}
-          <div>
-            <h2 className="text-2xl font-medium mb-5">
-              Workshop Details
-            </h2>
-
-            <div
-              className="
-                text-base
-                leading-relaxed
-                [&_ul]:list-disc
-                [&_ul]:pl-6
-                [&_ul]:space-y-2
-              "
-              dangerouslySetInnerHTML={{
-                __html: data.details,
-              }}
-            />
-          </div>
-          {/* How To Book */}
-<div className="mt-14">
-  <h2 className="text-2xl font-medium mb-5">
-    How to Book
-  </h2>
-
-  <div
-    className="
-      text-base
-      leading-relaxed
-      [&_ol]:list-decimal
-      [&_ol]:pl-6
-      [&_ol]:space-y-2
-    "
-    dangerouslySetInnerHTML={{
-      __html: data.howToBook,
-    }}
-  />
-</div>
-        {/* CTA */}
-<div className="mt-20 text-center">
-  <p className="mb-6 text-neutral-600 max-w-2xl mx-auto leading-relaxed">
-    Let's plan your workshop together.
-  </p>
-
-  <a
-    href="https://www.instagram.com/lovehestiaflowers"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="
-      inline-block
-      px-8
-      py-3
-      border
-      border-neutral-800
-      text-neutral-800
-      tracking-wide
-      transition-all
-      duration-300
-      hover:bg-neutral-800
-      hover:text-white
-    "
-  >
-    Contact Us
-  </a>
-</div>  
-
-        </div>
-
+        )}
       </section>
 
       <FooterComponent />
