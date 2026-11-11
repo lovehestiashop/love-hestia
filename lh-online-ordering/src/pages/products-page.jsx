@@ -54,6 +54,19 @@ function ProductsPage() {
         item["product-type"]?.includes(productTypeId)
       )
       .sort((a, b) => {
+        // CHECK PRODUCT AVAILABILITY
+        const stockA = Number(a.acf?.stock ?? 0);
+        const stockB = Number(b.acf?.stock ?? 0);
+
+        const availableA = stockA > 0;
+        const availableB = stockB > 0;
+
+        // AVAILABLE PRODUCTS ALWAYS COME FIRST
+        if (availableA !== availableB) {
+          return availableA ? -1 : 1;
+        }
+
+        // SORT BY PRICE WITHIN EACH AVAILABILITY GROUP
         const priceA = Number(
           a.acf?.price ??
           a.meta?.price ??
@@ -210,7 +223,7 @@ function ProductsPage() {
                       "
                     />
 
-                    {/* BOTTOM-LEFT SOLD OUT BADGE */}
+                    {/* SOLD OUT BADGE */}
                     {!isAvailable && (
                       <div
                         className="
