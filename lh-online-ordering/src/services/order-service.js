@@ -6,7 +6,7 @@ export const orderService = {
     const formData = new FormData();
     
 // Spam protection honeypot
-formData.append("website", "");
+formData.append("website", orderData.website || "");
     
     const productId =
       orderData.product_id ||
