@@ -4,7 +4,10 @@ import api from "./api";
 export const orderService = {
   async createOrder(orderData) {
     const formData = new FormData();
-
+    
+// Spam protection honeypot
+formData.append("website", "");
+    
     const productId =
       orderData.product_id ||
       orderData.product?.id ||
