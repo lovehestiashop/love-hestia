@@ -8,6 +8,7 @@ function QrComponent() {
 
   return (
     <div className="mb-4 space-y-5">
+
       {/* Local Payment QR Codes */}
       <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-center">
         <div className="text-center">
@@ -41,21 +42,24 @@ function QrComponent() {
 
       {/* International Orders Payment Details */}
       <div className="border border-neutral-300 bg-white p-5 sm:p-6">
+
         <div className="flex items-center gap-2 mb-3">
           <span className="text-lg">🌍</span>
           <h3 className="font-semibold text-neutral-800 tracking-wide">
-            FOR INTERNATIONAL ORDERS
+            FOR INTERNATIONAL CUSTOMERS
           </h3>
         </div>
 
         <p className="text-sm text-neutral-600 leading-relaxed mb-4">
-          For orders placed from other countries and delivered
-          within Cebu City.
+          Ordering from another country and having your flowers
+          delivered in Cebu City? You can send your payment
+          through GCash using the account details below.
         </p>
 
         <div className="bg-neutral-50 border border-neutral-200 p-4">
+
           <p className="text-sm font-medium text-neutral-800 mb-3">
-            You can pay through GCash
+            GCash Account Details
           </p>
 
           <div className="mb-3">
@@ -69,18 +73,20 @@ function QrComponent() {
 
           <div>
             <p className="text-xs uppercase tracking-wider text-neutral-500 mb-1">
-              Account Number
+              GCash Number
             </p>
             <p className="text-xl font-semibold tracking-wide text-neutral-900">
               09617129672
             </p>
           </div>
+
         </div>
 
         <p className="text-xs text-neutral-500 mt-3 leading-relaxed">
-          After completing your payment, please upload your proof
-          of payment below.
+          Once you've sent your payment, please upload a screenshot
+          of your payment confirmation below.
         </p>
+
       </div>
 
       {/* Fullscreen QR Image Modal */}
@@ -91,7 +97,7 @@ function QrComponent() {
         >
           <img
             src={selectedImage}
-            alt="Fullscreen QR"
+            alt="Fullscreen QR Code"
             className="max-w-full max-h-full"
             onClick={(e) => e.stopPropagation()}
           />
@@ -106,6 +112,7 @@ function QrComponent() {
           </button>
         </div>
       )}
+
     </div>
   );
 }
