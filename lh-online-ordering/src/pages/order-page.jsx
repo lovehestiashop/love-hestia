@@ -1,3 +1,4 @@
+
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMemo, useState, useRef, forwardRef } from "react";
 import HeaderComponent from "../components/header";
@@ -161,36 +162,36 @@ DateButtonInput.displayName = "DateButtonInput";
 
 function OrderPage() {
   const { state } = useLocation();
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const product = state?.product || null;
+  const product = state?.product || null;
 
-const cart = state?.cart || [];
-const isCartCheckout = cart.length > 0;
+  const cart = state?.cart || [];
+  const isCartCheckout = cart.length > 0;
 
-const cartSubtotal = state?.subtotal || 0;
-const cartDeliveryFee = state?.deliveryFee || 0;
-const cartGrandTotal = state?.grandTotal || 0;
+  const cartSubtotal = state?.subtotal || 0;
+  const cartDeliveryFee = state?.deliveryFee || 0;
+  const cartGrandTotal = state?.grandTotal || 0;
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deliveryArea, setDeliveryArea] = useState("standard");
-  
-const [showFreeDeliveryAreas, setShowFreeDeliveryAreas] =
-  useState(false);
 
-const [barangaySearch, setBarangaySearch] = useState("");
+  const [showFreeDeliveryAreas, setShowFreeDeliveryAreas] =
+    useState(false);
 
-const filteredBarangays = useMemo(() => {
-  const query = barangaySearch.trim().toLowerCase();
+  const [barangaySearch, setBarangaySearch] = useState("");
 
-  return CEBU_CITY_BARANGAYS.filter((barangay) =>
-    barangay.toLowerCase().includes(query)
-  );
-}, [barangaySearch]);
+  const filteredBarangays = useMemo(() => {
+    const query = barangaySearch.trim().toLowerCase();
+
+    return CEBU_CITY_BARANGAYS.filter((barangay) =>
+      barangay.toLowerCase().includes(query)
+    );
+  }, [barangaySearch]);
 
 
- const [form, setForm] = useState({
+  const [form, setForm] = useState({
     customer_name: "",
     customer_number: "",
     customer_email: "",
@@ -205,20 +206,26 @@ const filteredBarangays = useMemo(() => {
         .map((item) => item.product?.title?.rendered)
         .join(", "),
     customize_product: "",
+    website: "",
     small_card_note: "",
     proof_of_payment: null,
-});
+  });
 
   const price = product?.acf?.price || 0;
- const deliveryFee =
-  deliveryArea === "special"
-    ? SPECIAL_FEE
-    : deliveryArea === "car"
-    ? CAR_FEE
-    : STANDARD_FEE;
-  const currentCartTotal =
-  cartSubtotal + deliveryFee;
-  const total = useMemo(() => price + deliveryFee, [price, deliveryFee]);
+
+  const deliveryFee =
+    deliveryArea === "special"
+      ? SPECIAL_FEE
+      : deliveryArea === "car"
+      ? CAR_FEE
+      : STANDARD_FEE;
+
+  const currentCartTotal = cartSubtotal + deliveryFee;
+
+  const total = useMemo(
+    () => price + deliveryFee,
+    [price, deliveryFee]
+  );
 
   const imageUrl =
     product?._embedded?.["wp:featuredmedia"]?.[0]?.source_url ||
@@ -226,7 +233,10 @@ const filteredBarangays = useMemo(() => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    setForm((prev) => ({ ...prev, [name]: files ? files[0] : value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: files ? files[0] : value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -237,39 +247,38 @@ const filteredBarangays = useMemo(() => {
     setIsSubmitting(true);
 
     try {
-     
-  await orderService.createOrder({
-  ...form,
+      await orderService.createOrder({
+        ...form,
 
-  product,
+        product,
 
-  product_id: product ? product.id : null,
+        product_id: product ? product.id : null,
 
-  cart,
+        cart,
 
-  price: product ? price : cartSubtotal,
-  delivery_fee: deliveryFee,
-  delivery_area: deliveryArea,
+        price: product ? price : cartSubtotal,
+        delivery_fee: deliveryFee,
+        delivery_area: deliveryArea,
 
-  total: product
-    ? total
-    : currentCartTotal,
+        total: product
+          ? total
+          : currentCartTotal,
 
-  date_and_time_of_delivery: formatDateTime(
-    form.date_and_time_of_delivery,
-  ),
+        date_and_time_of_delivery: formatDateTime(
+          form.date_and_time_of_delivery
+        ),
 
-  date_time_ordered: formatDateTime(
-    new Date().toISOString()
-  ),
+        date_time_ordered: formatDateTime(
+          new Date().toISOString()
+        ),
 
-  product_image: product?.featured_media || "",
-});
+        product_image: product?.featured_media || "",
+      });
 
-     localStorage.setItem("cart", JSON.stringify([]));
+      localStorage.setItem("cart", JSON.stringify([]));
 
-alert("Order placed successfully!");
-navigate("/shop");
+      alert("Order placed successfully!");
+      navigate("/shop");
     } catch (err) {
       console.error(err);
       alert("Failed to place order: " + err.message);
@@ -296,11 +305,37 @@ navigate("/shop");
             }`}
             onSubmit={handleSubmit}
           >
+            {/* Spam protection honeypot: keep this field invisible to customers. */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                left: "-10000px",
+                top: "auto",
+                width: "1px",
+                height: "1px",
+                overflow: "hidden",
+              }}
+            >
+              <label>
+                Website
+                <input
+                  type="text"
+                  name="website"
+                  value={form.website}
+                  onChange={handleChange}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </label>
+            </div>
+
             {!product && !isCartCheckout && (
-  <div>
-    <h3 className="mb-4 font-medium uppercase tracking-wide">
-      Customize Your Arrangement
-    </h3>
+              <div>
+                <h3 className="mb-4 font-medium uppercase tracking-wide">
+                  Customize Your Arrangement
+                </h3>
+
                 <textarea
                   required
                   name="customize_product"
@@ -317,45 +352,45 @@ navigate("/shop");
               Your Information
             </h3>
 
-<input
-    required
-    name="customer_name"
-    value={form.customer_name}
-    onChange={handleChange}
-    type="text"
-    placeholder="Name*"
-    className="w-full border p-3 mb-3"
-/>
+            <input
+              required
+              name="customer_name"
+              value={form.customer_name}
+              onChange={handleChange}
+              type="text"
+              placeholder="Name*"
+              className="w-full border p-3 mb-3"
+            />
 
-<input
-    required
-    name="customer_number"
-    value={form.customer_number}
-    onChange={handleChange}
-    type="text"
-    placeholder="Number*"
-    className="w-full border p-3 mb-3"
-/>
+            <input
+              required
+              name="customer_number"
+              value={form.customer_number}
+              onChange={handleChange}
+              type="text"
+              placeholder="Number*"
+              className="w-full border p-3 mb-3"
+            />
 
-<input
-    required
-    name="customer_email"
-    value={form.customer_email}
-    onChange={handleChange}
-    type="email"
-    placeholder="Email address*"
-    className="w-full border p-3 mb-3"
-/>
+            <input
+              required
+              name="customer_email"
+              value={form.customer_email}
+              onChange={handleChange}
+              type="email"
+              placeholder="Email address*"
+              className="w-full border p-3 mb-3"
+            />
 
-<input
-    required
-    name="facebook_name"
-    value={form.facebook_name}
-    onChange={handleChange}
-    type="text"
-    placeholder="Facebook or Instagram name*"
-    className="w-full border p-3 mb-3"
-/>
+            <input
+              required
+              name="facebook_name"
+              value={form.facebook_name}
+              onChange={handleChange}
+              type="text"
+              placeholder="Facebook or Instagram name*"
+              className="w-full border p-3 mb-3"
+            />
 
             <h3 className="mb-4 font-medium uppercase tracking-wide">
               Receiver's Information (optional)
@@ -384,40 +419,36 @@ navigate("/shop");
               Delivery Details
             </h3>
 
-           
-<DatePicker
-  selected={selectedDate}
-  onChange={(date) => {
-    setSelectedDate(date);
-    setForm((prev) => ({
-      ...prev,
-      date_and_time_of_delivery: date?.toISOString() || "",
-    }));
-  }}
-  showTimeSelect
-  timeFormat="h:mm aa"
-  dateFormat="MMMM d, yyyy h:mm aa"
-  minDate={new Date()}
- filterDate={isDeliveryDateAvailable}
-  withPortal
-  customInput={<DateButtonInput />}
- 
-filterTime={(time) => {
-  const hours = new Date(time).getHours();
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date) => {
+                setSelectedDate(date);
+                setForm((prev) => ({
+                  ...prev,
+                  date_and_time_of_delivery: date?.toISOString() || "",
+                }));
+              }}
+              showTimeSelect
+              timeFormat="h:mm aa"
+              dateFormat="MMMM d, yyyy h:mm aa"
+              minDate={new Date()}
+              filterDate={isDeliveryDateAvailable}
+              withPortal
+              customInput={<DateButtonInput />}
+              filterTime={(time) => {
+                const hours = new Date(time).getHours();
 
-  const selected = selectedDate;
-  const isValentinesDay =
-    selected &&
-    selected.getMonth() === 1 &&
-    selected.getDate() === 14;
+                const selected = selectedDate;
+                const isValentinesDay =
+                  selected &&
+                  selected.getMonth() === 1 &&
+                  selected.getDate() === 14;
 
-  const earliestHour = isValentinesDay ? 6 : 8;
+                const earliestHour = isValentinesDay ? 6 : 8;
 
-  return hours >= earliestHour && hours <= 18;
-}}
-
-/>
-
+                return hours >= earliestHour && hours <= 18;
+              }}
+            />
 
             <textarea
               required
@@ -429,178 +460,175 @@ filterTime={(time) => {
               className="w-full border p-3 mb-3"
             />
 
-           {/*
-<textarea
-  name="small_card_note"
-  value={form.small_card_note}
-  onChange={handleChange}
-  placeholder="Small card note"
-  rows="2"
-  className="w-full border p-3 mb-3"
-/>
-*/}
+            {/*
+            <textarea
+              name="small_card_note"
+              value={form.small_card_note}
+              onChange={handleChange}
+              placeholder="Small card note"
+              rows="2"
+              className="w-full border p-3 mb-3"
+            />
+            */}
 
             <h3 className="mb-4 font-medium uppercase tracking-wide">
               Delivery Area
             </h3>
 
-           <label className="flex items-center gap-3 mb-2">
-  <input
-    type="radio"
-    checked={deliveryArea === "standard"}
-    onChange={() => setDeliveryArea("standard")}
-    required
-  />
-  FREE DELIVERY (Cebu city only)
-</label>
-  
-<div className="mb-4">
-  <button
-    type="button"
-    onClick={() =>
-      setShowFreeDeliveryAreas((previous) => !previous)
-    }
-    aria-expanded={showFreeDeliveryAreas}
-    aria-controls="cebu-city-free-delivery-areas"
-  className="
-  ml-6
-  flex
-  items-center
-  gap-1.5
-  text-xs
-  font-medium
-  text-blue-600
-  underline
-  underline-offset-4
-  hover:text-blue-800
-"
-  >
-    {showFreeDeliveryAreas ? "Hide" : "Check"} free-delivery areas
-    <span aria-hidden="true">
-      {showFreeDeliveryAreas ? "−" : "+"}
-    </span>
-  </button>
+            <label className="flex items-center gap-3 mb-2">
+              <input
+                type="radio"
+                checked={deliveryArea === "standard"}
+                onChange={() => setDeliveryArea("standard")}
+                required
+              />
+              FREE DELIVERY (Cebu city only)
+            </label>
 
-  {showFreeDeliveryAreas && (
-    <div
-      id="cebu-city-free-delivery-areas"
-      className="mt-4 border border-neutral-300 bg-white p-4"
-    >
-      <h4 className="font-medium text-neutral-800">
-        Cebu City Barangays
-      </h4>
+            <div className="mb-4">
+              <button
+                type="button"
+                onClick={() =>
+                  setShowFreeDeliveryAreas((previous) => !previous)
+                }
+                aria-expanded={showFreeDeliveryAreas}
+                aria-controls="cebu-city-free-delivery-areas"
+                className="
+                  ml-6
+                  flex
+                  items-center
+                  gap-1.5
+                  text-xs
+                  font-medium
+                  text-blue-600
+                  underline
+                  underline-offset-4
+                  hover:text-blue-800
+                "
+              >
+                {showFreeDeliveryAreas ? "Hide" : "Check"} free-delivery areas
+                <span aria-hidden="true">
+                  {showFreeDeliveryAreas ? "−" : "+"}
+                </span>
+              </button>
 
-      <p className="mt-1 mb-3 text-sm text-neutral-600">
-        Search your barangay to check whether it is listed for
-        Cebu City free delivery.
-      </p>
+              {showFreeDeliveryAreas && (
+                <div
+                  id="cebu-city-free-delivery-areas"
+                  className="mt-4 border border-neutral-300 bg-white p-4"
+                >
+                  <h4 className="font-medium text-neutral-800">
+                    Cebu City Barangays
+                  </h4>
 
-      <input
-        type="search"
-        value={barangaySearch}
-        onChange={(e) => setBarangaySearch(e.target.value)}
-        placeholder="Search barangay..."
-        aria-label="Search Cebu City barangays"
-        className="mb-3 w-full border border-neutral-300 p-2"
-      />
+                  <p className="mt-1 mb-3 text-sm text-neutral-600">
+                    Search your barangay to check whether it is listed for
+                    Cebu City free delivery.
+                  </p>
 
-      <p className="mb-2 text-xs text-neutral-500">
-        {filteredBarangays.length} of{" "}
-        {CEBU_CITY_BARANGAYS.length} barangays shown
-      </p>
+                  <input
+                    type="search"
+                    value={barangaySearch}
+                    onChange={(e) => setBarangaySearch(e.target.value)}
+                    placeholder="Search barangay..."
+                    aria-label="Search Cebu City barangays"
+                    className="mb-3 w-full border border-neutral-300 p-2"
+                  />
 
-      <ul className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
-        {filteredBarangays.map((barangay) => (
-          <li
-            key={barangay}
-            className="rounded bg-neutral-50 px-3 py-2 text-neutral-700"
-          >
-            {barangay}
-          </li>
-        ))}
-      </ul>
+                  <p className="mb-2 text-xs text-neutral-500">
+                    {filteredBarangays.length} of{" "}
+                    {CEBU_CITY_BARANGAYS.length} barangays shown
+                  </p>
 
-      {filteredBarangays.length === 0 && (
-        <p className="py-3 text-sm text-neutral-600">
-          No matching barangay found. Check the spelling or
-          contact Love Hestia to confirm your delivery area.
-        </p>
-      )}
+                  <ul className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
+                    {filteredBarangays.map((barangay) => (
+                      <li
+                        key={barangay}
+                        className="rounded bg-neutral-50 px-3 py-2 text-neutral-700"
+                      >
+                        {barangay}
+                      </li>
+                    ))}
+                  </ul>
 
-      <p className="mt-4 text-xs text-neutral-500">
-        This is the official barangay list for Cebu City.
-        If you are unsure which barangay your address belongs
-        to, please confirm with us before selecting free delivery.
-      </p>
-    </div>
-  )}
-</div>
-     
+                  {filteredBarangays.length === 0 && (
+                    <p className="py-3 text-sm text-neutral-600">
+                      No matching barangay found. Check the spelling or
+                      contact Love Hestia to confirm your delivery area.
+                    </p>
+                  )}
 
-<label className="flex items-center gap-3 mb-2">
-  <input
-    type="radio"
-    checked={deliveryArea === "special"}
-    onChange={() => setDeliveryArea("special")}
-  />
-  Minglanilla / Liloan / Lapu-Lapu (₱250)
-</label>
+                  <p className="mt-4 text-xs text-neutral-500">
+                    This is the official barangay list for Cebu City.
+                    If you are unsure which barangay your address belongs
+                    to, please confirm with us before selecting free delivery.
+                  </p>
+                </div>
+              )}
+            </div>
 
-<label className="flex items-center gap-3">
-  <input
-    type="radio"
-    checked={deliveryArea === "car"}
-    onChange={() => setDeliveryArea("car")}
-  />
-  Car Delivery (₱500)
-</label>
+            <label className="flex items-center gap-3 mb-2">
+              <input
+                type="radio"
+                checked={deliveryArea === "special"}
+                onChange={() => setDeliveryArea("special")}
+              />
+              Minglanilla / Liloan / Lapu-Lapu (₱250)
+            </label>
+
+            <label className="flex items-center gap-3">
+              <input
+                type="radio"
+                checked={deliveryArea === "car"}
+                onChange={() => setDeliveryArea("car")}
+              />
+              Car Delivery (₱500)
+            </label>
 
             <div className="border-t pt-6 space-y-2">
+              {product && (
+                <>
+                  <div className="flex justify-between">
+                    <span>Product Price</span>
+                    <span>₱{price}</span>
+                  </div>
 
-  {product && (
-    <>
-      <div className="flex justify-between">
-        <span>Product Price</span>
-        <span>₱{price}</span>
-      </div>
+                  <div className="flex justify-between">
+                    <span>Delivery Fee</span>
+                    <span>₱{deliveryFee}</span>
+                  </div>
 
-      <div className="flex justify-between">
-        <span>Delivery Fee</span>
-        <span>₱{deliveryFee}</span>
-      </div>
+                  <div className="flex justify-between font-medium text-lg">
+                    <span>Total</span>
+                    <span>₱{total}</span>
+                  </div>
+                </>
+              )}
 
-      <div className="flex justify-between font-medium text-lg">
-        <span>Total</span>
-        <span>₱{total}</span>
-      </div>
-    </>
-  )}
+              {!product && cart.length > 0 && (
+                <>
+                  <div className="flex justify-between">
+                    <span>Cart Items</span>
+                    <span>{cart.length}</span>
+                  </div>
 
-  {!product && cart.length > 0 && (
-    <>
-      <div className="flex justify-between">
-        <span>Cart Items</span>
-        <span>{cart.length}</span>
-      </div>
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>₱{cartSubtotal}</span>
+                  </div>
 
-      <div className="flex justify-between">
-        <span>Subtotal</span>
-        <span>₱{cartSubtotal}</span>
-      </div>
+                  <div className="flex justify-between">
+                    <span>Delivery Fee</span>
+                    <span>₱{deliveryFee}</span>
+                  </div>
 
-      <div className="flex justify-between">
-        <span>Delivery Fee</span>
-        <span>₱{deliveryFee}</span>
-      </div>
-
-      <div className="flex justify-between font-medium text-lg">
-        <span>Total</span>
-        <span>₱{currentCartTotal}</span>
-      </div>
-    </>
-  )}
-
-</div>
+                  <div className="flex justify-between font-medium text-lg">
+                    <span>Total</span>
+                    <span>₱{currentCartTotal}</span>
+                  </div>
+                </>
+              )}
+            </div>
 
             <h3 className="mb-4 font-medium uppercase tracking-wide">
               Payment
@@ -656,6 +684,7 @@ filterTime={(time) => {
                   className="h-full w-full object-cover"
                 />
               </div>
+
               <h2 className="mt-6 text-lg font-medium uppercase tracking-wide text-neutral-800">
                 {product.title.rendered}
               </h2>
