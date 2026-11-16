@@ -249,6 +249,7 @@ const filteredBarangays = useMemo(() => {
 
   price: product ? price : cartSubtotal,
   delivery_fee: deliveryFee,
+  delivery_area: deliveryArea,
 
   total: product
     ? total
