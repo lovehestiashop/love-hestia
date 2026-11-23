@@ -58,7 +58,7 @@ function CustomizePage() {
         value >= "2026-12-19" && value <= "2027-01-08"
           ? "We are unavailable from December 19, 2026 to January 8, 2027."
           : value < getMinimumDate()
-          ? "Please allow at least 5 days for custom arrangements."
+          ? "Please allow at least 2 days for custom arrangements."
           : "We do not accept Sunday deliveries, except February 14, 2027."
       );
     }
