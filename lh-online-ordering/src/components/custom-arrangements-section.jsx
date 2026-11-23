@@ -6,6 +6,7 @@ function CustomArrangementSectionComponent() {
     title: "Custom Arrangements",
     image: "/Custom Arrangements.jpeg",
     text: `We'd love to create a personalized dried-flower arrangement just for you.
+    
 Each design is thoughtfully crafted based on your chosen color palette, inspiration photos, and gifting needs.
 
 Final pricing depends on flower availability, arrangement size, and design complexity. Every piece is handmade with care, making each bouquet uniquely yours.`,
@@ -55,10 +56,30 @@ Final pricing depends on flower availability, arrangement size, and design compl
           </p>
 
           {/* Custom Arrangement Button */}
-          <div className="mt-8">
+          <div className="mt-9">
             <Link
               to="/customize"
-              className="inline-flex items-center justify-center rounded-full border border-[#7c8a6e] bg-[#7c8a6e] px-7 py-3 text-sm text-white transition duration-300 hover:bg-[#68765c] hover:border-[#68765c]"
+              className="
+                inline-flex
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-[#98776f]
+                bg-[#98776f]
+                px-10
+                py-4
+                text-base
+                font-medium
+                tracking-wide
+                text-white
+                shadow-md
+                transition-all
+                duration-300
+                hover:bg-[#806159]
+                hover:border-[#806159]
+                hover:shadow-lg
+              "
             >
               Create Your Custom Bouquet
             </Link>
