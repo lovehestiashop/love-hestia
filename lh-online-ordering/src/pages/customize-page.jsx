@@ -9,9 +9,8 @@ function CustomizePage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [dateError, setDateError] = useState("");
-  const [inspirationName, setInspirationName] = useState("");
 
-  // Calculate the minimum date: 5 days from today.
+  // Require at least 5 days' notice.
   const getMinimumDate = () => {
     const date = new Date();
     date.setDate(date.getDate() + 5);
@@ -29,7 +28,7 @@ function CustomizePage() {
       return false;
     }
 
-    // Shop closure.
+    // Shop closure: December 19, 2026 to January 8, 2027.
     if (value >= "2026-12-19" && value <= "2027-01-08") {
       return false;
     }
@@ -45,6 +44,7 @@ function CustomizePage() {
     return true;
   };
 
+  // Validate the selected delivery date.
   const handleDateChange = (event) => {
     const value = event.target.value;
 
@@ -52,6 +52,7 @@ function CustomizePage() {
 
     if (value && !isDateAllowed(value)) {
       event.target.value = "";
+
       setDateError(
         value >= "2026-12-19" && value <= "2027-01-08"
           ? "We are unavailable from December 19, 2026 to January 8, 2027."
@@ -62,35 +63,7 @@ function CustomizePage() {
     }
   };
 
-  const handleImageChange = (event) => {
-    setError("");
-
-    const file = event.target.files?.[0];
-
-    if (!file) {
-      setInspirationName("");
-      return;
-    }
-
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-
-    if (!allowedTypes.includes(file.type)) {
-      event.target.value = "";
-      setInspirationName("");
-      setError("Please upload a JPG, PNG, or WEBP image.");
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      event.target.value = "";
-      setInspirationName("");
-      setError("Your inspiration photo must be 5 MB or smaller.");
-      return;
-    }
-
-    setInspirationName(file.name);
-  };
-
+  // Submit custom inquiry.
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -123,12 +96,6 @@ function CustomizePage() {
     );
     inquiryData.append("notes", formData.get("notes") || "");
 
-    const inspirationImage = formData.get("inspiration_image");
-
-    if (inspirationImage && inspirationImage.size > 0) {
-      inquiryData.append("inspiration_image", inspirationImage);
-    }
-
     setLoading(true);
 
     try {
@@ -150,7 +117,6 @@ function CustomizePage() {
       );
 
       form.reset();
-      setInspirationName("");
       setDateError("");
     } catch (err) {
       setError(
@@ -195,9 +161,11 @@ function CustomizePage() {
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#7c8a6e]">
                 01
               </p>
+
               <h3 className="mb-2 text-sm font-semibold">
                 Submit your inquiry
               </h3>
+
               <p className="text-sm leading-relaxed text-neutral-500">
                 Share your preferred flowers, colors, and delivery date.
               </p>
@@ -207,9 +175,11 @@ function CustomizePage() {
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#7c8a6e]">
                 02
               </p>
+
               <h3 className="mb-2 text-sm font-semibold">
                 Receive your quotation
               </h3>
+
               <p className="text-sm leading-relaxed text-neutral-500">
                 We'll check availability and send you the proposed design
                 and price.
@@ -220,9 +190,11 @@ function CustomizePage() {
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#7c8a6e]">
                 03
               </p>
+
               <h3 className="mb-2 text-sm font-semibold">
                 Approve and order
               </h3>
+
               <p className="text-sm leading-relaxed text-neutral-500">
                 Once approved, we'll guide you through our regular checkout
                 and payment process.
@@ -249,10 +221,12 @@ function CustomizePage() {
                 <span className="text-[#7c8a6e]">✦</span>
                 One main focal flower
               </li>
+
               <li className="flex gap-3">
                 <span className="text-[#7c8a6e]">✦</span>
                 Four types of complementary filler flowers
               </li>
+
               <li className="flex gap-3">
                 <span className="text-[#7c8a6e]">✦</span>
                 Approximately 15–20 inches in height
@@ -275,10 +249,12 @@ function CustomizePage() {
               </h2>
 
               <div className="grid gap-5 sm:grid-cols-2">
+
                 <div>
                   <label className={labelClass}>
                     Full name *
                   </label>
+
                   <input
                     type="text"
                     name="customer_name"
@@ -293,6 +269,7 @@ function CustomizePage() {
                   <label className={labelClass}>
                     Contact number *
                   </label>
+
                   <input
                     type="tel"
                     name="customer_number"
@@ -307,6 +284,7 @@ function CustomizePage() {
                   <label className={labelClass}>
                     Email address *
                   </label>
+
                   <input
                     type="email"
                     name="customer_email"
@@ -321,6 +299,7 @@ function CustomizePage() {
                   <label className={labelClass}>
                     Instagram username *
                   </label>
+
                   <input
                     type="text"
                     name="instagram_name"
@@ -330,6 +309,7 @@ function CustomizePage() {
                     maxLength={100}
                   />
                 </div>
+
               </div>
             </div>
 
@@ -350,6 +330,7 @@ function CustomizePage() {
                   <label className={labelClass}>
                     Preferred color palette *
                   </label>
+
                   <input
                     type="text"
                     name="color_palette"
@@ -364,6 +345,7 @@ function CustomizePage() {
                   <label className={labelClass}>
                     Preferred focal flower *
                   </label>
+
                   <select
                     name="focal_flower"
                     className={inputClass}
@@ -373,15 +355,19 @@ function CustomizePage() {
                     <option value="" disabled>
                       Select a focal flower
                     </option>
+
                     <option value="Preserved Roses">
                       Preserved Roses
                     </option>
+
                     <option value="Preserved Peonies">
                       Preserved Peonies
                     </option>
+
                     <option value="Sola Peonies">
                       Sola Peonies
                     </option>
+
                     <option value="Preserved Sunflowers">
                       Preserved Sunflowers
                     </option>
@@ -392,6 +378,7 @@ function CustomizePage() {
                   <label className={labelClass}>
                     How many focal flowers would you prefer?
                   </label>
+
                   <input
                     type="text"
                     name="focal_quantity"
@@ -399,6 +386,7 @@ function CustomizePage() {
                     placeholder="e.g. 1, 3, 7, 12, or your preferred quantity"
                     maxLength={150}
                   />
+
                   <p className="mt-2 text-xs leading-relaxed text-neutral-500">
                     You may indicate your preferred quantity or leave
                     a note about the look you have in mind.
@@ -410,6 +398,7 @@ function CustomizePage() {
                   <label className={labelClass}>
                     Preferred delivery date *
                   </label>
+
                   <input
                     type="date"
                     name="delivery_date"
@@ -430,6 +419,7 @@ function CustomizePage() {
                   <label className={labelClass}>
                     Additional notes
                   </label>
+
                   <textarea
                     name="notes"
                     rows="4"
@@ -439,52 +429,32 @@ function CustomizePage() {
                   />
                 </div>
 
-                {/* Inspiration Upload */}
+                {/* Instagram Inspiration */}
                 <div>
                   <label className={labelClass}>
                     Do you have an inspiration photo?
                   </label>
 
-                  <p className="mb-3 text-sm text-neutral-500">
-                    Send it to us so we can better understand the bouquet
-                    you're imagining.
+                  <p className="mb-4 text-sm leading-relaxed text-neutral-500">
+                    We'd love to see your inspiration! Send us a message
+                    on Instagram with your reference photo so we can
+                    better understand the bouquet you're imagining.
                   </p>
 
-                  <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-neutral-300 bg-white px-5 py-8 text-center transition hover:border-[#7c8a6e]">
-                    <span className="mb-2 text-2xl text-[#7c8a6e]">
-                      +
-                    </span>
-                    <span className="text-sm font-medium text-neutral-700">
-                      Upload inspiration photo
-                    </span>
-                    <span className="mt-1 text-xs text-neutral-500">
-                      JPG, PNG, or WEBP · Maximum 5 MB
-                    </span>
-
-                    <input
-                      type="file"
-                      name="inspiration_image"
-                      accept="image/jpeg,image/png,image/webp"
-                      className="hidden"
-                      onChange={handleImageChange}
-                    />
-                  </label>
-
-                  {inspirationName && (
-                    <p className="mt-3 text-sm text-[#7c8a6e]">
-                      Selected: {inspirationName}
-                    </p>
-                  )}
-
-                  <p className="mt-2 text-xs text-neutral-500">
-                    Optional. You may also send your inspiration photo
-                    to us through Instagram.
-                  </p>
+                  <a
+                    href="https://www.instagram.com/lovehestiaflowers/?hl=en"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center rounded-full border border-[#7c8a6e] px-6 py-3 text-sm text-[#68765c] transition hover:bg-[#7c8a6e] hover:text-white"
+                  >
+                    Send us your inspiration on Instagram
+                  </a>
                 </div>
+
               </div>
             </div>
 
-            {/* Honeypot */}
+            {/* Honeypot Spam Protection */}
             <div
               aria-hidden="true"
               style={{
@@ -497,6 +467,7 @@ function CustomizePage() {
             >
               <label>
                 Leave this field empty
+
                 <input
                   type="text"
                   name="website"
@@ -506,7 +477,7 @@ function CustomizePage() {
               </label>
             </div>
 
-            {/* Feedback */}
+            {/* Submission Feedback */}
             {message && (
               <div
                 role="status"
@@ -525,7 +496,7 @@ function CustomizePage() {
               </div>
             )}
 
-            {/* Submit */}
+            {/* Submit Button */}
             <div className="pt-2 text-center">
               <button
                 type="submit"
@@ -540,6 +511,7 @@ function CustomizePage() {
                 payment. We'll contact you after reviewing your request.
               </p>
             </div>
+
           </form>
         </div>
       </section>
