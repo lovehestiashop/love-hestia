@@ -1,3 +1,6 @@
+
+import { Link } from "react-router-dom";
+
 function CustomArrangementSectionComponent() {
   const data = {
     title: "Custom Arrangements",
@@ -5,7 +8,7 @@ function CustomArrangementSectionComponent() {
     text: `We'd love to create a personalized dried-flower arrangement just for you.
 Each design is thoughtfully crafted based on your chosen color palette, inspiration photos, and gifting needs.
 
-Final pricing depends on flower availability, arrangement size, and design complexity.Every piece is handmade with care, making each bouquet uniquely yours.`,
+Final pricing depends on flower availability, arrangement size, and design complexity. Every piece is handmade with care, making each bouquet uniquely yours.`,
   };
 
   return (
@@ -23,33 +26,43 @@ Final pricing depends on flower availability, arrangement size, and design compl
 
         {/* Content */}
         <div>
-         <h2
-  className="
-    text-[30px]
-    md:text-[42px]
-    mb-8
-    font-semibold
-    text-neutral-700
-    leading-none
-  "
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-  }}
->
+          <h2
+            className="
+              text-[30px]
+              md:text-[42px]
+              mb-8
+              font-semibold
+              text-neutral-700
+              leading-none
+            "
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+            }}
+          >
             {data.title}
           </h2>
 
           <p
-  className="
-    text-[15px]
-    md:text-[18px]
-    leading-[2]
-    text-neutral-600
-    whitespace-pre-line
-  "
->
+            className="
+              text-[15px]
+              md:text-[18px]
+              leading-[2]
+              text-neutral-600
+              whitespace-pre-line
+            "
+          >
             {data.text}
           </p>
+
+          {/* Custom Arrangement Button */}
+          <div className="mt-8">
+            <Link
+              to="/customize"
+              className="inline-flex items-center justify-center rounded-full border border-[#7c8a6e] bg-[#7c8a6e] px-7 py-3 text-sm text-white transition duration-300 hover:bg-[#68765c] hover:border-[#68765c]"
+            >
+              Create Your Custom Bouquet
+            </Link>
+          </div>
         </div>
 
       </div>
