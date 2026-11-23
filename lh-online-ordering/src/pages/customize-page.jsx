@@ -380,8 +380,8 @@ function CustomizePage() {
                       Preserved Sunflowers
                     </option>
 
-                    <option value="Mix of Flowers">
-                      Mix of Flowers
+                    <option value="Mix of preserved Flowers">
+                      Mix of preserved Flowers 
                     </option>
                   </select>
                 </div>
