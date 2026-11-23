@@ -1,5 +1,5 @@
 
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import HeaderComponent from "../components/header";
 import FooterComponent from "../components/footer";
@@ -14,59 +14,186 @@ const PRODUCT_TYPE_MAP = {
 
 const STORAGE_KEY = "all_products";
 
+// The four occasions and their WordPress slugs.
+const OCCASION_CONFIG = [
+  {
+    name: "Birthday",
+    slug: "birthday",
+  },
+  {
+    name: "Anniversary",
+    slug: "anniversary",
+  },
+  {
+    name: "Just Because / Thank You",
+    slug: "just-because-thank-you",
+  },
+  {
+    name: "Graduation / Congratulations",
+    slug: "graduation-congratulations",
+  },
+];
+
+// Read assigned occasion IDs from a product.
+// WordPress REST returns taxonomy assignments as an array of term IDs.
+function getProductOccasionIds(product) {
+  const assigned =
+    product?.occasion ??
+    product?.occasions ??
+    [];
+
+  const values = Array.isArray(assigned)
+    ? assigned
+    : [assigned];
+
+  return values
+    .map((value) => Number(value))
+    .filter((value) => Number.isFinite(value));
+}
+
 function ProductsPage() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const productTypeId = Number(id);
 
+  const productTypeId = Number(id);
   const title = PRODUCT_TYPE_MAP[productTypeId] || "Products";
 
   const [products, setProducts] = useState([]);
+  const [occasions, setOccasions] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [sortOrder, setSortOrder] = useState("high-to-low");
+  const [selectedOccasion, setSelectedOccasion] = useState("");
 
-  const effectRan = useRef(false);
-
+  // Retrieve products and occasion terms from WordPress.
   useEffect(() => {
-    if (effectRan.current) return;
+    let isActive = true;
 
-    productService
-      .getAll()
-      .then((data) => {
+    async function loadData() {
+      const results = await Promise.allSettled([
+        productService.getAll(),
+        productService.getOccasions(),
+      ]);
+
+      if (!isActive) return;
+
+      const productsResult = results[0];
+      const occasionsResult = results[1];
+
+      if (productsResult.status === "fulfilled") {
+        const data = Array.isArray(productsResult.value)
+          ? productsResult.value
+          : [];
+
         setProducts(data);
 
-        localStorage.setItem(
-          STORAGE_KEY,
-          JSON.stringify(data)
+        try {
+          localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(data)
+          );
+        } catch (err) {
+          console.error("Unable to cache products:", err);
+        }
+      } else {
+        console.error(
+          "Failed to load products:",
+          productsResult.reason
         );
-      })
-      .catch((err) => {
-        console.error("Failed to load products", err);
-      })
-      .finally(() => setLoading(false));
+      }
 
-    effectRan.current = true;
+      if (occasionsResult.status === "fulfilled") {
+        setOccasions(
+          Array.isArray(occasionsResult.value)
+            ? occasionsResult.value
+            : []
+        );
+      } else {
+        console.error(
+          "Failed to load occasions. Check the WordPress REST API:",
+          occasionsResult.reason
+        );
+      }
+
+      setLoading(false);
+    }
+
+    loadData();
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
+  // Reset the occasion filter when changing product collections.
+  useEffect(() => {
+    setSelectedOccasion("");
+  }, [productTypeId]);
+
+  // Match the four preferred occasions with their real WordPress IDs.
+  const occasionOptions = useMemo(() => {
+    return OCCASION_CONFIG
+      .map((config) => {
+        const matchingTerm =
+          occasions.find(
+            (term) =>
+              String(term.slug).toLowerCase() === config.slug
+          ) ||
+          occasions.find(
+            (term) =>
+              String(term.name).trim().toLowerCase() ===
+              config.name.toLowerCase()
+          );
+
+        if (!matchingTerm) {
+          return null;
+        }
+
+        return {
+          id: matchingTerm.id,
+          name: config.name,
+        };
+      })
+      .filter(Boolean);
+  }, [occasions]);
+
+  // Filter products by collection and occasion, then sort.
   const filteredProducts = useMemo(() => {
+    const selectedOccasionId = selectedOccasion
+      ? Number(selectedOccasion)
+      : null;
+
     return products
       .filter((item) =>
         item["product-type"]?.includes(productTypeId)
       )
+      .filter((item) => {
+        // Show all products when no occasion is selected.
+        if (selectedOccasionId === null) {
+          return true;
+        }
+
+        const assignedOccasionIds =
+          getProductOccasionIds(item);
+
+        return assignedOccasionIds.includes(
+          selectedOccasionId
+        );
+      })
       .sort((a, b) => {
-        // CHECK PRODUCT AVAILABILITY
+        // Check product availability.
         const stockA = Number(a.acf?.stock ?? 0);
         const stockB = Number(b.acf?.stock ?? 0);
 
         const availableA = stockA > 0;
         const availableB = stockB > 0;
 
-        // AVAILABLE PRODUCTS ALWAYS COME FIRST
+        // Available products always come first.
         if (availableA !== availableB) {
           return availableA ? -1 : 1;
         }
 
-        // SORT BY PRICE WITHIN EACH AVAILABILITY GROUP
+        // Sort by price within each availability group.
         const priceA = Number(
           a.acf?.price ??
           a.meta?.price ??
@@ -85,7 +212,12 @@ function ProductsPage() {
           ? priceA - priceB
           : priceB - priceA;
       });
-  }, [products, productTypeId, sortOrder]);
+  }, [
+    products,
+    productTypeId,
+    selectedOccasion,
+    sortOrder,
+  ]);
 
   if (loading) {
     return (
@@ -118,17 +250,98 @@ function ProductsPage() {
           {title}
         </h2>
 
-        {/* PRICE SORTING */}
-        <div className="mx-auto mb-10 flex max-w-7xl justify-end px-5">
-          <label className="flex items-center gap-3 text-sm text-neutral-700">
+        {/* SHOP BY OCCASION AND PRICE SORTING */}
+        <div
+          className="
+            mx-auto
+            mb-10
+            flex
+            max-w-7xl
+            flex-col
+            gap-4
+            px-5
+            sm:flex-row
+            sm:items-end
+            sm:justify-between
+          "
+        >
+          {/* OCCASION FILTER */}
+          <label
+            className="
+              flex
+              flex-col
+              items-start
+              gap-2
+              text-sm
+              text-neutral-700
+            "
+          >
+            <span className="whitespace-nowrap">
+              Shop by Occasion:
+            </span>
+
+            <select
+              value={selectedOccasion}
+              onChange={(e) =>
+                setSelectedOccasion(e.target.value)
+              }
+              disabled={occasionOptions.length === 0}
+              className="
+                w-full
+                min-w-[240px]
+                border
+                border-neutral-300
+                bg-white
+                px-3
+                py-2
+                text-sm
+                text-neutral-700
+                focus:outline-none
+                focus:ring-1
+                focus:ring-neutral-500
+                disabled:cursor-not-allowed
+                disabled:bg-neutral-100
+              "
+            >
+              <option value="">
+                All Occasions
+              </option>
+
+              {occasionOptions.map((occasion) => (
+                <option
+                  key={occasion.id}
+                  value={String(occasion.id)}
+                >
+                  {occasion.name}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          {/* PRICE SORTING */}
+          <label
+            className="
+              flex
+              flex-col
+              items-start
+              gap-2
+              text-sm
+              text-neutral-700
+              sm:flex-row
+              sm:items-center
+            "
+          >
             <span className="whitespace-nowrap">
               Sort by price:
             </span>
 
             <select
               value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
+              onChange={(e) =>
+                setSortOrder(e.target.value)
+              }
               className="
+                w-full
                 max-w-[190px]
                 border
                 border-neutral-300
@@ -156,7 +369,9 @@ function ProductsPage() {
         {/* PRODUCT GRID */}
         {filteredProducts.length === 0 ? (
           <p className="py-12 text-center text-neutral-600">
-            No products are currently available in this collection.
+            {selectedOccasion
+              ? "No arrangements found for this occasion. Please try another option."
+              : "No products are currently available in this collection."}
           </p>
         ) : (
           <div
