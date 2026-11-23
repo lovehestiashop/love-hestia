@@ -306,7 +306,7 @@ function ProductDetailPage() {
                     color: "#666",
                   }}
                 >
-                  <span>Bouquet Size</span>
+                  <span>Arrangement Size</span>
 
                   <strong
                     style={{ color: "#5f5a55" }}
