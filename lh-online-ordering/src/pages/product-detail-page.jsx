@@ -94,3 +94,67 @@ function ProductDetailPage() {
     <div
       style={{
         maxWidth: "1400px",
+        margin: "0 auto",
+        padding: "60px 30px",
+        background: "#faf9f7",
+        minHeight: "100vh",
+      }}
+    >
+      {/* BREADCRUMB — keep this section only once on the page */}
+      <div
+        style={{
+          marginBottom: "50px",
+          fontSize: "13px",
+          color: "#8b8b8b",
+          letterSpacing: "2px",
+          textTransform: "uppercase",
+        }}
+      >
+        <span
+          onClick={() => navigate("/")}
+          style={{ cursor: "pointer" }}
+        >
+          Home
+        </span>
+
+        {" / "}
+
+        <span
+          onClick={() => navigate("/shop")}
+          style={{ cursor: "pointer" }}
+        >
+          Shop
+        </span>
+
+        {" / "}
+
+        <span
+          onClick={() => navigate("/shop/5")}
+          style={{ cursor: "pointer" }}
+        >
+          Flower Bouquets
+        </span>
+
+        {" / "}
+
+        <span>{product.title.rendered}</span>
+
+        {" / "}
+
+        <span
+          onClick={() => navigate("/cart")}
+          style={{
+            cursor: "pointer",
+            color: "#5f5a55",
+          }}
+        >
+          Cart
+        </span>
+      </div>
+
+      {/* PRODUCT LAYOUT: image on the left, details on the right */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          gap: "70px",
