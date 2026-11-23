@@ -1,183 +1,373 @@
+import { useState } from "react";
 import FooterComponent from "../components/footer";
 import HeaderComponent from "../components/header";
-import { useLocation, useNavigate } from "react-router-dom";
+import api from "../services/api";
 
 function CustomizePage() {
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
+  // Require at least 5 days' notice.
+  const getMinimumDate = () => {
+    const date = new Date();
+    date.setDate(date.getDate() + 5);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    setLoading(true);
+    setMessage("");
+    setError("");
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const inquiryData = {
+      website: formData.get("website") || "",
+      customer_name: formData.get("customer_name"),
+      customer_number: formData.get("customer_number"),
+      customer_email: formData.get("customer_email"),
+      delivery_date: formData.get("delivery_date"),
+      color_palette: formData.get("color_palette"),
+      focal_flower: formData.get("focal_flower"),
+      quantity: Number(formData.get("quantity")),
+      notes: formData.get("notes") || "",
+    };
+
+    try {
+      const response = await api.post(
+        "/love-hestia/v1/custom-inquiries",
+        inquiryData,
+        { timeout: 30000 }
+      );
+
+      if (!response.data?.success) {
+        throw new Error(
+          response.data?.message || "Unable to submit your inquiry."
+        );
+      }
+
+      setMessage(
+        response.data.message ||
+          "Thank you! Your custom bouquet inquiry has been submitted."
+      );
+
+      form.reset();
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+          err.message ||
+          "Something went wrong. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const inputClass =
+    "w-full rounded-md border border-neutral-300 bg-white px-4 py-3 text-sm outline-none focus:border-[#7c8a6e]";
+
+  const labelClass =
+    "mb-2 block text-sm font-medium text-neutral-700";
 
   return (
     <div>
       <HeaderComponent />
+
       <section className="bg-[#faf9f7] text-neutral-700">
-        <div className="max-w-3xl mx-auto px-6 py-24">
-          {/* Title */}
-          <h2 className="mb-14 text-center text-3xl font-medium text-neutral-800">
-            Your custom journey
-          </h2>
+        <div className="mx-auto max-w-3xl px-6 py-16 md:py-24">
 
-          {/* Content */}
-          <div className="space-y-6 text-sm leading-relaxed">
-            {/* Send Request */}
+          {/* Introduction */}
+          <div className="mb-12 text-center">
+            <h1 className="mb-4 text-3xl font-medium text-neutral-800">
+              A Bouquet Made Meaningful
+            </h1>
+
+            <p className="mx-auto max-w-xl text-sm leading-relaxed text-neutral-600">
+              Tell us a little about the bouquet you have in mind.
+              We'll review your preferences, check flower availability,
+              and prepare a quotation just for you.
+            </p>
+
+            <p className="mt-4 text-sm font-medium text-neutral-700">
+              Custom bouquets start at ₱1,500.
+            </p>
+          </div>
+
+          {/* Process */}
+          <div className="mb-12 grid gap-6 border-y border-neutral-200 py-8 sm:grid-cols-3">
             <div>
-              <h3 className="font-semibold mb-2">Send Us Your Request</h3>
-              <p className="mb-2">Message us on Facebook or Instagram with:</p>
-              <ul className="list-disc list-inside space-y-1">
-                <li>The type of arrangement you’d like</li>
-                <li>Any inspiration or reference images (if you have any)</li>
-                <li>Your budget (Custom arrangements start at ₱1,500)</li>
-              </ul>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#7c8a6e]">
+                01
+              </p>
+              <h3 className="mb-2 text-sm font-semibold">
+                Submit your inquiry
+              </h3>
+              <p className="text-sm leading-relaxed text-neutral-500">
+                Share your preferred flowers, colors, and delivery date.
+              </p>
             </div>
 
-            {/* Stock Check */}
             <div>
-              <h3 className="font-semibold mb-2">Stock Check & Quote</h3>
-              <ul className="list-disc list-inside space-y-1">
-                <li>
-                  We will confirm the availability of the dried flowers you
-                  requested.
-                </li>
-                <li>
-                  Once we finalize the flowers to be used, we will provide a
-                  quote for your arrangement.
-                </li>
-              </ul>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#7c8a6e]">
+                02
+              </p>
+              <h3 className="mb-2 text-sm font-semibold">
+                Receive your quotation
+              </h3>
+              <p className="text-sm leading-relaxed text-neutral-500">
+                We'll check availability and send you the proposed design
+                and price.
+              </p>
             </div>
 
-            {/* Order Form */}
             <div>
-              <h3 className="font-semibold mb-2">Order Form</h3>
-              <ul className="list-disc list-inside">
-                <li>
-                  Fill out the order form with your details and delivery
-                  preferences.
-                </li>
-              </ul>
-            </div>
-
-            {/* Payment */}
-            <div>
-              <h3 className="font-semibold mb-2">Payment & Confirmation</h3>
-              <ul className="list-disc list-inside space-y-1">
-                <li>
-                  A 50% down payment is required to start creating your order.
-                </li>
-                <li>
-                  Creation of custom arrangements takes 4–5 days before the
-                  delivery date.
-                </li>
-                <li>
-                  The remaining 50%, including the delivery fee (visible in the
-                  order form), is due on the day of delivery.
-                </li>
-                <li>
-                  If you prefer, you may also pick up your order instead of
-                  opting for delivery.
-                </li>
-                <li>
-                  Full payment is required to officially book and deliver your
-                  order.
-                </li>
-              </ul>
-            </div>
-
-            {/* Revisions */}
-            <div>
-              <h3 className="font-semibold mb-2">Revisions</h3>
-              <ul className="list-disc list-inside">
-                <li>
-                  You are entitled to one free revision once the arrangement is
-                  completed.
-                </li>
-              </ul>
-            </div>
-
-            {/* Cancellations */}
-            <div>
-              <h3 className="font-semibold mb-2">Cancellations</h3>
-              <ul className="list-disc list-inside">
-                <li>
-                  Orders can be cancelled, but cancellation fees may apply.
-                </li>
-              </ul>
-            </div>
-
-            {/* Terms */}
-            <div className="space-y-6">
-              <div>
-                <h3 className="font-semibold mb-1">Terms & Conditions</h3>
-                {/* Agreement */}
-                <p className="text-sm text-neutral-500">
-                  By placing a custom arrangement order with us, you acknowledge
-                  and agree to the following terms and conditions.
-                </p>
-
-                <p className="text-sm text-neutral-500">
-                  We may update these terms at any time, and any changes will
-                  apply to future orders.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold mb-1">
-                  Based on Your Inspiration
-                </h3>
-                <p className="text-sm">
-                  While we create your arrangement based on the inspiration you
-                  provide, please note that it may not be an exact replica. Our
-                  own style and the availability of dried flowers will influence
-                  the final design.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold mb-1">
-                  No Exchanges for Small Differences
-                </h3>
-                <p className="text-sm">
-                  Because each arrangement is handmade and unique, we do not
-                  accept returns or exchanges due to slight differences in
-                  color, size, or design.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold mb-1">Handling & Care</h3>
-                <p className="text-sm">
-                  Dried and preserved flowers are delicate. Some petals or small
-                  pieces may shift during delivery or pick-up.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold mb-1">Authentic Materials</h3>
-                <p className="text-sm">
-                  Dried and preserved flowers naturally vary in color, size, and
-                  shape. Minor shedding or movement of petals during delivery is
-                  normal.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold mb-1">Refunds & Returns</h3>
-                <p className="text-sm">
-                  Refunds are only given for items that arrive damaged. Natural
-                  shedding or small imperfections are not considered damage.
-                </p>
-              </div>
-            </div>
-
-            {/* CTA */}
-            <div className="pt-10 text-center">
-              <button
-                onClick={() => navigate("/order", { state: {} })}
-                className="border border-[#7c8a6e] px-6 py-2 rounded-full text-sm hover:bg-[#7c8a6e] hover:text-white transition hover:cursor-pointer"
-              >
-                Request custom arrangement
-              </button>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#7c8a6e]">
+                03
+              </p>
+              <h3 className="mb-2 text-sm font-semibold">
+                Approve and order
+              </h3>
+              <p className="text-sm leading-relaxed text-neutral-500">
+                Once approved, we'll guide you through our regular checkout
+                and payment process.
+              </p>
             </div>
           </div>
+
+          {/* Inquiry Form */}
+          <form onSubmit={handleSubmit} className="space-y-10">
+
+            {/* Contact Details */}
+            <div>
+              <h2 className="mb-6 text-lg font-medium text-neutral-800">
+                Your Details
+              </h2>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label className={labelClass}>
+                    Full name *
+                  </label>
+                  <input
+                    type="text"
+                    name="customer_name"
+                    className={inputClass}
+                    placeholder="Your name"
+                    required
+                    maxLength={100}
+                  />
+                </div>
+
+                <div>
+                  <label className={labelClass}>
+                    Contact number *
+                  </label>
+                  <input
+                    type="tel"
+                    name="customer_number"
+                    className={inputClass}
+                    placeholder="Your mobile number"
+                    required
+                    maxLength={30}
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className={labelClass}>
+                    Email address
+                  </label>
+                  <input
+                    type="email"
+                    name="customer_email"
+                    className={inputClass}
+                    placeholder="Your email address (optional)"
+                    maxLength={150}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Bouquet Preferences */}
+            <div>
+              <h2 className="mb-2 text-lg font-medium text-neutral-800">
+                Your Bouquet Preferences
+              </h2>
+
+              <p className="mb-6 text-sm text-neutral-500">
+                We work exclusively with dried and preserved flowers.
+                Fresh flowers are not available for custom arrangements.
+              </p>
+
+              <div className="space-y-6">
+                <div>
+                  <label className={labelClass}>
+                    Preferred color palette *
+                  </label>
+                  <input
+                    type="text"
+                    name="color_palette"
+                    className={inputClass}
+                    placeholder="e.g. Blush pink, ivory, and champagne"
+                    required
+                    maxLength={150}
+                  />
+                </div>
+
+                <div>
+                  <label className={labelClass}>
+                    Preferred focal flower *
+                  </label>
+                  <select
+                    name="focal_flower"
+                    className={inputClass}
+                    defaultValue=""
+                    required
+                  >
+                    <option value="" disabled>
+                      Select a focal flower
+                    </option>
+                    <option value="Preserved Roses">
+                      Preserved Roses
+                    </option>
+                    <option value="Preserved Peonies">
+                      Preserved Peonies
+                    </option>
+                    <option value="Sola Peonies">
+                      Sola Peonies
+                    </option>
+                    <option value="Preserved Sunflowers">
+                      Preserved Sunflowers
+                    </option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className={labelClass}>
+                    Number of focal flowers *
+                  </label>
+                  <select
+                    name="quantity"
+                    className={inputClass}
+                    defaultValue=""
+                    required
+                  >
+                    <option value="" disabled>
+                      Select quantity
+                    </option>
+                    <option value="1">1 flower</option>
+                    <option value="3">3 flowers</option>
+                    <option value="7">7 flowers</option>
+                    <option value="12">12 flowers</option>
+                    <option value="18">18 flowers</option>
+                  </select>
+                  <p className="mt-2 text-xs leading-relaxed text-neutral-500">
+                    Filler flowers and complementary stems will be selected
+                    by our florist to complete the arrangement.
+                  </p>
+                </div>
+
+                <div>
+                  <label className={labelClass}>
+                    Preferred delivery date *
+                  </label>
+                  <input
+                    type="date"
+                    name="delivery_date"
+                    min={getMinimumDate()}
+                    className={inputClass}
+                    required
+                  />
+                  <p className="mt-2 text-xs text-neutral-500">
+                    Please allow at least 5 days for custom arrangements.
+                    Your preferred date will be subject to confirmation.
+                  </p>
+                </div>
+
+                <div>
+                  <label className={labelClass}>
+                    Additional notes
+                  </label>
+                  <textarea
+                    name="notes"
+                    rows="4"
+                    maxLength={2000}
+                    className={inputClass}
+                    placeholder="Tell us more about the arrangement you're imagining..."
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Honeypot spam protection */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                left: "-9999px",
+                width: "1px",
+                height: "1px",
+                overflow: "hidden",
+              }}
+            >
+              <label>
+                Leave this field empty
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex="-1"
+                  autoComplete="off"
+                />
+              </label>
+            </div>
+
+            {/* Submission Feedback */}
+            {message && (
+              <div
+                role="status"
+                className="rounded-md border border-[#cbd5c0] bg-[#f0f3ed] p-4 text-sm leading-relaxed text-neutral-700"
+              >
+                {message}
+              </div>
+            )}
+
+            {error && (
+              <div
+                role="alert"
+                className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+              >
+                {error}
+              </div>
+            )}
+
+            {/* Submit */}
+            <div className="pt-2 text-center">
+              <button
+                type="submit"
+                disabled={loading}
+                className="rounded-full border border-[#7c8a6e] bg-[#7c8a6e] px-8 py-3 text-sm text-white transition hover:bg-[#68765c] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading ? "Submitting..." : "Submit custom inquiry"}
+              </button>
+
+              <p className="mt-4 text-xs leading-relaxed text-neutral-500">
+                Submitting an inquiry does not confirm an order or require
+                payment. We'll contact you after reviewing your request.
+              </p>
+            </div>
+          </form>
+
         </div>
       </section>
+
       <FooterComponent />
     </div>
   );
