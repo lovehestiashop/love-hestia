@@ -16,32 +16,25 @@ function ProductDetailPage() {
     Number(product?.acf?.stock ?? 0) > 0
   );
 
-  // Get bouquet size from ACF.
-  const bouquetSize = product?.acf?.bouquet_size;
+  // Get arrangement size from ACF.
+  const arrangementSize = product?.acf?.bouquet_size;
 
-  // Get bouquet height from either possible ACF field name.
-  const bouquetHeight = [
-    product?.acf?.bouquet_height_cm,
-    product?.acf?.approx_height_cm,
-  ].find(
-    (value) =>
-      value !== undefined &&
-      value !== null &&
-      String(value).trim() !== ""
-  );
+  // Get arrangement height directly in inches from ACF.
+  const arrangementHeight = product?.acf?.approx_height_inch;
 
-  const hasBouquetSize =
-    bouquetSize !== undefined &&
-    bouquetSize !== null &&
-    String(bouquetSize).trim() !== "";
+  const hasArrangementSize =
+    arrangementSize !== undefined &&
+    arrangementSize !== null &&
+    String(arrangementSize).trim() !== "";
 
-  const hasBouquetHeight =
-    bouquetHeight !== undefined &&
-    bouquetHeight !== null &&
-    String(bouquetHeight).trim() !== "";
+  const hasArrangementHeight =
+    arrangementHeight !== undefined &&
+    arrangementHeight !== null &&
+    String(arrangementHeight).trim() !== "" &&
+    Number.isFinite(Number(arrangementHeight));
 
-  const hasBouquetDetails =
-    hasBouquetSize || hasBouquetHeight;
+  const hasArrangementDetails =
+    hasArrangementSize || hasArrangementHeight;
 
   const [gallery, setGallery] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -265,7 +258,7 @@ function ProductDetailPage() {
                 window.innerWidth <= 768
                   ? "22px"
                   : "28px",
-              marginBottom: hasBouquetDetails
+              marginBottom: hasArrangementDetails
                 ? "22px"
                 : "40px",
               color: "#5f5a55",
@@ -279,9 +272,9 @@ function ProductDetailPage() {
             ).toLocaleString("en-PH")}
           </h2>
 
-          {/* BOUQUET SIZE AND HEIGHT */}
-          {/* Visible only on the individual product page */}
-          {hasBouquetDetails && (
+          {/* ARRANGEMENT SIZE AND HEIGHT */}
+          {/* Visible only on individual product pages */}
+          {hasArrangementDetails && (
             <div
               style={{
                 maxWidth: "490px",
@@ -293,13 +286,13 @@ function ProductDetailPage() {
                 borderRadius: "4px",
               }}
             >
-              {hasBouquetSize && (
+              {hasArrangementSize && (
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
                     gap: "16px",
-                    marginBottom: hasBouquetHeight
+                    marginBottom: hasArrangementHeight
                       ? "10px"
                       : "0",
                     fontSize: "14px",
@@ -311,12 +304,12 @@ function ProductDetailPage() {
                   <strong
                     style={{ color: "#5f5a55" }}
                   >
-                    {String(bouquetSize).trim()}
+                    {String(arrangementSize).trim()}
                   </strong>
                 </div>
               )}
 
-              {hasBouquetHeight && (
+              {hasArrangementHeight && (
                 <div
                   style={{
                     display: "flex",
@@ -328,11 +321,11 @@ function ProductDetailPage() {
                 >
                   <span>Approx. Height</span>
 
-                <strong
-  style={{ color: "#5f5a55" }}
->
-  {(Number(bouquetHeight) / 2.54).toFixed(1)} in
-</strong>
+                  <strong
+                    style={{ color: "#5f5a55" }}
+                  >
+                    {Number(arrangementHeight).toFixed(1)} in
+                  </strong>
                 </div>
               )}
             </div>
