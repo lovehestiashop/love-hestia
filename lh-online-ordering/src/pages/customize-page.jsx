@@ -419,13 +419,6 @@ function CustomizePage() {
                     required
                   />
 
-                  <p className="mt-2 text-xs leading-relaxed text-neutral-500">
-                    Please allow at least 5 days for custom arrangements.
-                    We are closed every Sunday, except February 14, 2027,
-                    and from December 19, 2026 to January 8, 2027.
-                    Your preferred date is subject to confirmation.
-                  </p>
-
                   {dateError && (
                     <p className="mt-2 text-sm text-red-600" role="alert">
                       {dateError}
