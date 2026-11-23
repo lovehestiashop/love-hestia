@@ -23,9 +23,9 @@ export const productService = {
     return res.data;
   },
 
-  // Retrieve all available occasion terms from WordPress.
+  // Get occasion terms from the WordPress REST API.
   async getOccasions() {
-    const res = await api.get("/wp/v2/occasion", {
+    const res = await api.get("/wp/v2/occasions", {
       params: {
         per_page: 100,
         hide_empty: false,
