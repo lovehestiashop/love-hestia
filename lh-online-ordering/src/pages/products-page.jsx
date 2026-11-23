@@ -14,7 +14,7 @@ const PRODUCT_TYPE_MAP = {
 
 const STORAGE_KEY = "all_products";
 
-// The four occasions and their WordPress slugs.
+// The four occasions configured in WordPress.
 const OCCASION_CONFIG = [
   {
     name: "Birthday",
@@ -34,12 +34,11 @@ const OCCASION_CONFIG = [
   },
 ];
 
-// Read assigned occasion IDs from a product.
-// WordPress REST returns taxonomy assignments as an array of term IDs.
+// Get occasion IDs assigned to a product.
 function getProductOccasionIds(product) {
   const assigned =
-    product?.occasion ??
     product?.occasions ??
+    product?.occasion ??
     [];
 
   const values = Array.isArray(assigned)
@@ -47,7 +46,13 @@ function getProductOccasionIds(product) {
     : [assigned];
 
   return values
-    .map((value) => Number(value))
+    .map((value) => {
+      if (value && typeof value === "object") {
+        return Number(value.id ?? value.term_id);
+      }
+
+      return Number(value);
+    })
     .filter((value) => Number.isFinite(value));
 }
 
@@ -56,7 +61,6 @@ function ProductsPage() {
   const { id } = useParams();
 
   const productTypeId = Number(id);
-  const title = PRODUCT_TYPE_MAP[productTypeId] || "Products";
 
   const [products, setProducts] = useState([]);
   const [occasions, setOccasions] = useState([]);
@@ -65,7 +69,7 @@ function ProductsPage() {
   const [sortOrder, setSortOrder] = useState("high-to-low");
   const [selectedOccasion, setSelectedOccasion] = useState("");
 
-  // Retrieve products and occasion terms from WordPress.
+  // Retrieve products and occasions from WordPress.
   useEffect(() => {
     let isActive = true;
 
@@ -80,6 +84,7 @@ function ProductsPage() {
       const productsResult = results[0];
       const occasionsResult = results[1];
 
+      // Load products.
       if (productsResult.status === "fulfilled") {
         const data = Array.isArray(productsResult.value)
           ? productsResult.value
@@ -93,7 +98,10 @@ function ProductsPage() {
             JSON.stringify(data)
           );
         } catch (err) {
-          console.error("Unable to cache products:", err);
+          console.error(
+            "Unable to cache products:",
+            err
+          );
         }
       } else {
         console.error(
@@ -102,6 +110,7 @@ function ProductsPage() {
         );
       }
 
+      // Load occasions.
       if (occasionsResult.status === "fulfilled") {
         setOccasions(
           Array.isArray(occasionsResult.value)
@@ -110,7 +119,7 @@ function ProductsPage() {
         );
       } else {
         console.error(
-          "Failed to load occasions. Check the WordPress REST API:",
+          "Failed to load occasions:",
           occasionsResult.reason
         );
       }
@@ -125,25 +134,14 @@ function ProductsPage() {
     };
   }, []);
 
-  // Reset the occasion filter when changing product collections.
-  useEffect(() => {
-    setSelectedOccasion("");
-  }, [productTypeId]);
-
-  // Match the four preferred occasions with their real WordPress IDs.
+  // Match the four preferred occasions with WordPress term IDs.
   const occasionOptions = useMemo(() => {
     return OCCASION_CONFIG
       .map((config) => {
-        const matchingTerm =
-          occasions.find(
-            (term) =>
-              String(term.slug).toLowerCase() === config.slug
-          ) ||
-          occasions.find(
-            (term) =>
-              String(term.name).trim().toLowerCase() ===
-              config.name.toLowerCase()
-          );
+        const matchingTerm = occasions.find(
+          (term) =>
+            String(term.slug).toLowerCase() === config.slug
+        );
 
         if (!matchingTerm) {
           return null;
@@ -152,32 +150,49 @@ function ProductsPage() {
         return {
           id: matchingTerm.id,
           name: config.name,
+          slug: config.slug,
         };
       })
       .filter(Boolean);
   }, [occasions]);
 
-  // Filter products by collection and occasion, then sort.
+  // Find the selected occasion name for the page heading.
+  const selectedOccasionName = occasionOptions.find(
+    (occasion) =>
+      String(occasion.id) === String(selectedOccasion)
+  )?.name;
+
+  // Change the heading when an occasion is selected.
+  const pageTitle = selectedOccasionName
+    ? `Arrangements for ${selectedOccasionName}`
+    : PRODUCT_TYPE_MAP[productTypeId] || "Products";
+
+  // FILTER PRODUCTS BY COLLECTION OR GLOBAL OCCASION.
   const filteredProducts = useMemo(() => {
     const selectedOccasionId = selectedOccasion
       ? Number(selectedOccasion)
       : null;
 
     return products
-      .filter((item) =>
-        item["product-type"]?.includes(productTypeId)
-      )
       .filter((item) => {
-        // Show all products when no occasion is selected.
-        if (selectedOccasionId === null) {
-          return true;
+        // When an occasion is selected, include matching
+        // products from ALL collections:
+        // Flower Bouquets, Vase Arrangements and Flower Domes.
+
+        if (selectedOccasionId !== null) {
+          const assignedOccasionIds =
+            getProductOccasionIds(item);
+
+          return assignedOccasionIds.includes(
+            selectedOccasionId
+          );
         }
 
-        const assignedOccasionIds =
-          getProductOccasionIds(item);
-
-        return assignedOccasionIds.includes(
-          selectedOccasionId
+        // When All Occasions is selected, show only products
+        // belonging to the current collection.
+        return (
+          item["product-type"]?.includes(productTypeId) ??
+          false
         );
       })
       .sort((a, b) => {
@@ -188,7 +203,7 @@ function ProductsPage() {
         const availableA = stockA > 0;
         const availableB = stockB > 0;
 
-        // Available products always come first.
+        // Available products always appear first.
         if (availableA !== availableB) {
           return availableA ? -1 : 1;
         }
@@ -232,12 +247,13 @@ function ProductsPage() {
       <HeaderComponent />
 
       <section className="py-20 md:py-24">
+
         {/* PAGE TITLE */}
         <h2
           className="
             mb-8
             text-center
-            text-[42px]
+            text-[36px]
             md:text-[72px]
             font-light
             text-neutral-700
@@ -247,7 +263,7 @@ function ProductsPage() {
             fontFamily: "'Cormorant Garamond', serif",
           }}
         >
-          {title}
+          {pageTitle}
         </h2>
 
         {/* SHOP BY OCCASION AND PRICE SORTING */}
@@ -265,6 +281,7 @@ function ProductsPage() {
             sm:justify-between
           "
         >
+
           {/* OCCASION FILTER */}
           <label
             className="
@@ -285,7 +302,6 @@ function ProductsPage() {
               onChange={(e) =>
                 setSelectedOccasion(e.target.value)
               }
-              disabled={occasionOptions.length === 0}
               className="
                 w-full
                 min-w-[240px]
@@ -296,11 +312,10 @@ function ProductsPage() {
                 py-2
                 text-sm
                 text-neutral-700
+                cursor-pointer
                 focus:outline-none
                 focus:ring-1
                 focus:ring-neutral-500
-                disabled:cursor-not-allowed
-                disabled:bg-neutral-100
               "
             >
               <option value="">
@@ -350,6 +365,7 @@ function ProductsPage() {
                 py-2
                 text-sm
                 text-neutral-700
+                cursor-pointer
                 focus:outline-none
                 focus:ring-1
                 focus:ring-neutral-500
@@ -407,6 +423,7 @@ function ProductsPage() {
                   key={item.id}
                   className="group flex flex-col"
                 >
+
                   {/* PRODUCT IMAGE */}
                   <div
                     className="
@@ -507,6 +524,7 @@ function ProductsPage() {
             })}
           </div>
         )}
+
       </section>
 
       <FooterComponent />
