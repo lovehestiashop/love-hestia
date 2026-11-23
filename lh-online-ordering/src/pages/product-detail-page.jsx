@@ -328,11 +328,11 @@ function ProductDetailPage() {
                 >
                   <span>Approx. Height</span>
 
-                  <strong
-                    style={{ color: "#5f5a55" }}
-                  >
-                    {String(bouquetHeight).trim()} cm
-                  </strong>
+                <strong
+  style={{ color: "#5f5a55" }}
+>
+  {(Number(bouquetHeight) / 2.54).toFixed(1)} in
+</strong>
                 </div>
               )}
             </div>
