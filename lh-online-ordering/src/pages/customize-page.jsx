@@ -9,6 +9,7 @@ function CustomizePage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [dateError, setDateError] = useState("");
+  const [showInspirationModal, setShowInspirationModal] = useState(false);
 
   // Require at least 5 days' notice.
   const getMinimumDate = () => {
@@ -69,6 +70,7 @@ function CustomizePage() {
 
     setMessage("");
     setError("");
+    setDateError("");
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -118,6 +120,10 @@ function CustomizePage() {
 
       form.reset();
       setDateError("");
+
+      // Show inspiration photo prompt after successful submission.
+      setShowInspirationModal(true);
+
     } catch (err) {
       setError(
         err.response?.data?.message ||
@@ -326,6 +332,7 @@ function CustomizePage() {
 
               <div className="space-y-6">
 
+                {/* Color Palette */}
                 <div>
                   <label className={labelClass}>
                     Preferred color palette *
@@ -341,6 +348,7 @@ function CustomizePage() {
                   />
                 </div>
 
+                {/* Focal Flower */}
                 <div>
                   <label className={labelClass}>
                     Preferred focal flower *
@@ -371,9 +379,14 @@ function CustomizePage() {
                     <option value="Preserved Sunflowers">
                       Preserved Sunflowers
                     </option>
+
+                    <option value="Mix of Flowers">
+                      Mix of Flowers
+                    </option>
                   </select>
                 </div>
 
+                {/* Focal Flower Quantity */}
                 <div>
                   <label className={labelClass}>
                     How many focal flowers would you prefer?
@@ -388,12 +401,28 @@ function CustomizePage() {
                   />
 
                   <p className="mt-2 text-xs leading-relaxed text-neutral-500">
-                    You may indicate your preferred quantity or leave
-                    a note about the look you have in mind.
-                    Our florist will help you finalize the arrangement.
+                    You may indicate your preferred quantity. For mixed
+                    focal flowers, please list each flower and quantity
+                    in the additional notes below.
                   </p>
                 </div>
 
+                {/* Additional Notes */}
+                <div>
+                  <label className={labelClass}>
+                    Additional notes
+                  </label>
+
+                  <textarea
+                    name="notes"
+                    rows="4"
+                    maxLength={2000}
+                    className={inputClass}
+                    placeholder="If you want mixed focal flowers, add your preferred quantities here. e.g. 2 sunflowers, 5 roses, and 2 peonies. You may also include any other notes for your bouquet."
+                  />
+                </div>
+
+                {/* Delivery Date */}
                 <div>
                   <label className={labelClass}>
                     Preferred delivery date *
@@ -413,42 +442,6 @@ function CustomizePage() {
                       {dateError}
                     </p>
                   )}
-                </div>
-
-                <div>
-                  <label className={labelClass}>
-                    Additional notes
-                  </label>
-
-                  <textarea
-                    name="notes"
-                    rows="4"
-                    maxLength={2000}
-                    className={inputClass}
-                    placeholder="Put notes here if you have any..."
-                  />
-                </div>
-
-                {/* Instagram Inspiration */}
-                <div>
-                  <label className={labelClass}>
-                    Do you have an inspiration photo?
-                  </label>
-
-                  <p className="mb-4 text-sm leading-relaxed text-neutral-500">
-                    We'd love to see your inspiration! Send us a message
-                    on Instagram with your reference photo so we can
-                    better understand the bouquet you're imagining.
-                  </p>
-
-                  <a
-                    href="https://www.instagram.com/lovehestiaflowers/?hl=en"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center rounded-full border border-[#7c8a6e] px-6 py-3 text-sm text-[#68765c] transition hover:bg-[#7c8a6e] hover:text-white"
-                  >
-                    Send us your inspiration on Instagram
-                  </a>
                 </div>
 
               </div>
@@ -517,6 +510,57 @@ function CustomizePage() {
       </section>
 
       <FooterComponent />
+
+      {/* Inspiration Photo Popup - Appears After Successful Submission */}
+      {showInspirationModal && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-5"
+          role="presentation"
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="inspiration-modal-title"
+            className="w-full max-w-md rounded-xl bg-[#faf9f7] p-7 text-center shadow-xl sm:p-9"
+          >
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#7c8a6e]">
+              Thank you for your inquiry
+            </p>
+
+            <h2
+              id="inspiration-modal-title"
+              className="mb-4 text-2xl font-medium text-neutral-800"
+            >
+              Do you have an inspiration photo?
+            </h2>
+
+            <p className="mb-7 text-sm leading-relaxed text-neutral-600">
+              We'd love to see what you have in mind! Send us your
+              inspiration photo through Instagram so we can better
+              understand the bouquet you'd love to have.
+            </p>
+
+            <a
+              href="https://www.instagram.com/lovehestiaflowers/?hl=en"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setShowInspirationModal(false)}
+              className="inline-flex w-full items-center justify-center rounded-full border border-[#7c8a6e] bg-[#7c8a6e] px-6 py-3 text-sm text-white transition hover:bg-[#68765c]"
+            >
+              Send your inspiration on Instagram
+            </a>
+
+            <button
+              type="button"
+              onClick={() => setShowInspirationModal(false)}
+              className="mt-4 px-5 py-2 text-sm text-neutral-500 transition hover:text-neutral-800"
+            >
+              Maybe later
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
