@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function CustomArrangementSectionComponent() {
   const data = {
     image: "/Custom Arrangements.jpeg",
-    heading: "We'd love to create a personalized dried-flower arrangement just for you.",
+    heading: "A little more personal",
     text: `Each design is thoughtfully crafted based on your chosen color palette, inspiration photos, and gifting needs.
 
 Final pricing depends on flower availability, arrangement size, and design complexity. Every piece is handmade with care, making each bouquet uniquely yours.`,
@@ -25,12 +25,11 @@ Final pricing depends on flower availability, arrangement size, and design compl
 
         {/* Content */}
         <div>
-          {/* Signature-style Heading */}
+          {/* Heading - Matching Website Typography */}
           <h2
-            className="text-[26px] md:text-[32px] leading-relaxed mb-5 text-neutral-700"
+            className="text-[28px] md:text-[36px] leading-tight mb-6 font-semibold text-neutral-700"
             style={{
-              fontFamily: "'Sacramento', cursive",
-              fontWeight: 400,
+              fontFamily: "'Cormorant Garamond', serif",
             }}
           >
             {data.heading}
