@@ -61,12 +61,13 @@ function HomePage() {
 
       {/* CUSTOM ARRANGEMENTS */}
       <CustomArrangementSectionComponent />
-      
-      {/* WEDDINGS & EVENTS */}
-<WeddingEventsSectionComponent />
+
+      {/* BRIDAL BOUQUETS AND EVENTS */}
+      <WeddingEventsSectionComponent />
 
       {/* FLORIST FOR A DAY */}
       <section className="py-16 bg-neutral-50 text-center">
+
         <h1
           className="
             text-[42px]
@@ -89,6 +90,7 @@ function HomePage() {
         </p>
 
         <div className="max-w-5xl mx-auto px-4">
+
           {/* AUTOMATIC SLIDESHOW — NO ARROWS */}
           <div className="overflow-hidden rounded-xl bg-white">
             <img
@@ -135,11 +137,13 @@ function HomePage() {
               />
             ))}
           </div>
+
         </div>
       </section>
 
-      {/* PRIVATE WORKSHOP BANNER */}
+      {/* PRIVATE DRIED FLOWER WORKSHOP */}
       <section className="relative h-[500px] md:h-[800px] text-white text-center overflow-hidden">
+
         <div className="absolute inset-0">
           <img
             src={workshopImage}
@@ -154,15 +158,16 @@ function HomePage() {
         </div>
 
         <div className="relative z-10 flex h-full flex-col items-center justify-center px-6">
+
           <h2
-  className="text-3xl md:text-5xl mb-3 font-normal"
-  style={{
-    fontFamily: "'Cormorant Garamond', serif",
-    fontWeight: 500,
-  }}
->
-  Private Dried Flower Workshop
-</h2>
+            className="text-3xl md:text-5xl mb-3 font-normal"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: 500,
+            }}
+          >
+            Private Dried Flower Workshop
+          </h2>
 
           <p className="mb-5 text-sm md:text-base">
             Birthdays · Bridal Shower · Events
@@ -185,6 +190,7 @@ function HomePage() {
           >
             Learn more
           </Link>
+
         </div>
       </section>
 
