@@ -4,6 +4,7 @@ import FooterComponent from "../components/footer";
 import HeaderComponent from "../components/header";
 import api from "../services/api";
 import { homeSettingsService } from "../services/home-settings-service";
+import { mediaService } from "../services/media-service";
 
 function BridalBouquetPage() {
   const [loading, setLoading] = useState(false);
@@ -18,9 +19,70 @@ function BridalBouquetPage() {
   const [civilImage, setCivilImage] = useState("");
   const [churchImage, setChurchImage] = useState("");
 
-  // Retrieve bridal photos from WordPress.
+  // Retrieve bridal sample photos from WordPress.
   useEffect(() => {
     let active = true;
+
+    const resolveImageUrl = async (image) => {
+      if (!image) return "";
+
+      // ACF may return a URL, image object, or attachment ID.
+      if (typeof image === "string") {
+        const value = image.trim();
+
+        if (!value) return "";
+
+        if (
+          value.startsWith("http://") ||
+          value.startsWith("https://") ||
+          value.startsWith("/")
+        ) {
+          return value;
+        }
+
+        if (/^\d+$/.test(value)) {
+          try {
+            const media = await mediaService.getById(Number(value));
+            return media?.source_url || "";
+          } catch (mediaError) {
+            console.error(
+              "Unable to load bridal image attachment:",
+              mediaError
+            );
+            return "";
+          }
+        }
+
+        return "";
+      }
+
+      if (typeof image === "object") {
+        const directUrl =
+          image.source_url ||
+          image.url ||
+          image.sizes?.large ||
+          image.sizes?.medium_large ||
+          image.guid?.rendered;
+
+        if (directUrl) return directUrl;
+
+        const imageId = image.ID || image.id || image.attachment_id;
+
+        if (imageId) {
+          try {
+            const media = await mediaService.getById(Number(imageId));
+            return media?.source_url || "";
+          } catch (mediaError) {
+            console.error(
+              "Unable to load bridal image attachment:",
+              mediaError
+            );
+          }
+        }
+      }
+
+      return "";
+    };
 
     const loadWeddingImages = async () => {
       try {
@@ -28,20 +90,32 @@ function BridalBouquetPage() {
 
         if (!active) return;
 
-        const getImageUrl = (image) => {
-          if (typeof image === "string") return image;
-          return image?.url || "";
-        };
+        const acf = settings?.acf || settings || {};
 
-        setCivilImage(
-          getImageUrl(settings?.civil_wedding_sample)
-        );
+        const [civilUrl, churchUrl] = await Promise.all([
+          resolveImageUrl(acf.civil_wedding_sample),
+          resolveImageUrl(acf.church_wedding_sample),
+        ]);
 
-        setChurchImage(
-          getImageUrl(settings?.church_wedding_sample)
-        );
+        if (!active) return;
+
+        setCivilImage(civilUrl);
+        setChurchImage(churchUrl);
+
+        if (!civilUrl || !churchUrl) {
+          console.warn(
+            "Bridal sample image field missing or empty in WordPress.",
+            {
+              civil_wedding_sample: acf.civil_wedding_sample,
+              church_wedding_sample: acf.church_wedding_sample,
+            }
+          );
+        }
       } catch (err) {
-        console.error("Unable to load bridal images:", err);
+        console.error(
+          "Unable to load bridal images from WordPress:",
+          err
+        );
       } finally {
         if (active) {
           setLoadingImages(false);
@@ -155,7 +229,6 @@ function BridalBouquetPage() {
 
     const wedding = weddingOptions[selectedWedding];
 
-    // Include wedding selection and starting price in WordPress inquiry.
     const originalNotes = formData.get("notes") || "";
 
     const bridalNotes =
@@ -327,6 +400,13 @@ function BridalBouquetPage() {
                         src={wedding.image}
                         alt={`${wedding.label} bridal bouquet sample`}
                         className="h-full w-full object-cover"
+                        onError={() => {
+                          if (key === "civil") {
+                            setCivilImage("");
+                          } else {
+                            setChurchImage("");
+                          }
+                        }}
                       />
                     ) : (
                       <div className="flex h-full flex-col items-center justify-center gap-2 text-neutral-500">
@@ -391,35 +471,6 @@ function BridalBouquetPage() {
                 </p>
               </div>
             )}
-          </div>
-
-          {/* PRICING INFORMATION */}
-          <div className="mb-14 rounded-lg border border-neutral-200 bg-white p-6 sm:p-8">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[#98776f]">
-              Bridal Bouquet Starting Prices
-            </p>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-neutral-600">Civil Wedding</p>
-                <h3 className="mt-1 text-2xl font-medium text-neutral-800">
-                  ₱1,500
-                </h3>
-              </div>
-
-              <div>
-                <p className="text-sm text-neutral-600">Church Wedding</p>
-                <h3 className="mt-1 text-2xl font-medium text-neutral-800">
-                  ₱3,500
-                </h3>
-              </div>
-            </div>
-
-            <p className="mt-5 border-t border-neutral-100 pt-4 text-xs leading-relaxed text-neutral-500">
-              These are starting prices. Final pricing depends on your
-              preferred flowers, focal flower quantity, design, and
-              flower availability.
-            </p>
           </div>
 
           {/* INQUIRY FORM */}
