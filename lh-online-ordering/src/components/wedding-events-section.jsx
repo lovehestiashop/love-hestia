@@ -82,7 +82,7 @@ function WeddingEventsSectionComponent() {
             fontWeight: 500,
           }}
         >
-          Flower Bar & Tablescape Styling
+          Withered Fleur Bar & Tablescape Styling
         </h2>
 
         {/* DESCRIPTION */}
