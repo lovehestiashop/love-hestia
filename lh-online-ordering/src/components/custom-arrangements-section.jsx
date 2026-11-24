@@ -23,9 +23,10 @@ Final pricing depends on flower availability, arrangement size, and design compl
           />
         </div>
 
-        {/* Content */}
-        <div>
-          {/* Heading - Matching Website Typography */}
+        {/* Centered Content */}
+        <div className="text-center">
+
+          {/* Heading */}
           <h2
             className="text-[28px] md:text-[36px] leading-tight mb-6 font-semibold text-neutral-700"
             style={{
@@ -49,8 +50,8 @@ Final pricing depends on flower availability, arrangement size, and design compl
               Customize your Arrangement
             </Link>
           </div>
-        </div>
 
+        </div>
       </div>
     </section>
   );
