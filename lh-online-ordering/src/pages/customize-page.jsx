@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FooterComponent from "../components/footer";
 import HeaderComponent from "../components/header";
 import api from "../services/api";
@@ -10,6 +10,15 @@ function CustomizePage() {
   const [error, setError] = useState("");
   const [dateError, setDateError] = useState("");
   const [showInspirationModal, setShowInspirationModal] = useState(false);
+
+  // Automatically scroll to the very top when the page opens.
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+  }, []);
 
   // Require at least 5 days' notice.
   const getMinimumDate = () => {
@@ -381,7 +390,7 @@ function CustomizePage() {
                     </option>
 
                     <option value="Mix of preserved Flowers">
-                      Mix of preserved Flowers 
+                      Mix of preserved Flowers
                     </option>
                   </select>
                 </div>
