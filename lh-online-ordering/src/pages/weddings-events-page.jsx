@@ -22,7 +22,7 @@ function WeddingsEventsPage() {
 
           {/* BRAND LABEL */}
           <p className="text-xs tracking-[0.22em] uppercase text-[#98776f] mb-6">
-            Pretty Withered · A Love Hestia Floral Experience
+           Withered Fleur bar · A Love Hestia Floral Experience
           </p>
 
           {/* MAIN HEADING */}
