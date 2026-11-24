@@ -62,7 +62,7 @@ function HomePage() {
       {/* CUSTOM ARRANGEMENTS */}
       <CustomArrangementSectionComponent />
 
-      {/* DRIED FLOWER BAR & TABLESCAPE STYLING */}
+      {/* FLOWER BAR & TABLESCAPE STYLING */}
       <WeddingEventsSectionComponent />
 
       {/* FLORIST FOR A DAY */}
