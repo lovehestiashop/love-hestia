@@ -339,8 +339,8 @@ function BridalBouquetPage() {
             </p>
           </div>
 
-          {/* PROCESS */}
-          <div className="mb-10 grid gap-6 border-y border-neutral-200 py-8 sm:grid-cols-3">
+          {/* PROCESS - HIDDEN ON MOBILE */}
+          <div className="mb-10 hidden gap-6 border-y border-neutral-200 py-8 sm:grid sm:grid-cols-3">
 
             <div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#98776f]">
@@ -418,8 +418,8 @@ function BridalBouquetPage() {
                   `}
                 >
 
-                  {/* IMAGE */}
-                  <div className="relative h-[135px] bg-[#eee9e5] sm:h-[190px] md:h-[250px]">
+                  {/* IMAGE - LARGER ON MOBILE */}
+                  <div className="relative h-[175px] bg-[#eee9e5] sm:h-[190px] md:h-[250px]">
 
                     {loadingImages ? (
                       <div className="flex h-full items-center justify-center text-xs text-neutral-500">
@@ -462,12 +462,12 @@ function BridalBouquetPage() {
 
                     <div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
 
-                      <h3 className="text-[13px] font-medium leading-tight text-neutral-800 sm:text-base">
+                      <h3 className="text-xs font-medium leading-tight text-neutral-800 sm:text-base">
                         {wedding.label}
                       </h3>
 
                       <span
-                        className={`text-[10px] sm:text-xs ${
+                        className={`text-[9px] sm:text-xs ${
                           selectedWedding === key
                             ? "text-[#98776f]"
                             : "text-neutral-400"
@@ -478,11 +478,11 @@ function BridalBouquetPage() {
 
                     </div>
 
-                    <p className="mt-3 text-[10px] uppercase tracking-wider text-neutral-500 sm:text-xs">
+                    <p className="mt-3 text-[9px] uppercase tracking-wider text-neutral-500 sm:text-xs">
                       Starting price
                     </p>
 
-                    <p className="mt-1 text-xl font-medium text-neutral-800 sm:text-2xl">
+                    <p className="mt-1 text-lg font-medium text-neutral-800 sm:text-2xl">
                       ₱{wedding.price.toLocaleString("en-PH")}
                     </p>
 
