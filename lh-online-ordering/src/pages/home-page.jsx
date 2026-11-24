@@ -62,7 +62,7 @@ function HomePage() {
       {/* CUSTOM ARRANGEMENTS */}
       <CustomArrangementSectionComponent />
 
-      {/* BRIDAL BOUQUETS AND EVENTS */}
+      {/* DRIED FLOWER BAR & TABLESCAPE STYLING */}
       <WeddingEventsSectionComponent />
 
       {/* FLORIST FOR A DAY */}
