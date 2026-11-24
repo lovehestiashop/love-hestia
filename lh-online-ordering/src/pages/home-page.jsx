@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 import CollectionsSectionComponent from "../components/collections-section";
 import CustomArrangementSectionComponent from "../components/custom-arrangements-section";
+import WeddingEventsSectionComponent from "../components/wedding-events-section";
 import FooterComponent from "../components/footer";
 import HeroSectionComponent from "../components/hero-section";
 import OurStorySectionComponent from "../components/our-story-section";
