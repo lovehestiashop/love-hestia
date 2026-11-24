@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import FooterComponent from "../components/footer";
 import HeaderComponent from "../components/header";
@@ -15,45 +14,38 @@ function BridalBouquetPage() {
   const [selectedWedding, setSelectedWedding] = useState("");
   const [showInspirationModal, setShowInspirationModal] = useState(false);
 
-  // WordPress ACF images
   const [civilImage, setCivilImage] = useState("");
   const [churchImage, setChurchImage] = useState("");
 
-  // Retrieve bridal sample photos from WordPress.
+  // LOAD BRIDAL PHOTOS FROM WORDPRESS
   useEffect(() => {
     let active = true;
 
     const resolveImageUrl = async (image) => {
       if (!image) return "";
 
-      // ACF may return a URL, image object, or attachment ID.
       if (typeof image === "string") {
         const value = image.trim();
 
         if (!value) return "";
 
-        if (
-          value.startsWith("http://") ||
-          value.startsWith("https://") ||
-          value.startsWith("/")
-        ) {
-          return value;
+        if (/^https?:\/\//i.test(value)) return value;
+
+        if (value.startsWith("/")) {
+          return `https://api.lovehestia.shop${value}`;
         }
 
         if (/^\d+$/.test(value)) {
-          try {
-            const media = await mediaService.getById(Number(value));
-            return media?.source_url || "";
-          } catch (mediaError) {
-            console.error(
-              "Unable to load bridal image attachment:",
-              mediaError
-            );
-            return "";
-          }
+          const media = await mediaService.getById(Number(value));
+          return media?.source_url || media?.guid?.rendered || "";
         }
 
         return "";
+      }
+
+      if (typeof image === "number") {
+        const media = await mediaService.getById(image);
+        return media?.source_url || media?.guid?.rendered || "";
       }
 
       if (typeof image === "object") {
@@ -62,22 +54,17 @@ function BridalBouquetPage() {
           image.url ||
           image.sizes?.large ||
           image.sizes?.medium_large ||
+          image.sizes?.full?.url ||
           image.guid?.rendered;
 
         if (directUrl) return directUrl;
 
-        const imageId = image.ID || image.id || image.attachment_id;
+        const imageId =
+          image.ID || image.id || image.attachment_id;
 
         if (imageId) {
-          try {
-            const media = await mediaService.getById(Number(imageId));
-            return media?.source_url || "";
-          } catch (mediaError) {
-            console.error(
-              "Unable to load bridal image attachment:",
-              mediaError
-            );
-          }
+          const media = await mediaService.getById(Number(imageId));
+          return media?.source_url || media?.guid?.rendered || "";
         }
       }
 
@@ -86,15 +73,43 @@ function BridalBouquetPage() {
 
     const loadWeddingImages = async () => {
       try {
-        const settings = await homeSettingsService.getSettings();
+        let pageData;
+
+        // Bridal photos are stored in WordPress page 4973.
+        try {
+          const response = await api.get(
+            "/pages/4973?acf_format=standard"
+          );
+
+          pageData = response.data;
+        } catch (pageError) {
+          console.warn(
+            "Trying the home settings service instead.",
+            pageError
+          );
+
+          pageData = await homeSettingsService.getSettings();
+        }
 
         if (!active) return;
 
-        const acf = settings?.acf || settings || {};
+        const acf = pageData?.acf || pageData?.meta || pageData || {};
+
+        const civilImageField =
+          acf.civil_wedding_sample ??
+          acf.civil_wedding_sample_image ??
+          acf.civil_wedding_image ??
+          acf.civil_wedding_photo;
+
+        const churchImageField =
+          acf.church_wedding_sample ??
+          acf.church_wedding_sample_image ??
+          acf.church_wedding_image ??
+          acf.church_wedding_photo;
 
         const [civilUrl, churchUrl] = await Promise.all([
-          resolveImageUrl(acf.civil_wedding_sample),
-          resolveImageUrl(acf.church_wedding_sample),
+          resolveImageUrl(civilImageField),
+          resolveImageUrl(churchImageField),
         ]);
 
         if (!active) return;
@@ -103,23 +118,23 @@ function BridalBouquetPage() {
         setChurchImage(churchUrl);
 
         if (!civilUrl || !churchUrl) {
-          console.warn(
-            "Bridal sample image field missing or empty in WordPress.",
+          console.error(
+            "Bridal sample image fields were not found.",
             {
-              civil_wedding_sample: acf.civil_wedding_sample,
-              church_wedding_sample: acf.church_wedding_sample,
+              pageId: pageData?.id,
+              availableFields: Object.keys(acf),
+              civilImageField,
+              churchImageField,
             }
           );
         }
       } catch (err) {
         console.error(
-          "Unable to load bridal images from WordPress:",
+          "Unable to load bridal sample photos:",
           err
         );
       } finally {
-        if (active) {
-          setLoadingImages(false);
-        }
+        if (active) setLoadingImages(false);
       }
     };
 
@@ -130,7 +145,7 @@ function BridalBouquetPage() {
     };
   }, []);
 
-  // Automatically scroll to top.
+  // SCROLL TO TOP
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -152,7 +167,7 @@ function BridalBouquetPage() {
     },
   };
 
-  // Require at least 3 days' notice.
+  // MINIMUM 3 DAYS NOTICE
   const getMinimumDate = () => {
     const date = new Date();
     date.setDate(date.getDate() + 3);
@@ -164,18 +179,16 @@ function BridalBouquetPage() {
     return `${year}-${month}-${day}`;
   };
 
-  // Check delivery date restrictions.
+  // DATE RESTRICTIONS
   const isDateAllowed = (value) => {
     if (!value || value < getMinimumDate()) {
       return false;
     }
 
-    // Shop closure: December 19, 2026 to January 8, 2027.
     if (value >= "2026-12-19" && value <= "2027-01-08") {
       return false;
     }
 
-    // Sundays unavailable except February 14, 2027.
     const date = new Date(`${value}T00:00:00`);
     const isSunday = date.getDay() === 0;
 
@@ -204,7 +217,7 @@ function BridalBouquetPage() {
     }
   };
 
-  // Submit bridal bouquet inquiry.
+  // SUBMIT BRIDAL INQUIRY
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -246,10 +259,12 @@ function BridalBouquetPage() {
     inquiryData.append("delivery_date", deliveryDate);
     inquiryData.append("color_palette", formData.get("color_palette"));
     inquiryData.append("focal_flower", formData.get("focal_flower"));
+
     inquiryData.append(
       "focal_quantity",
       formData.get("focal_quantity") || ""
     );
+
     inquiryData.append("notes", bridalNotes);
 
     setLoading(true);
@@ -325,13 +340,16 @@ function BridalBouquetPage() {
 
           {/* PROCESS */}
           <div className="mb-10 grid gap-6 border-y border-neutral-200 py-8 sm:grid-cols-3">
+
             <div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#98776f]">
                 01
               </p>
+
               <h3 className="mb-2 text-sm font-semibold">
                 Choose your bouquet
               </h3>
+
               <p className="text-sm leading-relaxed text-neutral-500">
                 Select your wedding style and share your floral preferences.
               </p>
@@ -341,9 +359,11 @@ function BridalBouquetPage() {
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#98776f]">
                 02
               </p>
+
               <h3 className="mb-2 text-sm font-semibold">
                 Receive your quotation
               </h3>
+
               <p className="text-sm leading-relaxed text-neutral-500">
                 We'll review your selections and send you a proposed design
                 and price.
@@ -354,17 +374,21 @@ function BridalBouquetPage() {
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#98776f]">
                 03
               </p>
+
               <h3 className="mb-2 text-sm font-semibold">
                 Approve your bouquet
               </h3>
+
               <p className="text-sm leading-relaxed text-neutral-500">
                 Once approved, we'll guide you through the ordering process.
               </p>
             </div>
+
           </div>
 
           {/* WEDDING STYLE SELECTION */}
           <div className="mb-14">
+
             <h2 className="mb-2 text-lg font-medium text-neutral-800">
               Choose Your Wedding Style
             </h2>
@@ -374,6 +398,7 @@ function BridalBouquetPage() {
             </p>
 
             <div className="grid gap-5 sm:grid-cols-2">
+
               {Object.entries(weddingOptions).map(([key, wedding]) => (
                 <button
                   key={key}
@@ -390,7 +415,9 @@ function BridalBouquetPage() {
                     }
                   `}
                 >
+
                   <div className="relative h-[250px] bg-[#eee9e5]">
+
                     {loadingImages ? (
                       <div className="flex h-full items-center justify-center text-sm text-neutral-500">
                         Loading photo...
@@ -422,9 +449,11 @@ function BridalBouquetPage() {
                         ✓
                       </div>
                     )}
+
                   </div>
 
                   <div className="p-5">
+
                     <div className="flex items-center justify-between gap-2">
                       <h3 className="text-base font-medium text-neutral-800">
                         {wedding.label}
@@ -448,9 +477,12 @@ function BridalBouquetPage() {
                     <p className="mt-1 text-2xl font-medium text-neutral-800">
                       ₱{wedding.price.toLocaleString("en-PH")}
                     </p>
+
                   </div>
+
                 </button>
               ))}
+
             </div>
 
             {!selectedWedding && (
@@ -459,18 +491,6 @@ function BridalBouquetPage() {
               </p>
             )}
 
-            {selectedWedding && (
-              <div className="mt-5 rounded-md border border-[#e5d8d3] bg-white p-4">
-                <p className="text-sm text-neutral-600">
-                  Your selected wedding style:
-                </p>
-
-                <p className="mt-1 font-medium text-neutral-800">
-                  {weddingOptions[selectedWedding].label} — Starting at ₱
-                  {weddingOptions[selectedWedding].price.toLocaleString("en-PH")}
-                </p>
-              </div>
-            )}
           </div>
 
           {/* INQUIRY FORM */}
@@ -478,13 +498,16 @@ function BridalBouquetPage() {
 
             {/* CUSTOMER DETAILS */}
             <div>
+
               <h2 className="mb-6 text-lg font-medium text-neutral-800">
                 Your Details
               </h2>
 
               <div className="grid gap-5 sm:grid-cols-2">
+
                 <div>
                   <label className={labelClass}>Full name *</label>
+
                   <input
                     type="text"
                     name="customer_name"
@@ -497,6 +520,7 @@ function BridalBouquetPage() {
 
                 <div>
                   <label className={labelClass}>Contact number *</label>
+
                   <input
                     type="tel"
                     name="customer_number"
@@ -509,6 +533,7 @@ function BridalBouquetPage() {
 
                 <div>
                   <label className={labelClass}>Email address *</label>
+
                   <input
                     type="email"
                     name="customer_email"
@@ -521,6 +546,7 @@ function BridalBouquetPage() {
 
                 <div>
                   <label className={labelClass}>Instagram username *</label>
+
                   <input
                     type="text"
                     name="instagram_name"
@@ -530,11 +556,13 @@ function BridalBouquetPage() {
                     maxLength={100}
                   />
                 </div>
+
               </div>
             </div>
 
             {/* BOUQUET PREFERENCES */}
             <div>
+
               <h2 className="mb-2 text-lg font-medium text-neutral-800">
                 Your Bridal Bouquet Preferences
               </h2>
@@ -545,6 +573,7 @@ function BridalBouquetPage() {
               </p>
 
               <div className="space-y-6">
+
                 <div>
                   <label className={labelClass}>
                     Preferred color palette *
@@ -646,6 +675,7 @@ function BridalBouquetPage() {
                     </p>
                   )}
                 </div>
+
               </div>
             </div>
 
@@ -662,6 +692,7 @@ function BridalBouquetPage() {
             >
               <label>
                 Leave this field empty
+
                 <input
                   type="text"
                   name="website"
@@ -692,6 +723,7 @@ function BridalBouquetPage() {
 
             {/* SUBMIT BUTTON */}
             <div className="pt-2 text-center">
+
               <button
                 type="submit"
                 disabled={loading}
@@ -705,8 +737,11 @@ function BridalBouquetPage() {
                 payment. We'll review your preferences and contact you
                 with a quotation.
               </p>
+
             </div>
+
           </form>
+
         </div>
       </section>
 
@@ -718,12 +753,14 @@ function BridalBouquetPage() {
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-5"
           role="presentation"
         >
+
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="bridal-modal-title"
             className="w-full max-w-md rounded-xl bg-[#faf9f7] p-7 text-center shadow-xl sm:p-9"
           >
+
             <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#98776f]">
               Thank you for your inquiry
             </p>
@@ -761,9 +798,11 @@ function BridalBouquetPage() {
             >
               Maybe later
             </button>
+
           </div>
         </div>
       )}
+
     </div>
   );
 }
