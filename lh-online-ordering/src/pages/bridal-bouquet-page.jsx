@@ -340,7 +340,7 @@ function BridalBouquetPage() {
           </div>
 
           {/* PROCESS - HIDDEN ON MOBILE */}
-          <div className="mb-10 hidden gap-6 border-y border-neutral-200 py-8 sm:grid sm:grid-cols-3">
+         <div className="hidden">
 
             <div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#98776f]">
