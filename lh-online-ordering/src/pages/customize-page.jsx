@@ -503,7 +503,7 @@ function CustomizePage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="rounded-full border border-[#7c8a6e] bg-[#7c8a6e] px-8 py-3 text-sm text-white transition hover:bg-[#68765c] disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full border border-[#98776f] bg-[#98776f] px-8 py-3 text-sm text-white transition hover:bg-[#806159] hover:border-[#806159] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Submitting..." : "Submit custom inquiry"}
               </button>
