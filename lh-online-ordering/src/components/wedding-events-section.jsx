@@ -46,6 +46,13 @@ function WeddingEventsSectionComponent() {
           response?.data ||
           response ||
           {};
+        console.log("HOME SETTINGS:", settings);
+
+console.log("WEDDING IMAGE FIELD:", {
+  wedding_events_image: settings?.wedding_events_image,
+  wedding_and_events: settings?.["wedding_&_events_image"],
+  camelCase: settings?.weddingEventsImage,
+});
 
         // Support different ACF field names.
         const imageValue =
