@@ -6,13 +6,14 @@ import api from "../services/api";
 import { homeSettingsService } from "../services/home-settings-service";
 import { mediaService } from "../services/media-service";
 
+const BRIDAL_STARTING_PRICE = 1500;
+
 function BridalBouquetPage() {
   const [loading, setLoading] = useState(false);
   const [loadingImages, setLoadingImages] = useState(true);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [dateError, setDateError] = useState("");
-  const [selectedWedding, setSelectedWedding] = useState("");
   const [showInspirationModal, setShowInspirationModal] = useState(false);
 
   const [civilImage, setCivilImage] = useState("");
@@ -53,7 +54,9 @@ function BridalBouquetPage() {
         const directUrl =
           image.source_url ||
           image.url ||
+          image.sizes?.large?.source_url ||
           image.sizes?.large ||
+          image.sizes?.medium_large?.source_url ||
           image.sizes?.medium_large ||
           image.sizes?.full?.url ||
           image.guid?.rendered;
@@ -76,7 +79,7 @@ function BridalBouquetPage() {
       try {
         let pageData;
 
-        // Bridal photos are stored in WordPress page 4973.
+        // Bridal sample photos are stored in WordPress page 4973.
         try {
           const response = await api.get(
             "/pages/4973?acf_format=standard"
@@ -129,6 +132,7 @@ function BridalBouquetPage() {
             }
           );
         }
+
       } catch (err) {
         console.error(
           "Unable to load bridal sample photos:",
@@ -154,19 +158,6 @@ function BridalBouquetPage() {
       behavior: "auto",
     });
   }, []);
-
-  const weddingOptions = {
-    civil: {
-      label: "Civil Wedding",
-      price: 1500,
-      image: civilImage,
-    },
-    church: {
-      label: "Church Wedding",
-      price: 3500,
-      image: churchImage,
-    },
-  };
 
   // MINIMUM 3 DAYS NOTICE
   const getMinimumDate = () => {
@@ -229,11 +220,6 @@ function BridalBouquetPage() {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    if (!selectedWedding) {
-      setError("Please select your wedding style.");
-      return;
-    }
-
     const deliveryDate = formData.get("delivery_date");
 
     if (!isDateAllowed(deliveryDate)) {
@@ -241,13 +227,18 @@ function BridalBouquetPage() {
       return;
     }
 
-    const wedding = weddingOptions[selectedWedding];
-
+    const preferredFlowers = formData.get("focal_flower");
+    const preferredQuantity = formData.get("focal_quantity") || "";
+    const colorPalette = formData.get("color_palette");
     const originalNotes = formData.get("notes") || "";
 
     const bridalNotes =
-      `Wedding type: ${wedding.label} | ` +
-      `Starting price: PHP ${wedding.price.toLocaleString("en-PH")} | ` +
+      `Wedding bouquet inquiry | ` +
+      `Starting price: PHP ${BRIDAL_STARTING_PRICE.toLocaleString("en-PH")} | ` +
+      `Starting inclusions: 1 focal flower and 4 different types of fillers | ` +
+      `Preferred flowers: ${preferredFlowers} | ` +
+      `Preferred quantity: ${preferredQuantity || "Not specified"} | ` +
+      `Color palette: ${colorPalette} | ` +
       `Additional notes: ${originalNotes.trim() || "None"}`;
 
     const inquiryData = new FormData();
@@ -258,14 +249,9 @@ function BridalBouquetPage() {
     inquiryData.append("customer_email", formData.get("customer_email"));
     inquiryData.append("instagram_name", formData.get("instagram_name"));
     inquiryData.append("delivery_date", deliveryDate);
-    inquiryData.append("color_palette", formData.get("color_palette"));
-    inquiryData.append("focal_flower", formData.get("focal_flower"));
-
-    inquiryData.append(
-      "focal_quantity",
-      formData.get("focal_quantity") || ""
-    );
-
+    inquiryData.append("color_palette", colorPalette);
+    inquiryData.append("focal_flower", preferredFlowers);
+    inquiryData.append("focal_quantity", preferredQuantity);
     inquiryData.append("notes", bridalNotes);
 
     setLoading(true);
@@ -289,7 +275,6 @@ function BridalBouquetPage() {
       );
 
       form.reset();
-      setSelectedWedding("");
       setDateError("");
       setShowInspirationModal(true);
 
@@ -315,10 +300,10 @@ function BridalBouquetPage() {
       <HeaderComponent />
 
       <section className="bg-[#faf9f7] text-neutral-700">
-        <div className="mx-auto max-w-3xl px-6 py-16 md:py-24">
+        <div className="mx-auto max-w-4xl px-6 py-16 md:py-24">
 
           {/* INTRODUCTION */}
-          <div className="mb-12 text-center">
+          <div className="mb-10 text-center">
 
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#98776f]">
               Love Hestia Bridal Florals
@@ -340,159 +325,104 @@ function BridalBouquetPage() {
             </p>
 
             {/* PRICING NOTE */}
-            <div className="mx-auto mt-6 max-w-xl rounded-lg border border-[#e8dfd5] bg-white px-5 py-4 text-left">
-              <p className="text-xs leading-relaxed text-neutral-600 md:text-sm">
-                <strong className="font-semibold text-[#98776f]">
-                  A little note on pricing:
-                </strong>{" "}
-                Displayed prices are starting prices only. Your final
-                quotation will depend on your inspiration photos,
-                preferred flowers, and the quantity of dried and
-                preserved blooms needed for your bouquet.
-              </p>
-            </div>
-
-          </div>
-
-          {/* PROCESS - REMOVED FROM DISPLAY */}
-          <div className="hidden">
-            <div>
-              <p>01</p>
-              <h3>Choose your bouquet</h3>
-              <p>
-                Select your wedding style and share your floral preferences.
-              </p>
-            </div>
-
-            <div>
-              <p>02</p>
-              <h3>Receive your quotation</h3>
-              <p>
-                We'll review your selections and send you a proposed design
-                and price.
-              </p>
-            </div>
-
-            <div>
-              <p>03</p>
-              <h3>Approve your bouquet</h3>
-              <p>
-                Once approved, we'll guide you through the ordering process.
-              </p>
-            </div>
-          </div>
-
-          {/* WEDDING STYLE SELECTION */}
-          <div className="mb-14">
-
-            <h2 className="mb-2 text-lg font-medium text-neutral-800">
-              Choose Your Wedding Style
-            </h2>
-
-            <p className="mb-6 text-sm text-neutral-500">
-              Select the type of wedding bouquet you'd like us to create.
+            <p className="mx-auto mt-5 max-w-xl text-xs leading-relaxed text-neutral-500 md:text-sm">
+              A little note on pricing: Final pricing depends on your
+              inspiration, preferred flower varieties, and the quantity
+              of dried and preserved blooms needed for your bouquet.
             </p>
 
-            {/* TWO COLUMNS ON MOBILE AND DESKTOP */}
-            <div className="grid grid-cols-2 gap-3 sm:gap-5">
+          </div>
 
-              {Object.entries(weddingOptions).map(([key, wedding]) => (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setSelectedWedding(key)}
-                  aria-pressed={selectedWedding === key}
-                  className={`
-                    group min-w-0 overflow-hidden rounded-lg border-2 bg-white text-left
-                    transition-all duration-300
-                    ${
-                      selectedWedding === key
-                        ? "border-[#98776f] shadow-md"
-                        : "border-neutral-200 hover:border-[#c3a59d]"
-                    }
-                  `}
-                >
+          {/* BRIDAL BOUQUET PHOTO COLLAGE */}
+          <div className="mb-12">
 
-                  {/* IMAGE - LARGER ON MOBILE */}
-                  <div className="relative h-[175px] bg-[#eee9e5] sm:h-[190px] md:h-[250px]">
+            <h2
+              className="mb-5 text-center text-2xl font-normal text-neutral-800 md:text-3xl"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+              }}
+            >
+              Bridal Bouquet Inspirations
+            </h2>
 
-                    {loadingImages ? (
-                      <div className="flex h-full items-center justify-center text-xs text-neutral-500">
-                        Loading...
-                      </div>
-                    ) : wedding.image ? (
-                      <img
-                        src={wedding.image}
-                        alt={`${wedding.label} bridal bouquet sample`}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-full w-full object-cover"
-                        onError={() => {
-                          if (key === "civil") {
-                            setCivilImage("");
-                          } else {
-                            setChurchImage("");
-                          }
-                        }}
-                      />
-                    ) : (
-                      <div className="flex h-full flex-col items-center justify-center gap-2 text-neutral-500">
-                        <span className="text-2xl">✿</span>
-                        <span className="text-center text-[10px] sm:text-xs">
-                          Photo not yet available
-                        </span>
-                      </div>
-                    )}
+            <div className="overflow-hidden rounded-lg bg-[#eee9e5]">
 
-                    {selectedWedding === key && (
-                      <div className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[#98776f] text-sm text-white sm:right-3 sm:top-3 sm:h-7 sm:w-7">
-                        ✓
-                      </div>
-                    )}
+              {loadingImages ? (
+                <div className="flex h-[280px] items-center justify-center text-sm text-neutral-500 md:h-[460px]">
+                  Loading bridal bouquet photos...
+                </div>
+              ) : civilImage && churchImage ? (
+                <div className="grid h-[280px] grid-cols-[1.15fr_0.85fr] gap-1 sm:h-[360px] md:h-[460px]">
 
-                  </div>
+                  <img
+                    src={civilImage}
+                    alt="Love Hestia preserved bridal bouquet inspiration"
+                    loading="eager"
+                    decoding="async"
+                    className="h-full w-full object-cover"
+                  />
 
-                  {/* CARD DETAILS */}
-                  <div className="p-3 sm:p-4 md:p-5">
+                  <img
+                    src={churchImage}
+                    alt="Love Hestia dried and preserved bridal bouquet inspiration"
+                    loading="eager"
+                    decoding="async"
+                    className="h-full w-full object-cover"
+                  />
 
-                    <div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
-
-                      <h3 className="text-xs font-medium leading-tight text-neutral-800 sm:text-base">
-                        {wedding.label}
-                      </h3>
-
-                      <span
-                        className={`text-[9px] sm:text-xs ${
-                          selectedWedding === key
-                            ? "text-[#98776f]"
-                            : "text-neutral-400"
-                        }`}
-                      >
-                        {selectedWedding === key ? "Selected" : "Select"}
-                      </span>
-
-                    </div>
-
-                    <p className="mt-3 text-[9px] uppercase tracking-wider text-neutral-500 sm:text-xs">
-                      Starting price
-                    </p>
-
-                    <p className="mt-1 text-lg font-medium text-neutral-800 sm:text-2xl">
-                      ₱{wedding.price.toLocaleString("en-PH")}
-                    </p>
-
-                  </div>
-
-                </button>
-              ))}
+                </div>
+              ) : civilImage || churchImage ? (
+                <img
+                  src={civilImage || churchImage}
+                  alt="Love Hestia bridal bouquet inspiration"
+                  loading="eager"
+                  decoding="async"
+                  className="h-[280px] w-full object-cover sm:h-[360px] md:h-[460px]"
+                />
+              ) : (
+                <div className="flex h-[280px] items-center justify-center text-sm text-neutral-500 md:h-[460px]">
+                  Bridal bouquet photos are not available yet.
+                </div>
+              )}
 
             </div>
 
-            {!selectedWedding && (
-              <p className="mt-4 text-xs text-neutral-500">
-                Please select one wedding style to continue.
-              </p>
-            )}
+          </div>
+
+          {/* BRIDAL BOUQUET STARTING PRICE */}
+          <div className="mb-14 rounded-lg border border-neutral-200 bg-white p-6 sm:p-8">
+
+            <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[#98776f]">
+              Bridal Bouquet Starting Price
+            </p>
+
+            <h2 className="mb-5 text-3xl font-medium text-neutral-800 md:text-4xl">
+              ₱1,500
+            </h2>
+
+            <p className="mb-4 text-sm text-neutral-600">
+              Your starting bouquet includes:
+            </p>
+
+            <ul className="space-y-3 text-sm leading-relaxed text-neutral-700">
+
+              <li className="flex gap-3">
+                <span className="text-[#98776f]">✦</span>
+                One main focal flower
+              </li>
+
+              <li className="flex gap-3">
+                <span className="text-[#98776f]">✦</span>
+                Four different types of complementary filler flowers
+              </li>
+
+            </ul>
+
+            <p className="mt-6 border-t border-neutral-100 pt-5 text-xs leading-relaxed text-neutral-500">
+              The final quotation may vary depending on your
+              inspiration photos, preferred flower varieties,
+              arrangement size, and the quantity of blooms required.
+            </p>
 
           </div>
 
@@ -577,6 +507,7 @@ function BridalBouquetPage() {
 
               <div className="space-y-6">
 
+                {/* COLOR PALETTE */}
                 <div>
                   <label className={labelClass}>
                     Preferred color palette *
@@ -592,9 +523,10 @@ function BridalBouquetPage() {
                   />
                 </div>
 
+                {/* PREFERRED FLOWERS */}
                 <div>
                   <label className={labelClass}>
-                    Preferred flowers *
+                    Preferred focal flower *
                   </label>
 
                   <select
@@ -622,9 +554,15 @@ function BridalBouquetPage() {
                     <option value="Sola Peonies">
                       Sola Peonies
                     </option>
+
+                    <option value="Mixed focal flowers">
+                      Mixed focal flowers
+                    </option>
+
                   </select>
                 </div>
 
+                {/* FOCAL FLOWER QUANTITY */}
                 <div>
                   <label className={labelClass}>
                     How many focal flowers would you prefer?
@@ -639,11 +577,12 @@ function BridalBouquetPage() {
                   />
 
                   <p className="mt-2 text-xs leading-relaxed text-neutral-500">
-                    For a combination of flowers, please list each flower
-                    and quantity in your additional notes.
+                    For a combination of flowers, please list each
+                    flower and its quantity in your additional notes.
                   </p>
                 </div>
 
+                {/* ADDITIONAL NOTES */}
                 <div>
                   <label className={labelClass}>
                     Additional notes
@@ -654,10 +593,11 @@ function BridalBouquetPage() {
                     rows="4"
                     maxLength={1500}
                     className={inputClass}
-                    placeholder="Tell us more about your dream bridal bouquet, preferred wrapping, ribbon, flower combinations, or any special requests."
+                    placeholder="Tell us about your dream bridal bouquet, preferred filler flowers, wrapping, ribbon, or special requests."
                   />
                 </div>
 
+                {/* DELIVERY DATE */}
                 <div>
                   <label className={labelClass}>
                     Preferred delivery date *
@@ -730,7 +670,21 @@ function BridalBouquetPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="rounded-full border border-[#98776f] bg-[#98776f] px-8 py-3 text-sm text-white transition hover:border-[#806159] hover:bg-[#806159] disabled:cursor-not-allowed disabled:opacity-60"
+                className="
+                  rounded-full
+                  border
+                  border-[#98776f]
+                  bg-[#98776f]
+                  px-8
+                  py-3
+                  text-sm
+                  text-white
+                  transition
+                  hover:border-[#806159]
+                  hover:bg-[#806159]
+                  disabled:cursor-not-allowed
+                  disabled:opacity-60
+                "
               >
                 {loading ? "Submitting..." : "Submit Bridal Inquiry"}
               </button>
@@ -738,7 +692,7 @@ function BridalBouquetPage() {
               <p className="mt-4 text-xs leading-relaxed text-neutral-500">
                 Submitting an inquiry does not confirm an order or require
                 payment. We'll review your preferences and contact you
-                with a quotation.
+                with a personalized quotation.
               </p>
 
             </div>
@@ -791,7 +745,22 @@ function BridalBouquetPage() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setShowInspirationModal(false)}
-              className="inline-flex w-full items-center justify-center rounded-full border border-[#98776f] bg-[#98776f] px-6 py-3 text-sm text-white transition hover:bg-[#806159]"
+              className="
+                inline-flex
+                w-full
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-[#98776f]
+                bg-[#98776f]
+                px-6
+                py-3
+                text-sm
+                text-white
+                transition
+                hover:bg-[#806159]
+              "
             >
               Send Your Inspiration Photos on Instagram
             </a>
