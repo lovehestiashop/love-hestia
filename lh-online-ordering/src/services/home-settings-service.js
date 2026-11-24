@@ -10,10 +10,10 @@ export const homeSettingsService = {
     }
 
     const res = await api.get(
-      "/pages/4973?acf_format=standard&_fields=acf"
+      "/wp/v2/pages/4973?acf_format=standard&_fields=acf"
     );
 
-    cachedSettings = res.data.acf || {};
+    cachedSettings = res.data?.acf || {};
 
     return cachedSettings;
   },
