@@ -32,33 +32,27 @@ Through every bouquet and every workshop, the mission remains the same: to share
         </div>
 
         {/* About Us Button and Story */}
-        <div className="order-2 md:order-1">
+        <div className="order-2 md:order-1 text-center">
 
-          {/* Centered About Us Button */}
-          <div className="flex justify-center">
-            <button
-              type="button"
-              onClick={() => setIsExpanded(!isExpanded)}
-              aria-expanded={isExpanded}
-              aria-controls="about-us-story"
-              className="inline-flex items-center gap-3 text-[30px] md:text-[42px] font-semibold text-neutral-700 leading-none transition-colors duration-300 hover:text-[#98776f]"
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-              }}
-            >
-              {data.title}
-
-              <span className="text-xl md:text-2xl font-normal">
-                {isExpanded ? "−" : "+"}
-              </span>
-            </button>
-          </div>
+          {/* About Us Button */}
+          <button
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)}
+            aria-expanded={isExpanded}
+            aria-controls="about-us-story"
+            className="inline-flex items-center justify-center gap-3 rounded-full border border-[#98776f] bg-[#98776f] px-9 py-3.5 text-sm md:text-base font-medium tracking-wide text-white shadow-md transition-all duration-300 hover:bg-[#806159] hover:border-[#806159] hover:shadow-lg"
+          >
+            {data.title}
+            <span aria-hidden="true">
+              {isExpanded ? "−" : "+"}
+            </span>
+          </button>
 
           {/* Collapsible Story */}
           {isExpanded && (
             <div
               id="about-us-story"
-              className="mt-8"
+              className="mt-8 text-left"
             >
               <p className="text-[15px] md:text-[18px] leading-[2] text-neutral-600 whitespace-pre-line">
                 {data.text}
