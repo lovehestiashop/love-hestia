@@ -860,17 +860,21 @@ function WorkshopPage() {
                 }
                 aria-expanded={pricingOpen}
                 aria-controls="workshop-pricing-content"
-                className="
-                  flex
-                  w-full
-                  items-center
-                  justify-between
-                  py-4
-                  text-left
-                  text-2xl
-                  font-medium
-                  text-neutral-800
-                "
+              className="
+  flex
+  w-full
+  items-center
+  justify-between
+  py-4
+  text-left
+  text-2xl
+  md:text-3xl
+  font-medium
+  text-neutral-800
+"
+style={{
+  fontFamily: "'Cormorant Garamond', serif",
+}}
               >
                 <span>Pricing</span>
 
@@ -909,17 +913,21 @@ function WorkshopPage() {
                 }
                 aria-expanded={detailsOpen}
                 aria-controls="workshop-details-content"
-                className="
-                  flex
-                  w-full
-                  items-center
-                  justify-between
-                  py-4
-                  text-left
-                  text-2xl
-                  font-medium
-                  text-neutral-800
-                "
+               className="
+  flex
+  w-full
+  items-center
+  justify-between
+  py-4
+  text-left
+  text-2xl
+  md:text-3xl
+  font-medium
+  text-neutral-800
+"
+style={{
+  fontFamily: "'Cormorant Garamond', serif",
+}}
               >
                 <span>Workshop Details</span>
 
