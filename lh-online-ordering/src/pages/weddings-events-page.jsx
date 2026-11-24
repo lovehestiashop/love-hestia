@@ -40,18 +40,9 @@ function WeddingsEventsPage() {
           <div className="w-16 h-px bg-[#98776f] mx-auto mb-8" />
 
           {/* DESCRIPTION */}
-          <h2
-            className="text-2xl md:text-3xl text-neutral-700 mb-6"
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontWeight: 500,
-            }}
-          >
-            A little more magic is on its way.
-          </h2>
 
           <p className="text-sm md:text-base leading-8 text-neutral-600 mb-5">
-            Our Pretty Withered Flower Bar & Tablescape Styling is
+            Our Withered Fleur Bar & Tablescape Styling is
             taking shape. We're preparing something special for
             weddings, birthdays, and intimate gatherings.
           </p>
@@ -61,15 +52,7 @@ function WeddingsEventsPage() {
             but we look forward to bringing it to your celebrations soon.
           </p>
 
-          {/* BRAND SIGNATURE */}
-          <p
-            className="text-lg italic text-[#98776f] mb-10"
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-            }}
-          >
-            Thoughtfully styled, beautifully remembered.
-          </p>
+
 
           {/* BACK TO HOME */}
           <Link
