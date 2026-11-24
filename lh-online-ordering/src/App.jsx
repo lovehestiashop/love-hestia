@@ -11,6 +11,7 @@ import CartPage from "./pages/cart-page";
 import HomePage from "./pages/home-page";
 import ShopPage from "./pages/shop-page";
 import CustomizePage from "./pages/customize-page";
+import BridalBouquetPage from "./pages/bridal-bouquet-page";
 import FaqPage from "./pages/faq-page";
 import ProductsPage from "./pages/products-page";
 import OrderPage from "./pages/order-page";
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "/customize",
         element: <CustomizePage />,
+      },
+      {
+        path: "/bridal-bouquet",
+        element: <BridalBouquetPage />,
       },
       {
         path: "/workshop",
