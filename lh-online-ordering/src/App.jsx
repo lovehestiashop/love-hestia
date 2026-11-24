@@ -1,6 +1,12 @@
+
 import ProductDetailPage from "./pages/product-detail-page";
 import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+
 import CartPage from "./pages/cart-page";
 import HomePage from "./pages/home-page";
 import ShopPage from "./pages/shop-page";
@@ -10,6 +16,7 @@ import ProductsPage from "./pages/products-page";
 import OrderPage from "./pages/order-page";
 import RootLayout from "./root";
 import WorkshopPage from "./pages/workshop-page";
+import WeddingsEventsPage from "./pages/weddings-events-page";
 
 const router = createBrowserRouter([
   {
@@ -29,19 +36,28 @@ const router = createBrowserRouter([
         element: <ProductsPage />,
       },
       {
-  path: "/product/:id",
-  element: <ProductDetailPage />,
-},
-      { path: "/order", element: <OrderPage /> },
-        { path: "/cart", element: <CartPage /> },
+        path: "/product/:id",
+        element: <ProductDetailPage />,
+      },
       {
-     
+        path: "/order",
+        element: <OrderPage />,
+      },
+      {
+        path: "/cart",
+        element: <CartPage />,
+      },
+      {
         path: "/customize",
         element: <CustomizePage />,
       },
       {
         path: "/workshop",
         element: <WorkshopPage />,
+      },
+      {
+        path: "/weddings-events",
+        element: <WeddingsEventsPage />,
       },
       {
         path: "/FAQ",
