@@ -170,7 +170,7 @@ function HomePage() {
           </h2>
 
           <p className="mb-5 text-sm md:text-base">
-            Birthdays · Bridal Shower · Events
+            Create your own arrangements for Birthdays · Bridal Shower · Events
           </p>
 
           <Link
