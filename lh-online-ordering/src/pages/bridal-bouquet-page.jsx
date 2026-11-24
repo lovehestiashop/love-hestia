@@ -319,6 +319,7 @@ function BridalBouquetPage() {
 
           {/* INTRODUCTION */}
           <div className="mb-12 text-center">
+
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#98776f]">
               Love Hestia Bridal Florals
             </p>
@@ -337,54 +338,48 @@ function BridalBouquetPage() {
               yours, and let us help you find the bouquet that feels
               just right for your day.
             </p>
+
+            {/* PRICING NOTE */}
+            <div className="mx-auto mt-6 max-w-xl rounded-lg border border-[#e8dfd5] bg-white px-5 py-4 text-left">
+              <p className="text-xs leading-relaxed text-neutral-600 md:text-sm">
+                <strong className="font-semibold text-[#98776f]">
+                  A little note on pricing:
+                </strong>{" "}
+                Displayed prices are starting prices only. Your final
+                quotation will depend on your inspiration photos,
+                preferred flowers, and the quantity of dried and
+                preserved blooms needed for your bouquet.
+              </p>
+            </div>
+
           </div>
 
-          {/* PROCESS - HIDDEN ON MOBILE */}
-         <div className="hidden">
-
+          {/* PROCESS - REMOVED FROM DISPLAY */}
+          <div className="hidden">
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#98776f]">
-                01
-              </p>
-
-              <h3 className="mb-2 text-sm font-semibold">
-                Choose your bouquet
-              </h3>
-
-              <p className="text-sm leading-relaxed text-neutral-500">
+              <p>01</p>
+              <h3>Choose your bouquet</h3>
+              <p>
                 Select your wedding style and share your floral preferences.
               </p>
             </div>
 
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#98776f]">
-                02
-              </p>
-
-              <h3 className="mb-2 text-sm font-semibold">
-                Receive your quotation
-              </h3>
-
-              <p className="text-sm leading-relaxed text-neutral-500">
+              <p>02</p>
+              <h3>Receive your quotation</h3>
+              <p>
                 We'll review your selections and send you a proposed design
                 and price.
               </p>
             </div>
 
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#98776f]">
-                03
-              </p>
-
-              <h3 className="mb-2 text-sm font-semibold">
-                Approve your bouquet
-              </h3>
-
-              <p className="text-sm leading-relaxed text-neutral-500">
+              <p>03</p>
+              <h3>Approve your bouquet</h3>
+              <p>
                 Once approved, we'll guide you through the ordering process.
               </p>
             </div>
-
           </div>
 
           {/* WEDDING STYLE SELECTION */}
@@ -780,13 +775,15 @@ function BridalBouquetPage() {
                 fontFamily: "'Cormorant Garamond', serif",
               }}
             >
-              Have a bridal inspiration photo?
+              Let's Bring Your Bridal Vision to Life
             </h2>
 
             <p className="mb-7 text-sm leading-relaxed text-neutral-600">
               We'd love to see the bouquet you've been dreaming of!
-              Send us your inspiration photos through Instagram to
-              help us understand your vision.
+              After submitting your inquiry, please send us your
+              inspiration photos through Instagram. Include your
+              preferred flower combinations and quantities so we can
+              review your vision and prepare a personalized quotation.
             </p>
 
             <a
@@ -796,7 +793,7 @@ function BridalBouquetPage() {
               onClick={() => setShowInspirationModal(false)}
               className="inline-flex w-full items-center justify-center rounded-full border border-[#98776f] bg-[#98776f] px-6 py-3 text-sm text-white transition hover:bg-[#806159]"
             >
-              Send your inspiration on Instagram
+              Send Your Inspiration Photos on Instagram
             </a>
 
             <button
