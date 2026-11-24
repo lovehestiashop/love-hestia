@@ -1,0 +1,720 @@
+
+import { useState, useEffect } from "react";
+import FooterComponent from "../components/footer";
+import HeaderComponent from "../components/header";
+import api from "../services/api";
+import { homeSettingsService } from "../services/home-settings-service";
+
+function BridalBouquetPage() {
+  const [loading, setLoading] = useState(false);
+  const [loadingImages, setLoadingImages] = useState(true);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [dateError, setDateError] = useState("");
+  const [selectedWedding, setSelectedWedding] = useState("");
+  const [showInspirationModal, setShowInspirationModal] = useState(false);
+
+  // WordPress ACF images
+  const [civilImage, setCivilImage] = useState("");
+  const [churchImage, setChurchImage] = useState("");
+
+  // Retrieve bridal photos from WordPress.
+  useEffect(() => {
+    let active = true;
+
+    const loadWeddingImages = async () => {
+      try {
+        const settings = await homeSettingsService.getSettings();
+
+        if (!active) return;
+
+        const getImageUrl = (image) => {
+          if (typeof image === "string") return image;
+          return image?.url || "";
+        };
+
+        setCivilImage(
+          getImageUrl(settings?.civil_wedding_sample)
+        );
+
+        setChurchImage(
+          getImageUrl(settings?.church_wedding_sample)
+        );
+      } catch (err) {
+        console.error("Unable to load bridal images:", err);
+      } finally {
+        if (active) {
+          setLoadingImages(false);
+        }
+      }
+    };
+
+    loadWeddingImages();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  // Automatically scroll to top.
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+  }, []);
+
+  const weddingOptions = {
+    civil: {
+      label: "Civil Wedding",
+      price: 1500,
+      image: civilImage,
+    },
+    church: {
+      label: "Church Wedding",
+      price: 3500,
+      image: churchImage,
+    },
+  };
+
+  // Require at least 3 days' notice.
+  const getMinimumDate = () => {
+    const date = new Date();
+    date.setDate(date.getDate() + 3);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
+
+  // Check delivery date restrictions.
+  const isDateAllowed = (value) => {
+    if (!value || value < getMinimumDate()) {
+      return false;
+    }
+
+    // Shop closure: December 19, 2026 to January 8, 2027.
+    if (value >= "2026-12-19" && value <= "2027-01-08") {
+      return false;
+    }
+
+    // Sundays unavailable except February 14, 2027.
+    const date = new Date(`${value}T00:00:00`);
+    const isSunday = date.getDay() === 0;
+
+    if (isSunday && value !== "2027-02-14") {
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleDateChange = (event) => {
+    const value = event.target.value;
+
+    setDateError("");
+
+    if (value && !isDateAllowed(value)) {
+      event.target.value = "";
+
+      setDateError(
+        value >= "2026-12-19" && value <= "2027-01-08"
+          ? "We are unavailable from December 19, 2026 to January 8, 2027."
+          : value < getMinimumDate()
+          ? "Please allow at least 3 days for your bridal bouquet."
+          : "We do not accept Sunday deliveries, except February 14, 2027."
+      );
+    }
+  };
+
+  // Submit bridal bouquet inquiry.
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    setMessage("");
+    setError("");
+    setDateError("");
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    if (!selectedWedding) {
+      setError("Please select your wedding style.");
+      return;
+    }
+
+    const deliveryDate = formData.get("delivery_date");
+
+    if (!isDateAllowed(deliveryDate)) {
+      setDateError("Please select an available delivery date.");
+      return;
+    }
+
+    const wedding = weddingOptions[selectedWedding];
+
+    // Include wedding selection and starting price in WordPress inquiry.
+    const originalNotes = formData.get("notes") || "";
+
+    const bridalNotes =
+      `Wedding type: ${wedding.label} | ` +
+      `Starting price: PHP ${wedding.price.toLocaleString("en-PH")} | ` +
+      `Additional notes: ${originalNotes.trim() || "None"}`;
+
+    const inquiryData = new FormData();
+
+    inquiryData.append("website", formData.get("website") || "");
+    inquiryData.append("customer_name", formData.get("customer_name"));
+    inquiryData.append("customer_number", formData.get("customer_number"));
+    inquiryData.append("customer_email", formData.get("customer_email"));
+    inquiryData.append("instagram_name", formData.get("instagram_name"));
+    inquiryData.append("delivery_date", deliveryDate);
+    inquiryData.append("color_palette", formData.get("color_palette"));
+    inquiryData.append("focal_flower", formData.get("focal_flower"));
+    inquiryData.append(
+      "focal_quantity",
+      formData.get("focal_quantity") || ""
+    );
+    inquiryData.append("notes", bridalNotes);
+
+    setLoading(true);
+
+    try {
+      const response = await api.post(
+        "/love-hestia/v1/custom-inquiries",
+        inquiryData,
+        { timeout: 30000 }
+      );
+
+      if (!response.data?.success) {
+        throw new Error(
+          response.data?.message || "Unable to submit your inquiry."
+        );
+      }
+
+      setMessage(
+        response.data.message ||
+          "Thank you! Your bridal bouquet inquiry has been submitted."
+      );
+
+      form.reset();
+      setSelectedWedding("");
+      setDateError("");
+      setShowInspirationModal(true);
+
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+          err.message ||
+          "Something went wrong. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const inputClass =
+    "w-full rounded-md border border-neutral-300 bg-white px-4 py-3 text-sm outline-none focus:border-[#98776f]";
+
+  const labelClass =
+    "mb-2 block text-sm font-medium text-neutral-700";
+
+  return (
+    <div>
+      <HeaderComponent />
+
+      <section className="bg-[#faf9f7] text-neutral-700">
+        <div className="mx-auto max-w-3xl px-6 py-16 md:py-24">
+
+          {/* INTRODUCTION */}
+          <div className="mb-12 text-center">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#98776f]">
+              Love Hestia Bridal Florals
+            </p>
+
+            <h1
+              className="mb-4 text-4xl font-medium text-neutral-800 md:text-5xl"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+              }}
+            >
+              A Bouquet for Your Forever
+            </h1>
+
+            <p className="mx-auto max-w-xl text-sm leading-relaxed text-neutral-600">
+              Every wedding has its own story. Tell us a little about
+              yours, and let us help you find the bouquet that feels
+              just right for your day.
+            </p>
+          </div>
+
+          {/* PROCESS */}
+          <div className="mb-10 grid gap-6 border-y border-neutral-200 py-8 sm:grid-cols-3">
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#98776f]">
+                01
+              </p>
+              <h3 className="mb-2 text-sm font-semibold">
+                Choose your bouquet
+              </h3>
+              <p className="text-sm leading-relaxed text-neutral-500">
+                Select your wedding style and share your floral preferences.
+              </p>
+            </div>
+
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#98776f]">
+                02
+              </p>
+              <h3 className="mb-2 text-sm font-semibold">
+                Receive your quotation
+              </h3>
+              <p className="text-sm leading-relaxed text-neutral-500">
+                We'll review your selections and send you a proposed design
+                and price.
+              </p>
+            </div>
+
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#98776f]">
+                03
+              </p>
+              <h3 className="mb-2 text-sm font-semibold">
+                Approve your bouquet
+              </h3>
+              <p className="text-sm leading-relaxed text-neutral-500">
+                Once approved, we'll guide you through the ordering process.
+              </p>
+            </div>
+          </div>
+
+          {/* WEDDING STYLE SELECTION */}
+          <div className="mb-14">
+            <h2 className="mb-2 text-lg font-medium text-neutral-800">
+              Choose Your Wedding Style
+            </h2>
+
+            <p className="mb-6 text-sm text-neutral-500">
+              Select the type of wedding bouquet you'd like us to create.
+            </p>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              {Object.entries(weddingOptions).map(([key, wedding]) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setSelectedWedding(key)}
+                  aria-pressed={selectedWedding === key}
+                  className={`
+                    group overflow-hidden rounded-lg border-2 bg-white text-left
+                    transition-all duration-300
+                    ${
+                      selectedWedding === key
+                        ? "border-[#98776f] shadow-md"
+                        : "border-neutral-200 hover:border-[#c3a59d]"
+                    }
+                  `}
+                >
+                  <div className="relative h-[250px] bg-[#eee9e5]">
+                    {loadingImages ? (
+                      <div className="flex h-full items-center justify-center text-sm text-neutral-500">
+                        Loading photo...
+                      </div>
+                    ) : wedding.image ? (
+                      <img
+                        src={wedding.image}
+                        alt={`${wedding.label} bridal bouquet sample`}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full flex-col items-center justify-center gap-2 text-neutral-500">
+                        <span className="text-3xl">✿</span>
+                        <span className="text-xs">
+                          Photo not yet available
+                        </span>
+                      </div>
+                    )}
+
+                    {selectedWedding === key && (
+                      <div className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#98776f] text-white">
+                        ✓
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-5">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="text-base font-medium text-neutral-800">
+                        {wedding.label}
+                      </h3>
+
+                      <span
+                        className={`text-xs ${
+                          selectedWedding === key
+                            ? "text-[#98776f]"
+                            : "text-neutral-400"
+                        }`}
+                      >
+                        {selectedWedding === key ? "Selected" : "Select"}
+                      </span>
+                    </div>
+
+                    <p className="mt-3 text-xs uppercase tracking-wider text-neutral-500">
+                      Starting price
+                    </p>
+
+                    <p className="mt-1 text-2xl font-medium text-neutral-800">
+                      ₱{wedding.price.toLocaleString("en-PH")}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {!selectedWedding && (
+              <p className="mt-4 text-xs text-neutral-500">
+                Please select one wedding style to continue.
+              </p>
+            )}
+
+            {selectedWedding && (
+              <div className="mt-5 rounded-md border border-[#e5d8d3] bg-white p-4">
+                <p className="text-sm text-neutral-600">
+                  Your selected wedding style:
+                </p>
+
+                <p className="mt-1 font-medium text-neutral-800">
+                  {weddingOptions[selectedWedding].label} — Starting at ₱
+                  {weddingOptions[selectedWedding].price.toLocaleString("en-PH")}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* PRICING INFORMATION */}
+          <div className="mb-14 rounded-lg border border-neutral-200 bg-white p-6 sm:p-8">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[#98776f]">
+              Bridal Bouquet Starting Prices
+            </p>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-neutral-600">Civil Wedding</p>
+                <h3 className="mt-1 text-2xl font-medium text-neutral-800">
+                  ₱1,500
+                </h3>
+              </div>
+
+              <div>
+                <p className="text-sm text-neutral-600">Church Wedding</p>
+                <h3 className="mt-1 text-2xl font-medium text-neutral-800">
+                  ₱3,500
+                </h3>
+              </div>
+            </div>
+
+            <p className="mt-5 border-t border-neutral-100 pt-4 text-xs leading-relaxed text-neutral-500">
+              These are starting prices. Final pricing depends on your
+              preferred flowers, focal flower quantity, design, and
+              flower availability.
+            </p>
+          </div>
+
+          {/* INQUIRY FORM */}
+          <form onSubmit={handleSubmit} className="space-y-10">
+
+            {/* CUSTOMER DETAILS */}
+            <div>
+              <h2 className="mb-6 text-lg font-medium text-neutral-800">
+                Your Details
+              </h2>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label className={labelClass}>Full name *</label>
+                  <input
+                    type="text"
+                    name="customer_name"
+                    className={inputClass}
+                    placeholder="Your name"
+                    required
+                    maxLength={100}
+                  />
+                </div>
+
+                <div>
+                  <label className={labelClass}>Contact number *</label>
+                  <input
+                    type="tel"
+                    name="customer_number"
+                    className={inputClass}
+                    placeholder="Your mobile number"
+                    required
+                    maxLength={30}
+                  />
+                </div>
+
+                <div>
+                  <label className={labelClass}>Email address *</label>
+                  <input
+                    type="email"
+                    name="customer_email"
+                    className={inputClass}
+                    placeholder="Your email address"
+                    required
+                    maxLength={150}
+                  />
+                </div>
+
+                <div>
+                  <label className={labelClass}>Instagram username *</label>
+                  <input
+                    type="text"
+                    name="instagram_name"
+                    className={inputClass}
+                    placeholder="@yourusername"
+                    required
+                    maxLength={100}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* BOUQUET PREFERENCES */}
+            <div>
+              <h2 className="mb-2 text-lg font-medium text-neutral-800">
+                Your Bridal Bouquet Preferences
+              </h2>
+
+              <p className="mb-6 text-sm text-neutral-500">
+                Help us understand the flowers and colors you envision
+                for your wedding day.
+              </p>
+
+              <div className="space-y-6">
+                <div>
+                  <label className={labelClass}>
+                    Preferred color palette *
+                  </label>
+
+                  <input
+                    type="text"
+                    name="color_palette"
+                    className={inputClass}
+                    placeholder="e.g. Ivory, champagne, and blush pink"
+                    required
+                    maxLength={150}
+                  />
+                </div>
+
+                <div>
+                  <label className={labelClass}>
+                    Preferred flowers *
+                  </label>
+
+                  <select
+                    name="focal_flower"
+                    className={inputClass}
+                    defaultValue=""
+                    required
+                  >
+                    <option value="" disabled>
+                      Select your preferred flower
+                    </option>
+
+                    <option value="Preserved Roses">
+                      Preserved Roses
+                    </option>
+
+                    <option value="Preserved Sunflowers">
+                      Preserved Sunflowers
+                    </option>
+
+                    <option value="Preserved Peonies">
+                      Preserved Peonies
+                    </option>
+
+                    <option value="Sola Peonies">
+                      Sola Peonies
+                    </option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className={labelClass}>
+                    How many focal flowers would you prefer?
+                  </label>
+
+                  <input
+                    type="text"
+                    name="focal_quantity"
+                    className={inputClass}
+                    placeholder="e.g. 3, 5, 7, or your preferred quantity"
+                    maxLength={150}
+                  />
+
+                  <p className="mt-2 text-xs leading-relaxed text-neutral-500">
+                    For a combination of flowers, please list each flower
+                    and quantity in your additional notes.
+                  </p>
+                </div>
+
+                <div>
+                  <label className={labelClass}>
+                    Additional notes
+                  </label>
+
+                  <textarea
+                    name="notes"
+                    rows="4"
+                    maxLength={1500}
+                    className={inputClass}
+                    placeholder="Tell us more about your dream bridal bouquet, preferred wrapping, ribbon, flower combinations, or any special requests."
+                  />
+                </div>
+
+                <div>
+                  <label className={labelClass}>
+                    Preferred delivery date *
+                  </label>
+
+                  <input
+                    type="date"
+                    name="delivery_date"
+                    min={getMinimumDate()}
+                    className={inputClass}
+                    onChange={handleDateChange}
+                    required
+                  />
+
+                  {dateError && (
+                    <p className="mt-2 text-sm text-red-600" role="alert">
+                      {dateError}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* HONEYPOT SPAM PROTECTION */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                left: "-9999px",
+                width: "1px",
+                height: "1px",
+                overflow: "hidden",
+              }}
+            >
+              <label>
+                Leave this field empty
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex="-1"
+                  autoComplete="off"
+                />
+              </label>
+            </div>
+
+            {/* SUBMISSION FEEDBACK */}
+            {message && (
+              <div
+                role="status"
+                className="rounded-md border border-[#cbd5c0] bg-[#f0f3ed] p-4 text-sm leading-relaxed text-neutral-700"
+              >
+                {message}
+              </div>
+            )}
+
+            {error && (
+              <div
+                role="alert"
+                className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+              >
+                {error}
+              </div>
+            )}
+
+            {/* SUBMIT BUTTON */}
+            <div className="pt-2 text-center">
+              <button
+                type="submit"
+                disabled={loading}
+                className="rounded-full border border-[#98776f] bg-[#98776f] px-8 py-3 text-sm text-white transition hover:border-[#806159] hover:bg-[#806159] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading ? "Submitting..." : "Submit Bridal Inquiry"}
+              </button>
+
+              <p className="mt-4 text-xs leading-relaxed text-neutral-500">
+                Submitting an inquiry does not confirm an order or require
+                payment. We'll review your preferences and contact you
+                with a quotation.
+              </p>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <FooterComponent />
+
+      {/* INSPIRATION PHOTO POPUP */}
+      {showInspirationModal && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-5"
+          role="presentation"
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="bridal-modal-title"
+            className="w-full max-w-md rounded-xl bg-[#faf9f7] p-7 text-center shadow-xl sm:p-9"
+          >
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#98776f]">
+              Thank you for your inquiry
+            </p>
+
+            <h2
+              id="bridal-modal-title"
+              className="mb-4 text-2xl font-medium text-neutral-800"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+              }}
+            >
+              Have a bridal inspiration photo?
+            </h2>
+
+            <p className="mb-7 text-sm leading-relaxed text-neutral-600">
+              We'd love to see the bouquet you've been dreaming of!
+              Send us your inspiration photos through Instagram to
+              help us understand your vision.
+            </p>
+
+            <a
+              href="https://www.instagram.com/lovehestiaflowers/?hl=en"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setShowInspirationModal(false)}
+              className="inline-flex w-full items-center justify-center rounded-full border border-[#98776f] bg-[#98776f] px-6 py-3 text-sm text-white transition hover:bg-[#806159]"
+            >
+              Send your inspiration on Instagram
+            </a>
+
+            <button
+              type="button"
+              onClick={() => setShowInspirationModal(false)}
+              className="mt-4 px-5 py-2 text-sm text-neutral-500 transition hover:text-neutral-800"
+            >
+              Maybe later
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default BridalBouquetPage;
