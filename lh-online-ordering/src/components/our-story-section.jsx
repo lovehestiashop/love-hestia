@@ -7,6 +7,7 @@ function OurStorySectionComponent() {
   const data = {
     image: "/Our story.jpeg",
     title: "About Us",
+    subtitle: "Discover the story and inspiration behind Love Hestia.",
     text: `Love Hestia began in 2022, born from healing, hope, and a renewed sense of purpose.
 
 Like many, the journey was shaped by the uncertainty of the pandemic. In the quiet stillness that followed, dried flowers became a new source of comfort and creativity. With no background in floral design, the very first bouquet I created was sold right away. That small moment sparked something much bigger—a path that felt unexpected but meant to be.
@@ -31,30 +32,49 @@ Through every bouquet and every workshop, the mission remains the same: to share
           />
         </div>
 
-        {/* About Us Button and Story */}
-        <div className="order-2 md:order-1 text-center">
+        {/* About Us Card and Story */}
+        <div className="order-2 md:order-1">
 
-          {/* About Us Button */}
+          {/* Clickable About Us Card */}
           <button
             type="button"
             onClick={() => setIsExpanded(!isExpanded)}
             aria-expanded={isExpanded}
             aria-controls="about-us-story"
-            className="inline-flex items-center justify-center gap-3 rounded-full border border-[#98776f] bg-[#98776f] px-9 py-3.5 text-sm md:text-base font-medium tracking-wide text-white shadow-md transition-all duration-300 hover:bg-[#806159] hover:border-[#806159] hover:shadow-lg"
+            className="w-full rounded-xl border border-neutral-200 bg-white p-5 text-left shadow-sm transition-all duration-300 hover:shadow-md hover:border-[#98776f] sm:p-6"
           >
-            {data.title}
-            <span aria-hidden="true">
-              {isExpanded ? "−" : "+"}
+            {/* Heading and Expand Icon */}
+            <span className="flex items-center justify-between gap-4">
+              <span
+                className="text-[28px] md:text-[36px] font-semibold leading-tight text-[#98776f]"
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                }}
+              >
+                {data.title}
+              </span>
+
+              <span
+                aria-hidden="true"
+                className="text-xl font-medium text-[#98776f]"
+              >
+                {isExpanded ? "−" : "+"}
+              </span>
+            </span>
+
+            {/* Supporting Sentence */}
+            <span className="mt-2 block text-sm md:text-base leading-relaxed text-neutral-600">
+              {data.subtitle}
             </span>
           </button>
 
-          {/* Collapsible Story */}
+          {/* Expandable Story */}
           {isExpanded && (
             <div
               id="about-us-story"
-              className="mt-8 text-left"
+              className="mt-5 rounded-xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6"
             >
-              <p className="text-[15px] md:text-[18px] leading-[2] text-neutral-600 whitespace-pre-line">
+              <p className="text-[15px] md:text-[17px] leading-[2] text-neutral-600 whitespace-pre-line">
                 {data.text}
               </p>
             </div>
