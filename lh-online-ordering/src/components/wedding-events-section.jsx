@@ -4,6 +4,31 @@ import { Link } from "react-router-dom";
 import { homeSettingsService } from "../services/home-settings-service";
 import { mediaService } from "../services/media-service";
 
+// Extract a direct image URL from different WordPress image formats.
+function getDirectImageUrl(image) {
+  if (typeof image === "string" && /^https?:\/\//i.test(image)) {
+    return image;
+  }
+
+  if (image && typeof image === "object") {
+    const url =
+      image.url ||
+      image.source_url ||
+      image.guid?.rendered ||
+      image.sizes?.large?.source_url ||
+      image.sizes?.large ||
+      image.sizes?.medium_large?.source_url ||
+      image.sizes?.medium_large ||
+      image.sizes?.full?.url;
+
+    if (typeof url === "string" && /^https?:\/\//i.test(url)) {
+      return url;
+    }
+  }
+
+  return "";
+}
+
 function WeddingEventsSectionComponent() {
   const [imageUrl, setImageUrl] = useState("");
 
@@ -12,27 +37,72 @@ function WeddingEventsSectionComponent() {
 
     const loadWeddingImage = async () => {
       try {
-        // Get homepage settings from WordPress ACF
-        const settings = await homeSettingsService.getSettings();
+        // Get homepage settings from WordPress.
+        const response = await homeSettingsService.getSettings();
 
-        // Get Wedding & Events image ID
-        const imageId =
+        const settings =
+          response?.acf ||
+          response?.data?.acf ||
+          response?.data ||
+          response ||
+          {};
+
+        // Support different ACF field names.
+        const imageValue =
           settings?.wedding_events_image ??
-          settings?.["wedding_&_events_image"];
+          settings?.["wedding_&_events_image"] ??
+          settings?.weddingEventsImage;
 
-        if (!imageId) {
+        if (!imageValue) {
           console.warn(
-            "Wedding & Events image has not been selected."
+            "Wedding & Events image has not been selected in WordPress."
           );
           return;
         }
 
-        // Retrieve the actual image URL from WordPress
-        const media = await mediaService.getById(imageId);
+        // Check whether ACF already returned an image URL.
+        const directUrl = getDirectImageUrl(imageValue);
 
-        if (isMounted && media?.source_url) {
-          setImageUrl(media.source_url);
+        if (directUrl) {
+          if (isMounted) {
+            setImageUrl(directUrl);
+          }
+          return;
         }
+
+        // Extract WordPress media ID.
+        const imageId =
+          typeof imageValue === "object"
+            ? imageValue.ID ?? imageValue.id
+            : imageValue;
+
+        if (!imageId) {
+          throw new Error("Invalid Wedding & Events image data.");
+        }
+
+        // Retrieve the WordPress media image.
+        const mediaResponse = await mediaService.getById(imageId);
+
+        const media =
+          mediaResponse?.data ||
+          mediaResponse?.media ||
+          mediaResponse;
+
+        // Support different WordPress media response formats.
+        const resolvedUrl =
+          getDirectImageUrl(media) ||
+          getDirectImageUrl(media?.media_details);
+
+        if (!resolvedUrl) {
+          throw new Error(
+            "WordPress did not return a valid Wedding & Events image URL."
+          );
+        }
+
+        if (isMounted) {
+          setImageUrl(resolvedUrl);
+        }
+
       } catch (error) {
         console.error(
           "Unable to load Wedding & Events image:",
@@ -49,22 +119,26 @@ function WeddingEventsSectionComponent() {
   }, []);
 
   return (
-    <section className="relative h-[500px] md:h-[800px] text-white text-center overflow-hidden">
+    <section className="relative h-[500px] md:h-[800px] overflow-hidden text-center text-white">
 
       {/* BACKGROUND IMAGE */}
-      <div className="absolute inset-0">
-        {imageUrl ? (
+      <div className="absolute inset-0 bg-neutral-300">
+
+        {imageUrl && (
           <img
             src={imageUrl}
-            alt="Love Hestia Flower Bar and Tablescape Styling"
+            alt="Love Hestia Withered Fleur Bar and Tablescape Styling"
             loading="lazy"
-            className="w-full h-full object-cover"
-            style={{
-              objectPosition: "center center",
+            decoding="async"
+            className="h-full w-full object-cover object-center"
+            onError={() => {
+              console.error(
+                "Wedding & Events background image could not be displayed:",
+                imageUrl
+              );
+              setImageUrl("");
             }}
           />
-        ) : (
-          <div className="w-full h-full bg-neutral-300" />
         )}
 
         {/* DARK OVERLAY */}
@@ -76,7 +150,7 @@ function WeddingEventsSectionComponent() {
 
         {/* HEADING */}
         <h2
-          className="text-3xl md:text-5xl mb-3 font-normal"
+          className="mb-3 text-3xl font-normal md:text-5xl"
           style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontWeight: 500,
@@ -86,7 +160,7 @@ function WeddingEventsSectionComponent() {
         </h2>
 
         {/* DESCRIPTION */}
-        <p className="mb-5 text-sm md:text-base max-w-3xl leading-relaxed">
+        <p className="mb-5 max-w-3xl text-sm leading-relaxed md:text-base">
           A little floral magic for weddings, birthdays, and intimate
           gatherings. Thoughtfully styled, beautifully remembered.
         </p>
@@ -96,16 +170,16 @@ function WeddingEventsSectionComponent() {
           to="/weddings-events"
           className="
             inline-block
+            rounded-full
             border
             border-white
             px-6
             py-2
-            rounded-full
             text-sm
-            hover:bg-white
-            hover:text-neutral-800
             transition
             duration-300
+            hover:bg-white
+            hover:text-neutral-800
           "
         >
           Learn more
