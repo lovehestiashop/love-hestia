@@ -324,13 +324,7 @@ function BridalBouquetPage() {
               just right for your day.
             </p>
 
-            {/* PRICING NOTE */}
-            <p className="mx-auto mt-5 max-w-xl text-xs leading-relaxed text-neutral-500 md:text-sm">
-              A little note on pricing: Final pricing depends on your
-              inspiration, preferred flower varieties, and the quantity
-              of dried and preserved blooms needed for your bouquet.
-            </p>
-
+      
           </div>
 
           {/* BRIDAL BOUQUET PHOTO COLLAGE */}
