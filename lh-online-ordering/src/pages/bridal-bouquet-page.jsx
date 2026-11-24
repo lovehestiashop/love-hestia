@@ -330,14 +330,6 @@ function BridalBouquetPage() {
           {/* BRIDAL BOUQUET PHOTO COLLAGE */}
           <div className="mb-12">
 
-            <h2
-              className="mb-5 text-center text-2xl font-normal text-neutral-800 md:text-3xl"
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-              }}
-            >
-              Bridal Bouquet Inspirations
-            </h2>
 
             <div className="overflow-hidden rounded-lg bg-[#eee9e5]">
 
