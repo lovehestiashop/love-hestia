@@ -12,20 +12,22 @@ function WeddingEventsSectionComponent() {
 
     const loadWeddingImage = async () => {
       try {
-        // Retrieve homepage ACF settings
+        // Get homepage settings from WordPress ACF
         const settings = await homeSettingsService.getSettings();
 
-        // Retrieve Wedding & Events image ID
+        // Get Wedding & Events image ID
         const imageId =
           settings?.wedding_events_image ??
           settings?.["wedding_&_events_image"];
 
         if (!imageId) {
-          console.warn("Wedding & Events image has not been selected.");
+          console.warn(
+            "Wedding & Events image has not been selected."
+          );
           return;
         }
 
-        // Retrieve actual WordPress image URL
+        // Retrieve the actual image URL from WordPress
         const media = await mediaService.getById(imageId);
 
         if (isMounted && media?.source_url) {
@@ -54,7 +56,7 @@ function WeddingEventsSectionComponent() {
         {imageUrl ? (
           <img
             src={imageUrl}
-            alt="Love Hestia dried flower bar and tablescape styling"
+            alt="Love Hestia Flower Bar and Tablescape Styling"
             loading="lazy"
             className="w-full h-full object-cover"
             style={{
@@ -80,15 +82,13 @@ function WeddingEventsSectionComponent() {
             fontWeight: 500,
           }}
         >
-          Dried Flower Bar & Tablescape Styling
+          Flower Bar & Tablescape Styling
         </h2>
 
         {/* DESCRIPTION */}
-        <p className="mb-6 text-sm md:text-base max-w-3xl leading-relaxed">
-          For celebrations big or small, we bring flowers to the heart
-          of the occasion. From thoughtfully styled tablescapes to
-          interactive dried flower bars, every detail is designed to
-          make your gathering feel a little more special.
+        <p className="mb-5 text-sm md:text-base max-w-3xl leading-relaxed">
+          A little floral magic for weddings, birthdays, and intimate
+          gatherings. Thoughtfully styled, beautifully remembered.
         </p>
 
         {/* BUTTON */}
