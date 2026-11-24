@@ -305,10 +305,6 @@ function BridalBouquetPage() {
           {/* INTRODUCTION */}
           <div className="mb-10 text-center">
 
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#98776f]">
-              Love Hestia Bridal Florals
-            </p>
-
             <h1
               className="mb-4 text-4xl font-medium text-neutral-800 md:text-5xl"
               style={{
