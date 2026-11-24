@@ -60,6 +60,9 @@ function HomePage() {
 
       {/* CUSTOM ARRANGEMENTS */}
       <CustomArrangementSectionComponent />
+      
+      {/* WEDDINGS & EVENTS */}
+<WeddingEventsSectionComponent />
 
       {/* FLORIST FOR A DAY */}
       <section className="py-16 bg-neutral-50 text-center">
