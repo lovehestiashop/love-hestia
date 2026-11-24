@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import FooterComponent from "../components/footer";
 import HeaderComponent from "../components/header";
@@ -397,7 +398,8 @@ function BridalBouquetPage() {
               Select the type of wedding bouquet you'd like us to create.
             </p>
 
-            <div className="grid gap-5 sm:grid-cols-2">
+            {/* TWO COLUMNS ON MOBILE AND DESKTOP */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-5">
 
               {Object.entries(weddingOptions).map(([key, wedding]) => (
                 <button
@@ -406,7 +408,7 @@ function BridalBouquetPage() {
                   onClick={() => setSelectedWedding(key)}
                   aria-pressed={selectedWedding === key}
                   className={`
-                    group overflow-hidden rounded-lg border-2 bg-white text-left
+                    group min-w-0 overflow-hidden rounded-lg border-2 bg-white text-left
                     transition-all duration-300
                     ${
                       selectedWedding === key
@@ -416,16 +418,19 @@ function BridalBouquetPage() {
                   `}
                 >
 
-                  <div className="relative h-[250px] bg-[#eee9e5]">
+                  {/* IMAGE */}
+                  <div className="relative h-[135px] bg-[#eee9e5] sm:h-[190px] md:h-[250px]">
 
                     {loadingImages ? (
-                      <div className="flex h-full items-center justify-center text-sm text-neutral-500">
-                        Loading photo...
+                      <div className="flex h-full items-center justify-center text-xs text-neutral-500">
+                        Loading...
                       </div>
                     ) : wedding.image ? (
                       <img
                         src={wedding.image}
                         alt={`${wedding.label} bridal bouquet sample`}
+                        loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover"
                         onError={() => {
                           if (key === "civil") {
@@ -437,30 +442,32 @@ function BridalBouquetPage() {
                       />
                     ) : (
                       <div className="flex h-full flex-col items-center justify-center gap-2 text-neutral-500">
-                        <span className="text-3xl">✿</span>
-                        <span className="text-xs">
+                        <span className="text-2xl">✿</span>
+                        <span className="text-center text-[10px] sm:text-xs">
                           Photo not yet available
                         </span>
                       </div>
                     )}
 
                     {selectedWedding === key && (
-                      <div className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#98776f] text-white">
+                      <div className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[#98776f] text-sm text-white sm:right-3 sm:top-3 sm:h-7 sm:w-7">
                         ✓
                       </div>
                     )}
 
                   </div>
 
-                  <div className="p-5">
+                  {/* CARD DETAILS */}
+                  <div className="p-3 sm:p-4 md:p-5">
 
-                    <div className="flex items-center justify-between gap-2">
-                      <h3 className="text-base font-medium text-neutral-800">
+                    <div className="flex min-w-0 flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+
+                      <h3 className="text-[13px] font-medium leading-tight text-neutral-800 sm:text-base">
                         {wedding.label}
                       </h3>
 
                       <span
-                        className={`text-xs ${
+                        className={`text-[10px] sm:text-xs ${
                           selectedWedding === key
                             ? "text-[#98776f]"
                             : "text-neutral-400"
@@ -468,13 +475,14 @@ function BridalBouquetPage() {
                       >
                         {selectedWedding === key ? "Selected" : "Select"}
                       </span>
+
                     </div>
 
-                    <p className="mt-3 text-xs uppercase tracking-wider text-neutral-500">
+                    <p className="mt-3 text-[10px] uppercase tracking-wider text-neutral-500 sm:text-xs">
                       Starting price
                     </p>
 
-                    <p className="mt-1 text-2xl font-medium text-neutral-800">
+                    <p className="mt-1 text-xl font-medium text-neutral-800 sm:text-2xl">
                       ₱{wedding.price.toLocaleString("en-PH")}
                     </p>
 
