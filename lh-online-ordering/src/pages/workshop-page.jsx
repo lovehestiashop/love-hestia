@@ -69,19 +69,23 @@ function getDateKey(date) {
 function WorkshopPage() {
   const [data, setData] = useState(null);
   const [currentImage, setCurrentImage] = useState(0);
+
   const [loading, setLoading] = useState(true);
   const [pageError, setPageError] = useState(false);
+  const [imagesLoading, setImagesLoading] = useState(true);
 
-  // Both sections remain collapsed when the page first opens.
+  // Collapsible sections.
   const [pricingOpen, setPricingOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
+  // Workshop availability.
   const [blockedDates, setBlockedDates] = useState([]);
   const [availabilityLoading, setAvailabilityLoading] =
     useState(true);
   const [availabilityError, setAvailabilityError] =
     useState(false);
 
+  // Inquiry form.
   const [selectedDate, setSelectedDate] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -90,18 +94,98 @@ function WorkshopPage() {
 
   const [inquiry, setInquiry] = useState(INITIAL_INQUIRY);
 
-  // LOAD WORKSHOP CONTENT AND UP TO SIX PHOTOS.
+  // --------------------------------------------------
+  // LOAD WORKSHOP CONTENT FIRST, PHOTOS IN BACKGROUND.
+  // --------------------------------------------------
+
   useEffect(() => {
     let cancelled = false;
 
+    async function resolveImage(imageValue) {
+      if (!imageValue) return null;
+
+      // Direct image URL.
+      if (
+        typeof imageValue === "string" &&
+        /^https?:\/\//i.test(imageValue)
+      ) {
+        return imageValue;
+      }
+
+      // ACF image object.
+      if (
+        typeof imageValue === "object" &&
+        !Array.isArray(imageValue)
+      ) {
+        const directUrl =
+          imageValue.url ||
+          imageValue.source_url ||
+          imageValue.sizes?.large?.source_url ||
+          imageValue.sizes?.large ||
+          imageValue.sizes?.medium_large?.source_url ||
+          imageValue.sizes?.medium_large ||
+          imageValue.sizes?.["1536x1536"]?.source_url ||
+          imageValue.sizes?.["1536x1536"];
+
+        if (
+          typeof directUrl === "string" &&
+          /^https?:\/\//i.test(directUrl)
+        ) {
+          return directUrl;
+        }
+      }
+
+      // WordPress media ID.
+      const imageId =
+        typeof imageValue === "object"
+          ? imageValue.ID ?? imageValue.id
+          : imageValue;
+
+      if (!imageId) return null;
+
+      try {
+        const imageResponse = await axios.get(
+          `${WORDPRESS_API}/media/${imageId}`,
+          {
+            params: {
+              _fields: "source_url,media_details",
+            },
+            timeout: 10000,
+          }
+        );
+
+        const media = imageResponse.data;
+        const sizes = media.media_details?.sizes || {};
+
+        return (
+          sizes.large?.source_url ||
+          sizes.medium_large?.source_url ||
+          sizes["1536x1536"]?.source_url ||
+          media.source_url ||
+          null
+        );
+
+      } catch (error) {
+        console.error(
+          "Workshop image failed to load:",
+          imageId,
+          error
+        );
+
+        return null;
+      }
+    }
+
     async function loadData() {
       try {
+        // STEP 1: Fetch workshop page content.
         const response = await axios.get(
           `${WORDPRESS_API}/pages/4973`,
           {
             params: {
               _fields: "acf",
             },
+            timeout: 12000,
           }
         );
 
@@ -113,6 +197,7 @@ function WorkshopPage() {
           );
         }
 
+        // STEP 2: Collect the six image fields.
         const imageFields = [
           acf.workshop_image_1,
           acf.workshop_image_2,
@@ -122,65 +207,73 @@ function WorkshopPage() {
           acf.workshop_image_6,
         ].filter(Boolean);
 
-        const imageResults = await Promise.all(
-          imageFields.map(async (imageValue) => {
-            if (
-              typeof imageValue === "string" &&
-              /^https?:\/\//i.test(imageValue)
-            ) {
-              return imageValue;
-            }
-
-            const imageId =
-              typeof imageValue === "object"
-                ? imageValue.ID ??
-                  imageValue.id
-                : imageValue;
-
-            if (!imageId) return null;
-
-            try {
-              const imageResponse = await axios.get(
-                `${WORDPRESS_API}/media/${imageId}`,
-                {
-                  params: {
-                    _fields: "source_url,media_details",
-                  },
-                }
-              );
-
-              const media = imageResponse.data;
-              const sizes =
-                media.media_details?.sizes || {};
-
-              return (
-                sizes["1536x1536"]?.source_url ||
-                sizes.large?.source_url ||
-                sizes.medium_large?.source_url ||
-                media.source_url ||
-                null
-              );
-            } catch (imageError) {
-              console.error(
-                "Failed to load workshop photo:",
-                imageError
-              );
-
-              return null;
-            }
-          })
-        );
-
         if (cancelled) return;
 
+        // STEP 3: Display content immediately.
+        // Do not wait for the photos.
         setData({
           title: acf.workshop_title || "Private Workshop",
           pricing: acf.workshop_pricing || "",
           details: acf.workshop_details || "",
-          images: imageResults.filter(Boolean),
+          images: [],
         });
 
         setCurrentImage(0);
+        setLoading(false);
+
+        // STEP 4: Handle pages without photos.
+        if (imageFields.length === 0) {
+          setImagesLoading(false);
+          return;
+        }
+
+        // STEP 5: Start loading remaining photos
+        // while the first photo is being resolved.
+        const remainingImagesPromise = Promise.all(
+          imageFields.slice(1).map(resolveImage)
+        );
+
+        // STEP 6: Resolve the first photo separately.
+        const firstImage = await resolveImage(
+          imageFields[0]
+        );
+
+        if (cancelled) return;
+
+        if (firstImage) {
+          setData((previous) =>
+            previous
+              ? {
+                  ...previous,
+                  images: [firstImage],
+                }
+              : previous
+          );
+
+          // The first photo is ready.
+          setImagesLoading(false);
+        }
+
+        // STEP 7: Finish loading remaining photos
+        // without delaying the rest of the page.
+        const remainingImages = await remainingImagesPromise;
+
+        if (cancelled) return;
+
+        setData((previous) =>
+          previous
+            ? {
+                ...previous,
+                images: [
+                  firstImage,
+                  ...remainingImages,
+                ].filter(Boolean),
+              }
+            : previous
+        );
+
+        setImagesLoading(false);
+
       } catch (error) {
         console.error(
           "Failed to load workshop page:",
@@ -190,6 +283,7 @@ function WorkshopPage() {
         if (!cancelled) {
           setPageError(true);
         }
+
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -204,14 +298,20 @@ function WorkshopPage() {
     };
   }, []);
 
-  // LOAD DATES ALREADY CONFIRMED AND PAID IN WORDPRESS.
+  // --------------------------------------------------
+  // LOAD WORKSHOP AVAILABILITY.
+  // --------------------------------------------------
+
   useEffect(() => {
     let cancelled = false;
 
     async function loadAvailability() {
       try {
         const response = await axios.get(
-          AVAILABILITY_ENDPOINT
+          AVAILABILITY_ENDPOINT,
+          {
+            timeout: 10000,
+          }
         );
 
         const dates = response.data?.blockedDates;
@@ -226,6 +326,7 @@ function WorkshopPage() {
           setBlockedDates(dates);
           setAvailabilityError(false);
         }
+
       } catch (error) {
         console.error(
           "Could not load workshop availability:",
@@ -235,6 +336,7 @@ function WorkshopPage() {
         if (!cancelled) {
           setAvailabilityError(true);
         }
+
       } finally {
         if (!cancelled) {
           setAvailabilityLoading(false);
@@ -249,7 +351,11 @@ function WorkshopPage() {
     };
   }, []);
 
-  // AUTOMATIC SLIDESHOW: CHANGE PHOTOS EVERY FIVE SECONDS.
+  // --------------------------------------------------
+  // AUTOMATIC SLIDESHOW.
+  // CHANGE PHOTOS EVERY FIVE SECONDS.
+  // --------------------------------------------------
+
   useEffect(() => {
     const imageCount = data?.images?.length ?? 0;
 
@@ -264,7 +370,10 @@ function WorkshopPage() {
     return () => clearInterval(interval);
   }, [data?.images?.length]);
 
-  // UPDATE FORM FIELDS.
+  // --------------------------------------------------
+  // UPDATE INQUIRY FORM.
+  // --------------------------------------------------
+
   const handleInquiryChange = (event) => {
     const { name, value } = event.target;
 
@@ -274,7 +383,10 @@ function WorkshopPage() {
     }));
   };
 
-  // SUBMIT INQUIRY AND SHOW THE CONFIRMATION POPUP.
+  // --------------------------------------------------
+  // SUBMIT WORKSHOP INQUIRY.
+  // --------------------------------------------------
+
   const handleInquirySubmit = async (event) => {
     event.preventDefault();
 
@@ -342,20 +454,27 @@ function WorkshopPage() {
     setSubmitError("");
 
     try {
-      await axios.post(INQUIRY_ENDPOINT, {
-        name,
-        email,
-        location,
-        arrangement: inquiry.arrangement,
-        preferred_date: preferredDate,
-        preferred_time: preferredTime,
-        website: websiteField,
-      });
+      await axios.post(
+        INQUIRY_ENDPOINT,
+        {
+          name,
+          email,
+          location,
+          arrangement: inquiry.arrangement,
+          preferred_date: preferredDate,
+          preferred_time: preferredTime,
+          website: websiteField,
+        },
+        {
+          timeout: 30000,
+        }
+      );
 
-      // Keep the form visible and reset the values after success.
+      // Reset form after successful submission.
       setInquiry({ ...INITIAL_INQUIRY });
       setSelectedDate(null);
       setShowSuccessModal(true);
+
     } catch (error) {
       console.error(
         "Workshop inquiry submission failed:",
@@ -364,18 +483,26 @@ function WorkshopPage() {
 
       setSubmitError(
         error.response?.data?.message ||
+          error.message ||
           "We couldn't save your inquiry. Please try again or contact us on Instagram."
       );
+
     } finally {
       setSubmitting(false);
     }
   };
 
+  // Today's date.
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  // --------------------------------------------------
+  // PAGE DISPLAY.
+  // --------------------------------------------------
+
   return (
     <div className="bg-[#faf9f7]">
+
       <HeaderComponent />
 
       {/* SUCCESS POPUP */}
@@ -496,8 +623,9 @@ function WorkshopPage() {
 
       <section className="bg-[#faf9f7] text-neutral-700">
 
-        {/* WORKSHOP PHOTO SLIDESHOW — NO ARROWS */}
+        {/* WORKSHOP PHOTO SLIDESHOW */}
         <div className="mx-auto max-w-7xl px-4 pt-12">
+
           {loading ? (
             <div
               className="
@@ -514,6 +642,7 @@ function WorkshopPage() {
             >
               Loading workshop photos...
             </div>
+
           ) : pageError ? (
             <p
               className="py-24 text-center text-neutral-600"
@@ -522,6 +651,7 @@ function WorkshopPage() {
               We couldn't load the workshop page.
               Please refresh and try again.
             </p>
+
           ) : data?.images?.length > 0 ? (
             <>
               <div className="overflow-hidden rounded-xl">
@@ -529,7 +659,8 @@ function WorkshopPage() {
                   key={data.images[currentImage]}
                   src={data.images[currentImage]}
                   alt={`Love Hestia workshop photo ${currentImage + 1}`}
-                  fetchPriority="high"
+                  fetchPriority={currentImage === 0 ? "high" : "auto"}
+                  loading={currentImage === 0 ? "eager" : "lazy"}
                   decoding="async"
                   className="
                     h-[350px]
@@ -540,6 +671,7 @@ function WorkshopPage() {
                 />
               </div>
 
+              {/* SLIDESHOW INDICATORS */}
               {data.images.length > 1 && (
                 <div className="mt-6 flex justify-center gap-3">
                   {data.images.map((_, index) => (
@@ -568,12 +700,32 @@ function WorkshopPage() {
                   ))}
                 </div>
               )}
+
             </>
+
+          ) : imagesLoading ? (
+            <div
+              className="
+                flex
+                min-h-[350px]
+                items-center
+                justify-center
+                bg-[#f0ede8]
+                text-sm
+                text-neutral-500
+                md:min-h-[700px]
+              "
+              role="status"
+            >
+              Loading workshop photos...
+            </div>
+
           ) : (
             <p className="py-24 text-center text-neutral-600">
               No workshop photos are available yet.
             </p>
           )}
+
         </div>
 
         {/* WORKSHOP CONTENT */}
@@ -582,7 +734,14 @@ function WorkshopPage() {
 
             {/* PAGE TITLE */}
             <h1
-              className="mb-8 text-center text-4xl font-normal text-neutral-800 md:text-5xl"
+              className="
+                mb-8
+                text-center
+                text-4xl
+                font-normal
+                text-neutral-800
+                md:text-5xl
+              "
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
               }}
@@ -590,7 +749,7 @@ function WorkshopPage() {
               {data.title}
             </h1>
 
-            {/* FLORAL WORKSHOP INVITATION — DIRECTLY BELOW TITLE */}
+            {/* FLORAL WORKSHOP INVITATION */}
             <div className="mb-14 px-1">
               <div
                 className="
@@ -609,7 +768,13 @@ function WorkshopPage() {
                 </p>
 
                 <h2
-                  className="mb-5 text-3xl font-normal text-neutral-800 md:text-5xl"
+                  className="
+                    mb-5
+                    text-3xl
+                    font-normal
+                    text-neutral-800
+                    md:text-5xl
+                  "
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
                   }}
@@ -633,7 +798,13 @@ function WorkshopPage() {
                     </span>
 
                     <h3
-                      className="mb-2 mt-3 text-2xl font-normal text-neutral-800"
+                      className="
+                        mb-2
+                        mt-3
+                        text-2xl
+                        font-normal
+                        text-neutral-800
+                      "
                       style={{
                         fontFamily: "'Cormorant Garamond', serif",
                       }}
@@ -655,7 +826,13 @@ function WorkshopPage() {
                     </span>
 
                     <h3
-                      className="mb-2 mt-3 text-2xl font-normal text-neutral-800"
+                      className="
+                        mb-2
+                        mt-3
+                        text-2xl
+                        font-normal
+                        text-neutral-800
+                      "
                       style={{
                         fontFamily: "'Cormorant Garamond', serif",
                       }}
@@ -669,13 +846,12 @@ function WorkshopPage() {
                       assistance and guidance from our florist.
                     </p>
                   </div>
-                </div>
 
-            
+                </div>
               </div>
             </div>
 
-            {/* COLLAPSIBLE PRICING — CLOSED BY DEFAULT */}
+            {/* COLLAPSIBLE PRICING */}
             <div className="mb-6 border-b border-neutral-200">
               <button
                 type="button"
@@ -724,7 +900,7 @@ function WorkshopPage() {
               )}
             </div>
 
-            {/* COLLAPSIBLE WORKSHOP DETAILS — CLOSED BY DEFAULT */}
+            {/* COLLAPSIBLE WORKSHOP DETAILS */}
             <div className="mb-6 border-b border-neutral-200">
               <button
                 type="button"
@@ -807,7 +983,7 @@ function WorkshopPage() {
                 className="space-y-5"
               >
 
-                {/* NAME — REQUIRED */}
+                {/* NAME */}
                 <div>
                   <label
                     htmlFor="workshop-name"
@@ -839,7 +1015,7 @@ function WorkshopPage() {
                   />
                 </div>
 
-                {/* EMAIL — REQUIRED */}
+                {/* EMAIL */}
                 <div>
                   <label
                     htmlFor="workshop-email"
@@ -870,7 +1046,7 @@ function WorkshopPage() {
                   />
                 </div>
 
-                {/* LOCATION — REQUIRED */}
+                {/* LOCATION */}
                 <div>
                   <label
                     htmlFor="workshop-location"
@@ -902,7 +1078,7 @@ function WorkshopPage() {
                   />
                 </div>
 
-                {/* ARRANGEMENT TYPE AND PRICE — REQUIRED */}
+                {/* ARRANGEMENT TYPE AND PRICE */}
                 <div>
                   <label
                     htmlFor="workshop-arrangement"
@@ -941,7 +1117,7 @@ function WorkshopPage() {
                   </p>
                 </div>
 
-                {/* PREFERRED DATE AND TIME — REQUIRED */}
+                {/* PREFERRED DATE AND TIME */}
                 <div>
                   <label
                     htmlFor="workshop-date"
@@ -1018,7 +1194,7 @@ function WorkshopPage() {
                   </p>
                 )}
 
-                {/* SUBMIT — NO PAYMENT */}
+                {/* SUBMIT BUTTON */}
                 <button
                   type="submit"
                   disabled={
@@ -1057,6 +1233,7 @@ function WorkshopPage() {
                   palette and payment details. No payment is collected
                   through this form.
                 </p>
+
               </form>
             </div>
 
@@ -1090,9 +1267,11 @@ function WorkshopPage() {
 
           </div>
         )}
+
       </section>
 
       <FooterComponent />
+
     </div>
   );
 }
