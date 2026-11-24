@@ -12,10 +12,10 @@ function WeddingEventsSectionComponent() {
 
     const loadWeddingImage = async () => {
       try {
-        // Retrieve ACF homepage settings
+        // Retrieve homepage ACF settings
         const settings = await homeSettingsService.getSettings();
 
-        // Retrieve the Wedding & Events image ID
+        // Retrieve Wedding & Events image ID
         const imageId =
           settings?.wedding_events_image ??
           settings?.["wedding_&_events_image"];
@@ -25,7 +25,7 @@ function WeddingEventsSectionComponent() {
           return;
         }
 
-        // Retrieve the actual WordPress image
+        // Retrieve actual WordPress image URL
         const media = await mediaService.getById(imageId);
 
         if (isMounted && media?.source_url) {
@@ -54,7 +54,7 @@ function WeddingEventsSectionComponent() {
         {imageUrl ? (
           <img
             src={imageUrl}
-            alt="Love Hestia bridal bouquets and event florals"
+            alt="Love Hestia dried flower bar and tablescape styling"
             loading="lazy"
             className="w-full h-full object-cover"
             style={{
@@ -80,12 +80,15 @@ function WeddingEventsSectionComponent() {
             fontWeight: 500,
           }}
         >
-          Bridal Bouquets and Events
+          Dried Flower Bar & Tablescape Styling
         </h2>
 
-        {/* SUBTITLE */}
-        <p className="mb-5 text-sm md:text-base">
-          Bridal Bouquets · Wedding Florals · Event Flower Bars
+        {/* DESCRIPTION */}
+        <p className="mb-6 text-sm md:text-base max-w-3xl leading-relaxed">
+          For celebrations big or small, we bring flowers to the heart
+          of the occasion. From thoughtfully styled tablescapes to
+          interactive dried flower bars, every detail is designed to
+          make your gathering feel a little more special.
         </p>
 
         {/* BUTTON */}
