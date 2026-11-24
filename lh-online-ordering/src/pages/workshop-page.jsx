@@ -77,6 +77,7 @@ function WorkshopPage() {
   // Collapsible sections.
   const [pricingOpen, setPricingOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [inclusionsOpen, setInclusionsOpen] = useState(false);
 
   // Workshop availability.
   const [blockedDates, setBlockedDates] = useState([]);
@@ -210,7 +211,6 @@ function WorkshopPage() {
         if (cancelled) return;
 
         // STEP 3: Display content immediately.
-        // Do not wait for the photos.
         setData({
           title: acf.workshop_title || "Private Workshop",
           pricing: acf.workshop_pricing || "",
@@ -227,8 +227,7 @@ function WorkshopPage() {
           return;
         }
 
-        // STEP 5: Start loading remaining photos
-        // while the first photo is being resolved.
+        // STEP 5: Load remaining photos in parallel.
         const remainingImagesPromise = Promise.all(
           imageFields.slice(1).map(resolveImage)
         );
@@ -250,12 +249,10 @@ function WorkshopPage() {
               : previous
           );
 
-          // The first photo is ready.
           setImagesLoading(false);
         }
 
-        // STEP 7: Finish loading remaining photos
-        // without delaying the rest of the page.
+        // STEP 7: Finish loading remaining photos.
         const remainingImages = await remainingImagesPromise;
 
         if (cancelled) return;
@@ -860,21 +857,20 @@ function WorkshopPage() {
                 }
                 aria-expanded={pricingOpen}
                 aria-controls="workshop-pricing-content"
-              className="
-  flex
-  w-full
-  items-center
-  justify-between
-  py-4
-  text-left
-  text-2xl
-  md:text-3xl
-  font-medium
-  text-neutral-800
-"
-style={{
-  fontFamily: "'Cormorant Garamond', serif",
-}}
+                className="
+                  flex
+                  w-full
+                  items-center
+                  justify-between
+                  py-4
+                  text-left
+                  text-2xl
+                  font-medium
+                  text-neutral-800
+                "
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                }}
               >
                 <span>Pricing</span>
 
@@ -913,21 +909,20 @@ style={{
                 }
                 aria-expanded={detailsOpen}
                 aria-controls="workshop-details-content"
-               className="
-  flex
-  w-full
-  items-center
-  justify-between
-  py-4
-  text-left
-  text-2xl
-  md:text-3xl
-  font-medium
-  text-neutral-800
-"
-style={{
-  fontFamily: "'Cormorant Garamond', serif",
-}}
+                className="
+                  flex
+                  w-full
+                  items-center
+                  justify-between
+                  py-4
+                  text-left
+                  text-2xl
+                  font-medium
+                  text-neutral-800
+                "
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                }}
               >
                 <span>Workshop Details</span>
 
@@ -954,6 +949,82 @@ style={{
                     __html: data.details,
                   }}
                 />
+              )}
+            </div>
+
+            {/* COLLAPSIBLE WORKSHOP INCLUSIONS */}
+            <div className="mb-6 border-b border-neutral-200">
+              <button
+                type="button"
+                onClick={() =>
+                  setInclusionsOpen((open) => !open)
+                }
+                aria-expanded={inclusionsOpen}
+                aria-controls="workshop-inclusions-content"
+                className="
+                  flex
+                  w-full
+                  items-center
+                  justify-between
+                  py-4
+                  text-left
+                  text-2xl
+                  font-medium
+                  text-neutral-800
+                "
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                }}
+              >
+                <span>Inclusions</span>
+
+                <span
+                  className="ml-4 text-2xl font-normal"
+                  aria-hidden="true"
+                >
+                  {inclusionsOpen ? "−" : "+"}
+                </span>
+              </button>
+
+              {inclusionsOpen && (
+                <div
+                  id="workshop-inclusions-content"
+                  className="pb-6 text-base leading-relaxed text-neutral-600"
+                >
+                  <ul className="space-y-3">
+                    <li className="flex gap-3">
+                      <span className="text-[#98776f]">✦</span>
+                      <span>
+                        Preserved and dried flowers (1 focal flower and 5 types of fillers)
+                      </span>
+                    </li>
+
+                    <li className="flex gap-3">
+                      <span className="text-[#98776f]">✦</span>
+                      <span>Flower materials and tools</span>
+                    </li>
+
+                    <li className="flex gap-3">
+                      <span className="text-[#98776f]">✦</span>
+                      <span>Certificate of participation</span>
+                    </li>
+
+                    <li className="flex gap-3">
+                      <span className="text-[#98776f]">✦</span>
+                      <span>Personalized name welcome card</span>
+                    </li>
+
+                    <li className="flex gap-3">
+                      <span className="text-[#98776f]">✦</span>
+                      <span>Flower bag</span>
+                    </li>
+
+                    <li className="flex gap-3">
+                      <span className="text-[#98776f]">✦</span>
+                      <span>Flower care tips card</span>
+                    </li>
+                  </ul>
+                </div>
               )}
             </div>
 
@@ -1202,38 +1273,48 @@ style={{
                   </p>
                 )}
 
-                {/* SUBMIT BUTTON */}
-                <button
-                  type="submit"
-                  disabled={
-                    submitting ||
-                    availabilityLoading ||
-                    availabilityError
-                  }
-                  className={`
-                    w-full
-                    border
-                    px-6
-                    py-3
-                    text-sm
-                    font-medium
-                    uppercase
-                    tracking-widest
-                    text-white
-                    transition
-                    ${
+                {/* SUBMIT BUTTON - MATCHING CUSTOM ARRANGEMENT BUTTON */}
+                <div className="flex justify-center pt-2">
+                  <button
+                    type="submit"
+                    disabled={
                       submitting ||
                       availabilityLoading ||
                       availabilityError
-                        ? "cursor-not-allowed border-neutral-400 bg-neutral-400"
-                        : "border-neutral-800 bg-neutral-800 hover:bg-neutral-700"
                     }
-                  `}
-                >
-                  {submitting
-                    ? "Submitting inquiry..."
-                    : "Submit Workshop Inquiry"}
-                </button>
+                    className="
+                      inline-flex
+                      min-w-[260px]
+                      items-center
+                      justify-center
+                      rounded-full
+                      border
+                      border-[#98776f]
+                      bg-[#98776f]
+                      px-9
+                      py-3.5
+                      text-sm
+                      md:text-base
+                      font-medium
+                      tracking-wide
+                      text-white
+                      shadow-md
+                      transition-all
+                      duration-300
+                      hover:border-[#806159]
+                      hover:bg-[#806159]
+                      hover:shadow-lg
+                      disabled:cursor-not-allowed
+                      disabled:border-neutral-400
+                      disabled:bg-neutral-400
+                      disabled:opacity-60
+                    "
+                  >
+                    {submitting
+                      ? "Submitting inquiry..."
+                      : "Submit Workshop Inquiry"}
+                  </button>
+                </div>
 
                 <p className="text-center text-xs leading-relaxed text-neutral-500">
                   After submitting, please message us on Instagram
