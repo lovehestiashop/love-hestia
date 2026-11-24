@@ -25,13 +25,12 @@ Final pricing depends on flower availability, arrangement size, and design compl
 
         {/* Content */}
         <div>
-
-          {/* Cursive Heading */}
+          {/* Signature-style Heading */}
           <h2
-            className="text-[30px] md:text-[38px] leading-tight mb-6 text-neutral-700"
+            className="text-[26px] md:text-[32px] leading-relaxed mb-5 text-neutral-700"
             style={{
-              fontFamily: "'Dancing Script', cursive",
-              fontWeight: 600,
+              fontFamily: "'Sacramento', cursive",
+              fontWeight: 400,
             }}
           >
             {data.heading}
@@ -51,8 +50,8 @@ Final pricing depends on flower availability, arrangement size, and design compl
               Customize your Arrangement
             </Link>
           </div>
-
         </div>
+
       </div>
     </section>
   );
